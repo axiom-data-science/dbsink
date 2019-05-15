@@ -1,0 +1,14 @@
+**/__pycache__
+**/*.pyc
+.git/
+Dockerfile
+.dockerignore
+.gitignore
+.env
+.envrc
+dist/
+build/
+conda-recipe/
+tests/
+.travis.yml
+release.sh

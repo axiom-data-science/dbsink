@@ -1,0 +1,38 @@
+{
+  "type": "record",
+  "name": "axds.netcdf.replayer.data.value",
+  "doc": "An instrument/analysis report from a single platform at a single moment in space and time",
+  "fields": [
+    { "name": "uid",           "type": "string",                      "doc": "Unique identifier for the platform this message and values apply to"},
+    { "name": "gid",           "type": ["null", "string"],            "doc": "A grouping key used to create multiple data streams per platform if required. eg. 'test_1' or 'algorithm_b'"},
+    { "name": "time",          "type": "string",                      "doc": "timestamp in UTC"},
+    { "name": "lat",           "type": "double",                      "doc": "wgs84 latitude"},
+    { "name": "lon",           "type": "double",                      "doc": "wgs84 longitude"},
+    { "name": "z",             "type": ["null", "double"],  "default": 0.0,    "doc": "device depth/elevation, in meters positive up from WGS84"},
+    {
+      "name": "values",
+      "doc":  "measurement values",
+      "type": [
+        "null",
+        {
+          "type": "map",
+          "values": [
+            "null",
+            "boolean",
+            "int",
+            "long",
+            "float",
+            "double",
+            "bytes",
+            "string"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "meta",
+      "doc":  "JSON string representation of the meta",
+      "type": ["null", "string"]
+    }
+  ]
+}
