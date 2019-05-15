@@ -11,7 +11,7 @@ This assumes a certain structure of the data (see `schema.avsc`).
 
 ## WHY?
 
-I needed to read from well-defined kafka topics and store the results in a database table so collaborators could interact with the data in a more farmiliar way.
+I needed to read from well-defined kafka topics and store the results in a database table so collaborators could interact with the data in a more familiar way.
 
 It is also a very convienent and easy to setup PostgREST on top of the resulting tables to get a quick read-only REST API on top of the tabled messages.
 
