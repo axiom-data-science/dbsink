@@ -1,0 +1,36 @@
+package:
+  name: dbsink
+  version: "1.0.0"
+
+source:
+  path: ../
+
+build:
+  number: 0
+  noarch: python
+  script: python -m pip install --no-deps --ignore-installed .
+
+requirements:
+  build:
+    - python
+    - pip
+  run:
+    - python
+    - click
+    - easyavro >=2.5.0
+    - msgpack-python
+    - sqlalchemy
+    - psycopg2
+
+test:
+  source_files:
+    - dbsink
+  imports:
+    - dbsink
+  commands:
+    - dbsink --help
+
+about:
+  home: https://github.com/axiom-data-science/dbsink
+  license: MIT
+  summary: 'Read from a kafka topic and sink to a database table, one row per message.'

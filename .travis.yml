@@ -1,0 +1,83 @@
+language: minimal
+
+sudo: false
+
+env:
+  global:
+    - PACKAGE_NAME=dbsink
+    - secure: "n2fDU3WQjw781S8p1qUVAOIbNay991tk0LiiKZkYPJFUxEUT23yA11i/XODKRdoCuLS7gNfBb1P9QWNXQ9liHIRFzCbYRBRvUseHnkAraTBg3Wq2dDikheUQO82S5TMlttmCXJHaqQLdK3YxBqJdc2FitzxqD0/qn9sSmbfTD5MCAymcFWtqRrLyb4PbnmlJvL2EgFQI9AaZq59WDwo04Gw+tDvBn7krb9HQ8ATzw+YVgIO65xk6TXMPqg0NAnkPmYBf4E39ewyeBvPGbgngvk47zWxQ2GO18Au095P+dk6mykmtjsEf68XrobF+bZyz4Em0IcTP8pGeuvkgRhFysNUiW9KXH+UfhIv9MU1Fx4Q/229d2jPYy0xD6IvG9JW9m7bZmBUp6to7uqDnfxnrlxmTKf7CN/M0qpFSIyqXZEfNye4LlvnTOBJh5XkfZnBHLpwptacMlS5m1pjOWYbSUSGUDebqtQTBDaF7g8EcXMkUKw6nMXE1uTvDM7kcSvBNBaVQh5ammZLn2y6rqfZR0NK9vyGGfl1N+axe+U48iRpFBDs3Pq/IeSWvPVajbpR/kIjstu9ybu6qQPq1BlozvbPEuVGNUAja1jAWP/v3YNbJtWl2bWviyLw7/NWC5W95TPLLFUP1p6nqf3AkiZPjpAVmhC2lY1R9CfotSXD0Bo0="
+
+matrix:
+  fast_finish: true
+  include:
+    - name: "default"
+      env:  PY=3.7
+    - name: "coding_standards"
+      env:  PY=3.7
+  allow_failures:
+    - name: "coding_standards"
+      env:  PY=3.7
+
+before_install:
+    # Install miniconda and create TEST env.
+  - |
+    wget http://bit.ly/miniconda3 -O miniconda.sh
+    bash miniconda.sh -b -p $HOME/miniconda
+    export PATH="$HOME/miniconda/bin:$PATH"
+    conda config --set always_yes yes --set changeps1 no --set show_channel_urls true
+    conda update conda --quiet
+    conda config --add channels conda-forge --force
+    conda config --add channels axiom-data-science --force
+    conda install pycryptosat
+    conda config --set channel_priority strict
+    conda config --set safety_checks disabled
+    conda create --name TEST python=$PY --file requirements.txt --file requirements-dev.txt
+    source activate TEST
+
+install:
+  - python setup.py sdist && version=$(python setup.py --version) && pushd dist && pip install --no-deps --force-reinstall ${PACKAGE_NAME}-${version}.tar.gz && popd
+
+script:
+  - if [[ $TRAVIS_JOB_NAME == "default" ]]; then
+      cp -r tests/ /tmp ;
+      pushd /tmp && pytest -n 2 -rxs tests && popd ;
+    fi
+
+  - if [[ $TRAVIS_JOB_NAME == "coding_standards" ]]; then
+      py.test --flake8 -m flake8 ;
+    fi
+
+after_success:
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_JOB_NAME" == "default" ]; then
+      conda install -n root conda-build anaconda-client ;
+      conda build conda-recipe;
+      anaconda -t $ANACONDA_TOKEN upload --force -u axiom-data-science $HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2 ;
+    fi
+
+deploy:
+
+  # Honestly, this isn't working and is eating more time than I am willing to throw at it
+  # - provider: pypi
+  #   user: "kwilcox"
+  #   password:
+  #     secure: "dplwj5hWKitDNvQn2dbw8tjwsAWmwtkmFzkujOUD368DfQb6ICxMwk4bnxgriIsujW9WjUs6uKzKtK+QY0HC60FYr3dX3ve8TzL9dhDia32vn+LkdH4BQLZoRhRqGUGLKjZS5xURzcmJedDq1OY6c9JRSgd3tlp6KgcRtLZ7asTKCd/MEDFUd0r+3aOSYQBmVX5cOclwUJ7FROL94G68mVxcjDDX56qFqDR4O/j0yrnvv7LSMXKaGHIpRNBGY7Sse8nAlE3ozCzMzI35/K2UZBBIDoIij9hR7rb5L5LVXEWck/JLjLLgyy47wQvxNVLB6mS8U1zBIH7nSrgbCMYQpVUJqkNFoSMN17ZK/bE7Dl45h3Mk+Nu3s6QjjStkrKxvcBQ61Ywzvl/7Wpffpx21WUIpVZCzCWm+QR9WjpB8o7ghBP9Dt/AC33MPZAav20ElAMCn9RAAIqMzJ2ekIUy7+kXuVEDrF+8nLq3XxMPoyA4cakds/TGkja+t+iGETWSglf456lH92TuqyCLFaRkL8eRtmDa8rS7cWbOJjaYiCppVDwIRPU7QgopO/BaDZfINKeClizENMBtAQDWMWeGo0G5dhkVuno2/MTzjnghS7sJn2XPqzKa8JRyIcJfyEFhzvsHRqRS/FTUD3eN2m4POXh5frTqEQIx2wEtH7JWIGVw="
+  #   distributions: sdist bdist_wheel
+  #   upload_docs: no
+  #   skip_cleanup: true
+  #   on:
+  #     repo: axiom-data-science/ncreplayer
+  #     tags: true
+  #     all_branches: master
+  #     condition: '$TRAVIS_JOB_NAME == "default"'
+
+  - provider: releases
+    api_key:
+      secure: "E6sh0LyCk/InSb9tg83EWyx6xXak+Cu7ChumiGzYqCsN1r4hF+55SiNNToTmH5rn2EoO5UWhvjEMlA6BtWUDNVLJT8/Pl5DQdGab48xc/Pps1DibaAVLuWmNcUc+AuH0+bDKkjvp0EHtAssJCiuFN/qQDAOF7pCiDREidGmYyRSWOGJ4/8EysTtYstuvSU3vUXp8rmlWakEl8SImBWVWZJ8k4EEBi8DMA1/zVFWM7Hj7Q26QoaHqBkokWHDVN5nZv9rEUhhWLRqOABY345HupigGCjb6yFSvHgiEoSAXP4enPIrjYPDizCeYlJB5FCQS6z6c9zeLkgivG2iO+Rb9K2GG9LGfIyXyVE4+rAvNW5N3BHWtkFOYZgaWLMwPad9Cv1JKMA1J6mY8uUcU7+VE43Gc4PcJCs0VHynLbSgJdzqvLicJlqUaoRwVsD1/pUISavm1VvIXqJ1COU8P28O0kkkr1qbygDk1xxdLEzdykP0SktI9C9fGPLIdkKpTH/wGOGrF1Yh9NgvCpepEawVmGF5aIqOSn2orofuP4NsysdOHKPxfN8jqjaiMU71HpqTN7j/WSC5IsAdUCCHwcOHcVyR3cDfKiEfeUWZEONWU24wHOnl8i5Wdlweg0Gfdqco4tByjB/EgAKXHGQxOWC5Rnp4ExwITymxyZeQkLKBZXoc="
+    file_glob: true
+    file: "$HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2"
+    skip_cleanup: true
+    on:
+      repo: axiom-data-science/ncreplayer
+      tags: true
+      all_branches: master
+      condition: '$TRAVIS_JOB_NAME == "default"'
