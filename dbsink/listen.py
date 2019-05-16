@@ -36,7 +36,7 @@ L.addHandler(stream)
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
 @click.option('--logfile',  type=str, default='', help="File to log messages to. Defaults to stdout.")
-@click.option('--setup-only/--no-setup-only', default=False, help="Setup mode will setup tables but not consume messages")
+@click.option('--setup-only/--no-setup-only', default=False, help="Setup or drop tables but do not consume messages")
 @click.option('-v', '--verbose', count=True)
 def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile, setup_only, verbose):
 
@@ -109,7 +109,14 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
     if f'{schema}.{topic}' not in meta.tables:
         table = sql.Table(topic, meta, *cols)
     else:
-        table = sql.Table(topic, meta, *cols, autoload=True, keep_existing=False, extend_existing=True)
+        table = sql.Table(
+            topic,
+            meta,
+            *cols,
+            autoload=True,
+            keep_existing=False,
+            extend_existing=True
+        )
     meta.create_all(tables=[table])
 
     def on_recieve(k, v):

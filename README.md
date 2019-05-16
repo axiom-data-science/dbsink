@@ -43,7 +43,7 @@ Options:
                                   requested
   --drop / --no-drop              Drop the table first
   --logfile TEXT                  File to log messages to. Defaults to stdout.
-  --setup-only / --no-setup-only  Setup mode will setup tables but not consume
+  --setup-only / --no-setup-only  Setup or drop tables but do not consume
                                   messages
   -v, --verbose
   --help                          Show this message and exit.
@@ -55,7 +55,7 @@ All configuration options can be specified with environmental variables using th
 
 ```bash
 DBSINK_TOPIC="axds-netcdf-replayer-data" \
-DBSINK_CONSUMER='myconsumer' \
-DBSINK_PACKING='msgpack' \
+DBSINK_CONSUMER="myconsumer" \
+DBSINK_PACKING="msgpack" \
     dbsink
 ```
