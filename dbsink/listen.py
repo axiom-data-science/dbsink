@@ -87,7 +87,7 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
         pool_pre_ping=True,
         client_encoding='utf8',
         use_native_hstore=True,
-        echo=False
+        echo=verbose >= 2
     )
 
     # Create schema
