@@ -1,0 +1,417 @@
+[
+  {
+    "cdr_reference" : 6632840699619371231,
+    "headers" : {
+      "imei" : -1196390984,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : 1605313186,
+      "mt_msn" : -126304479,
+      "location" : {
+        "cep_radius" : 103063285,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.43073702
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.91330063
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 1578850641,
+      "system_status" : -366374297,
+      "latitude" : 0.866611,
+      "longitude" : null,
+      "heading" : 0.3165244,
+      "battery_level" : -627447636,
+      "bus_voltage" : 0.39590633,
+      "operating_temp" : 0.42482674,
+      "charge_rate" : -246981457,
+      "sw_rev" : null,
+      "geofence_config_index" : 1118741809,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -1472216977462579785,
+    "headers" : {
+      "imei" : 421246520,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "LOCATION_UNACCEPTABLE",
+      "mo_msn" : 1576276764,
+      "mt_msn" : -1130876295,
+      "location" : {
+        "cep_radius" : -7283697,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.33748317
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.7540428
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 0.44873667,
+      "system_status" : -946086280,
+      "latitude" : null,
+      "longitude" : 0.90701944,
+      "heading" : 0.33791614,
+      "battery_level" : 2083880452,
+      "bus_voltage" : 0.49245894,
+      "operating_temp" : 0.03078872,
+      "charge_rate" : 0.7166825,
+      "sw_rev" : 979339576,
+      "geofence_config_index" : -127725386,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -1209239531612466006,
+    "headers" : {
+      "imei" : -182000820,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "PROTOCOL_ANOMALY",
+      "mo_msn" : -1852333904,
+      "mt_msn" : -1977977132,
+      "location" : {
+        "cep_radius" : -23611709,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.25522846
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.873517
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 0.45929807,
+      "system_status" : null,
+      "latitude" : 2034185072,
+      "longitude" : -88424365,
+      "heading" : 0.7342947,
+      "battery_level" : -2008039461,
+      "bus_voltage" : null,
+      "operating_temp" : -1548803953,
+      "charge_rate" : null,
+      "sw_rev" : 1110319865,
+      "geofence_config_index" : -82866585,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -8563073738653537086,
+    "headers" : {
+      "imei" : 2110081971,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : 1542982515,
+      "mt_msn" : 67896152,
+      "location" : {
+        "cep_radius" : -1570331522,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.4260571
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.94429535
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 0.09015322,
+      "system_status" : -601717501,
+      "latitude" : -61993638,
+      "longitude" : null,
+      "heading" : 0.8584417,
+      "battery_level" : null,
+      "bus_voltage" : 0.07804245,
+      "operating_temp" : null,
+      "charge_rate" : 1363673059,
+      "sw_rev" : 2088351972,
+      "geofence_config_index" : -715747478,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 8919924786408079603,
+    "headers" : {
+      "imei" : 1910721968,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : -1677307183,
+      "mt_msn" : 1561653066,
+      "location" : {
+        "cep_radius" : -943715431,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.1705789
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.123209655
+        }
+      }
+    },
+    "values" : {
+      "status_ts": null,
+      "latitude" : 0.84978294,
+      "longitude" : null,
+      "heading" : null,
+      "battery_level" : -488828029,
+      "bus_voltage" : 0.16271299,
+      "operating_temp" : null,
+      "charge_rate" : 2128229321,
+      "sw_rev" : 1677281613,
+      "geofence_config_index" : null,
+      "misc" : {
+        "map" : {
+          " " : 0.8098857,
+          "&" : 0.28789973,
+          "\u0019" : 0.13235116,
+          ":" : 0.982728,
+          "j" : 0.19133574,
+          "*" : 0.5695157,
+          "+" : 0.91166884,
+          "<" : 0.5584922,
+          "L" : 0.34091264,
+          "|" : 0.5195773,
+          "." : 0.40250242,
+          "O" : 0.21320641
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 3936142170325059247,
+    "headers" : {
+      "imei" : -1363525160,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "TIMEOUT",
+      "mo_msn" : -770976051,
+      "mt_msn" : 1001583197,
+      "location" : {
+        "cep_radius" : 1140214064,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.39194536
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.30182916
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 0.15353125,
+      "system_status" : "D&3g\u001A\n\u001C4o.Ll",
+      "latitude" : 2067039545,
+      "longitude" : null,
+      "heading" : 0.1903041,
+      "battery_level" : 2030917577,
+      "bus_voltage" : 96461752,
+      "operating_temp" : 122912338,
+      "charge_rate" : null,
+      "sw_rev" : null,
+      "geofence_config_index" : 1853685263,
+      "misc" : {
+        "map" : {
+          "\u0010" : 0.47345328,
+          "s" : 0.6661816,
+          "c" : 0.39442742,
+          "\u0014" : 0.04710424,
+          "%" : 0.9543921,
+          ")" : 0.9717377,
+          "\u0019" : 0.36265457,
+          "\n" : 0.14545345,
+          "k" : 0.8425795,
+          "^" : 0.7999296,
+          "\u001F" : 0.46935076
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 5779540022324747400,
+    "headers" : {
+      "imei" : 765148092,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : -968140912,
+      "mt_msn" : -803226911,
+      "location" : {
+        "cep_radius" : 1665568935,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.8212542
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.20199174
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 114363785,
+      "system_status" : null,
+      "latitude" : null,
+      "longitude" : -731245149,
+      "heading" : 0.75870323,
+      "battery_level" : null,
+      "bus_voltage" : 1998175552,
+      "operating_temp" : -974819296,
+      "charge_rate" : 0.38416994,
+      "sw_rev" : null,
+      "geofence_config_index" : -1296881951,
+      "misc" : {
+        "map" : {
+          "\u0001" : 0.15319002,
+          "\u0004" : 0.035500526,
+          "\u0007" : 0.25425613,
+          ")" : 0.33681524,
+          "\n" : 0.9050966,
+          "J" : 0.68495584,
+          "\f" : 0.15383232
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 68661840921510804,
+    "headers" : {
+      "imei" : -246552534,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "RF_LINK_LOST",
+      "mo_msn" : -501212072,
+      "mt_msn" : 1783240358,
+      "location" : {
+        "cep_radius" : 955572804,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.5757476
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.8885625
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 24162382,
+      "system_status" : 1619344198,
+      "latitude" : null,
+      "longitude" : null,
+      "heading" : null,
+      "battery_level" : null,
+      "bus_voltage" : 0.35828215,
+      "operating_temp" : null,
+      "charge_rate" : null,
+      "sw_rev" : null,
+      "geofence_config_index" : 1241064168,
+      "misc" : {
+        "map" : {
+          "\u0003" : 0.23537272,
+          "\u0005" : 0.62612766,
+          "e" : 0.014433801,
+          "G" : 0.050035655,
+          "i" : 0.6400979,
+          "-" : 0.8108907,
+          "\u0012" : 0.46191072,
+          "T" : 0.8598004,
+          "\u0015" : 0.6288408,
+          "\u0019" : 0.42305732,
+          "Z" : 0.05050391,
+          "]" : 0.041990638,
+          "\u001D" : 0.29272276,
+          "~" : 0.8349933
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 7405474526136109562,
+    "headers" : {
+      "imei" : 1794363785,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "PROHIBITED",
+      "mo_msn" : 135269153,
+      "mt_msn" : 1669397835,
+      "location" : {
+        "cep_radius" : -819157046,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.9733287
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.47856116
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 0.032060802,
+      "system_status" : null,
+      "latitude" : -320532081,
+      "longitude" : 0.34559506,
+      "heading" : null,
+      "battery_level" : -1007587775,
+      "bus_voltage" : null,
+      "operating_temp" : null,
+      "charge_rate" : null,
+      "sw_rev" : null,
+      "geofence_config_index" : null,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 2718983786142826166,
+    "headers" : {
+      "imei" : 1176952012,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "TIMEOUT",
+      "mo_msn" : -1702662950,
+      "mt_msn" : -1972038799,
+      "location" : {
+        "cep_radius" : 331658007,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.42931712
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.3556835
+        }
+      }
+    },
+    "values" : {
+      "status_ts": 958482021,
+      "system_status" : 61667396,
+      "latitude" : null,
+      "longitude" : null,
+      "heading" : null,
+      "battery_level" : 265110181,
+      "bus_voltage" : 416221111,
+      "operating_temp" : -2129536710,
+      "charge_rate" : null,
+      "sw_rev" : -1443722453,
+      "geofence_config_index" : -764106183,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  }
+]

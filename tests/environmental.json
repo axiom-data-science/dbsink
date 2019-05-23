@@ -1,0 +1,438 @@
+[
+  {
+    "cdr_reference" : 3329282367616380582,
+    "headers" : {
+      "imei" : 978549438,
+      "iridium_ts" : -1148945717,
+      "sbd_session_status" : "RF_LINK_LOST",
+      "mo_msn" : -45147856,
+      "mt_msn" : 2091183351,
+      "location" : {
+        "cep_radius" : -901562301,
+        "latitude" : {
+          "degrees" : -1688848245,
+          "minutes" : 0.26404113
+        },
+        "longitude" : {
+          "degrees" : -966864480,
+          "minutes" : 0.63901615
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 0.4124328,
+      "sea_surface_temperature" : null,
+      "sst_var" : null,
+      "air_temperature" : null,
+      "air_temp_var" : 0.4431333,
+      "air_pressure" : 128840291,
+      "pressure_var" : null,
+      "relative_humidity" : 0.15816492,
+      "sea_water_electrical_conductivity" : -1340538599,
+      "sea_water_ph_reported_on_total_scale" : 0.5334511,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : null,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 7147768441891613160,
+    "headers" : {
+      "imei" : -191631789,
+      "iridium_ts" : -1641334291,
+      "sbd_session_status" : "TIMEOUT",
+      "mo_msn" : -2109735230,
+      "mt_msn" : -2014375558,
+      "location" : {
+        "cep_radius" : 1235156399,
+        "latitude" : {
+          "degrees" : -1773563045,
+          "minutes" : 0.51963514
+        },
+        "longitude" : {
+          "degrees" : -358104472,
+          "minutes" : 0.72976893
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 0.3676315,
+      "sea_surface_temperature" : 0.7395041,
+      "sst_var" : null,
+      "air_temperature" : 1811300834,
+      "air_temp_var" : 0.30130994,
+      "air_pressure" : null,
+      "pressure_var" : 0.9007823,
+      "relative_humidity" : 0.46155185,
+      "sea_water_electrical_conductivity" : 0.6462044,
+      "sea_water_ph_reported_on_total_scale" : null,
+      "sea_surface_dominant_wave_period" : 0.59246767,
+      "sea_surface_wave_significant_height" : 0.9039035,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 9112328202565570817,
+    "headers" : {
+      "imei" : -1457378573,
+      "iridium_ts" : -390773496,
+      "sbd_session_status" : "SUCCESS",
+      "mo_msn" : 262856336,
+      "mt_msn" : 2102753265,
+      "location" : {
+        "cep_radius" : -1343259122,
+        "latitude" : {
+          "degrees" : 797398763,
+          "minutes" : 0.42542523
+        },
+        "longitude" : {
+          "degrees" : -194459786,
+          "minutes" : 0.17225742
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : null,
+      "sea_surface_temperature" : -623557409,
+      "sst_var" : null,
+      "air_temperature" : -1755817442,
+      "air_temp_var" : 0.0084607005,
+      "air_pressure" : -1445313627,
+      "pressure_var" : 0.76669264,
+      "relative_humidity" : 0.64468503,
+      "sea_water_electrical_conductivity" : 0.83229125,
+      "sea_water_ph_reported_on_total_scale" : null,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : null,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 5128146619959065616,
+    "headers" : {
+      "imei" : -949904894,
+      "iridium_ts" : 1804158851,
+      "sbd_session_status" : "PROHIBITED",
+      "mo_msn" : -1279949325,
+      "mt_msn" : 146660928,
+      "location" : {
+        "cep_radius" : 1824399432,
+        "latitude" : {
+          "degrees" : -1025451233,
+          "minutes" : 0.7371735
+        },
+        "longitude" : {
+          "degrees" : 1762137313,
+          "minutes" : 0.88328856
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : -1246139800,
+      "sea_surface_temperature" : 0.5912789,
+      "sst_var" : 0.36419618,
+      "air_temperature" : null,
+      "air_temp_var" : null,
+      "air_pressure" : 0.8447201,
+      "pressure_var" : 2024664687,
+      "relative_humidity" : null,
+      "sea_water_electrical_conductivity" : null,
+      "sea_water_ph_reported_on_total_scale" : 0.9127937,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : null,
+      "misc" : {
+        "map" : {
+          "p" : 0.051611304,
+          "!" : 0.7754564,
+          "\u0013" : 0.15613735,
+          "d" : 0.9807448,
+          "D" : 0.66511726,
+          "U" : 0.163306,
+          "X" : 0.15428233,
+          "Z" : 0.8508816,
+          "+" : 0.85229766,
+          "[" : 0.8571933,
+          ">" : 0.38948733
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -6039677724004814407,
+    "headers" : {
+      "imei" : -413216017,
+      "iridium_ts" : 1930628574,
+      "sbd_session_status" : "TIMEOUT",
+      "mo_msn" : -1537862780,
+      "mt_msn" : 910679618,
+      "location" : {
+        "cep_radius" : 1214226632,
+        "latitude" : {
+          "degrees" : 1051710620,
+          "minutes" : 0.847083
+        },
+        "longitude" : {
+          "degrees" : 1397785947,
+          "minutes" : 0.95644665
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 0.014444292,
+      "sea_surface_temperature" : 1187112768,
+      "sst_var" : -175678444,
+      "air_temperature" : 0.5233341,
+      "air_temp_var" : 95340689,
+      "air_pressure" : 0.45142788,
+      "pressure_var" : -1703925427,
+      "relative_humidity" : 1978608512,
+      "sea_water_electrical_conductivity" : -925507349,
+      "sea_water_ph_reported_on_total_scale" : null,
+      "sea_surface_dominant_wave_period" : 0.078255594,
+      "sea_surface_wave_significant_height" : 0.12270486,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -7584521568898379445,
+    "headers" : {
+      "imei" : -1242809834,
+      "iridium_ts" : 629676514,
+      "sbd_session_status" : "LOCATION_UNACCEPTABLE",
+      "mo_msn" : 18432516,
+      "mt_msn" : -170135303,
+      "location" : {
+        "cep_radius" : -712216364,
+        "latitude" : {
+          "degrees" : 327243109,
+          "minutes" : 0.010344744
+        },
+        "longitude" : {
+          "degrees" : -2074925382,
+          "minutes" : 0.92972535
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : null,
+      "sea_surface_temperature" : null,
+      "sst_var" : 1133653015,
+      "air_temperature" : 0.6830351,
+      "air_temp_var" : 0.56082934,
+      "air_pressure" : 0.3645112,
+      "pressure_var" : null,
+      "relative_humidity" : 0.50574446,
+      "sea_water_electrical_conductivity" : 0.7515849,
+      "sea_water_ph_reported_on_total_scale" : null,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : null,
+      "misc" : {
+        "map" : {
+          "\u0010" : 0.9249278,
+          "p" : 0.43764073,
+          "e" : 0.62358785,
+          "7" : 0.7500357,
+          "g" : 0.30290228,
+          "\t" : 0.61975694,
+          "Z" : 0.30606818,
+          "\u001C" : 0.51207626,
+          "n" : 0.7054403,
+          "~" : 0.33863735
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -3884044054355763221,
+    "headers" : {
+      "imei" : -391133728,
+      "iridium_ts" : -1880534511,
+      "sbd_session_status" : "RF_LINK_LOST",
+      "mo_msn" : 1923319105,
+      "mt_msn" : 1290151763,
+      "location" : {
+        "cep_radius" : 901139816,
+        "latitude" : {
+          "degrees" : -61150431,
+          "minutes" : 0.48187804
+        },
+        "longitude" : {
+          "degrees" : -295169150,
+          "minutes" : 0.006270528
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 1973448968,
+      "sea_surface_temperature" : 0.105755866,
+      "sst_var" : null,
+      "air_temperature" : null,
+      "air_temp_var" : null,
+      "air_pressure" : 0.030708075,
+      "pressure_var" : 0.49862808,
+      "relative_humidity" : 0.97698253,
+      "sea_water_electrical_conductivity" : 0.34158242,
+      "sea_water_ph_reported_on_total_scale" : 0.10747445,
+      "sea_surface_dominant_wave_period" : 0.25805062,
+      "sea_surface_wave_significant_height" : null,
+      "misc" : {
+        "map" : {
+          "p" : 0.46002823,
+          "!" : 0.20584273,
+          "Q" : 0.2919529,
+          "3" : 0.3688839,
+          "d" : 0.833225,
+          "\u0004" : 0.8547858,
+          "e" : 0.15602612,
+          "\u0016" : 0.29920465,
+          "J" : 0.77213025,
+          "M" : 0.7170866,
+          "\u001D" : 0.4292125
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 6315888754591681978,
+    "headers" : {
+      "imei" : 28360297,
+      "iridium_ts" : 690984767,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : -1603562644,
+      "mt_msn" : -1639098381,
+      "location" : {
+        "cep_radius" : 1212770478,
+        "latitude" : {
+          "degrees" : -551130161,
+          "minutes" : 0.40848696
+        },
+        "longitude" : {
+          "degrees" : 220343480,
+          "minutes" : 0.08034629
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 0.72702104,
+      "sea_surface_temperature" : 0.98558384,
+      "sst_var" : null,
+      "air_temperature" : -1621258019,
+      "air_temp_var" : 0.6097824,
+      "air_pressure" : null,
+      "pressure_var" : null,
+      "relative_humidity" : 0.09034133,
+      "sea_water_electrical_conductivity" : null,
+      "sea_water_ph_reported_on_total_scale" : 0.03212756,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : 0.46070945,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -8482719415053460811,
+    "headers" : {
+      "imei" : 1174702301,
+      "iridium_ts" : 884602376,
+      "sbd_session_status" : "PROTOCOL_ANOMALY",
+      "mo_msn" : 1413322837,
+      "mt_msn" : -1054474545,
+      "location" : {
+        "cep_radius" : 1225361794,
+        "latitude" : {
+          "degrees" : -920429411,
+          "minutes" : 0.77237236
+        },
+        "longitude" : {
+          "degrees" : -1771752821,
+          "minutes" : 0.5800425
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 509337884,
+      "sea_surface_temperature" : -1694276775,
+      "sst_var" : null,
+      "air_temperature" : null,
+      "air_temp_var" : 1455067385,
+      "air_pressure" : 0.6165682,
+      "pressure_var" : 0.07899535,
+      "relative_humidity" : 0.6592198,
+      "sea_water_electrical_conductivity" : null,
+      "sea_water_ph_reported_on_total_scale" : null,
+      "sea_surface_dominant_wave_period" : 0.4774307,
+      "sea_surface_wave_significant_height" : 0.22538579,
+      "misc" : {
+        "map" : {
+          "\u0000" : 0.32129097,
+          "\u0002" : 0.5919699,
+          "s" : 0.26408142,
+          "5" : 0.20865166,
+          "j" : 0.48776454,
+          "*" : 0.49415803,
+          "~" : 0.18062711
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 5438580894676001521,
+    "headers" : {
+      "imei" : 780846062,
+      "iridium_ts" : -1597085736,
+      "sbd_session_status" : "RF_LINK_LOST",
+      "mo_msn" : 1460658444,
+      "mt_msn" : -1485657101,
+      "location" : {
+        "cep_radius" : 2074319370,
+        "latitude" : {
+          "degrees" : -1055408576,
+          "minutes" : 0.028021336
+        },
+        "longitude" : {
+          "degrees" : -1242669765,
+          "minutes" : 0.66671276
+        }
+      }
+    },
+    "values" : {
+      "environmental_ts" : 0.87711376,
+      "sea_surface_temperature" : 0.25437522,
+      "sst_var" : 0.19694263,
+      "air_temperature" : null,
+      "air_temp_var" : 1563944037,
+      "air_pressure" : 0.98237306,
+      "pressure_var" : -945906045,
+      "relative_humidity" : null,
+      "sea_water_electrical_conductivity" : 0.13320804,
+      "sea_water_ph_reported_on_total_scale" : 0.14946318,
+      "sea_surface_dominant_wave_period" : null,
+      "sea_surface_wave_significant_height" : 0.8906262,
+      "misc" : {
+        "map" : {
+          "c" : 0.6707359,
+          "U" : 0.3625527,
+          "5" : 0.1610055,
+          "9" : 0.5425843,
+          ":" : 0.24586952,
+          "\u001A" : 0.39703262,
+          "J" : 0.6660034,
+          "K" : 0.68958884,
+          "k" : 0.5119775,
+          "," : 0.9542344,
+          "\u001E" : 0.6370369,
+          "o" : 0.19610596
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  }
+]

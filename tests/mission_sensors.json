@@ -1,0 +1,319 @@
+[
+  {
+    "cdr_reference" : -5699810423388316158,
+    "headers" : {
+      "imei" : -1556323178,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "PROTOCOL_ANOMALY",
+      "mo_msn" : -725951606,
+      "mt_msn" : -419825455,
+      "location" : {
+        "cep_radius" : 158880407,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.803512
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.3486771
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : 1194313350,
+      "rf_ais_decoded_rssi" : 1825254200,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 956269784080289176,
+    "headers" : {
+      "imei" : -488112517,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "SUCCESS",
+      "mo_msn" : -1759151031,
+      "mt_msn" : -1215365872,
+      "location" : {
+        "cep_radius" : -76974037,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.0043352842
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.016319752
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : -1324605492,
+      "rf_ais_decoded_rssi" : -1201808279,
+      "misc" : {
+        "map" : {
+          "a" : 0.40776777,
+          "R" : 0.98860085,
+          "s" : 0.2660718,
+          "u" : 0.2184915,
+          "y" : 0.2650038,
+          "*" : 0.54304975,
+          "L" : 0.84803724,
+          "=" : 0.9088225,
+          "N" : 0.08476615,
+          "?" : 0.6655479
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 4131371670301504386,
+    "headers" : {
+      "imei" : 1048470607,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "QUEUED",
+      "mo_msn" : 554936386,
+      "mt_msn" : -1619264769,
+      "location" : {
+        "cep_radius" : 425173326,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.6764378
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.5840936
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : {
+        "float" : 0.3767385
+      },
+      "rf_ais_decoded_rssi" : -304534174,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 6887213825832235349,
+    "headers" : {
+      "imei" : 1995273514,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "LOCATION_UNACCEPTABLE",
+      "mo_msn" : 912997314,
+      "mt_msn" : 215331202,
+      "location" : {
+        "cep_radius" : 809462846,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.93217146
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.993393
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : null,
+      "rf_ais_decoded_rssi" : null,
+      "misc" : {
+        "map" : {
+          "\u0001" : 0.0416373,
+          "\u0002" : 0.8870003,
+          "C" : 0.5803171,
+          "\t" : 0.8372033,
+          "l" : 0.119482875,
+          "\u000E" : 0.7789766,
+          "p" : 0.010389149,
+          "\u0010" : 0.8457746,
+          "2" : 0.6889366,
+          "U" : 0.56739527,
+          "7" : 0.4997316,
+          "Z" : 0.39795232,
+          "<" : 0.76343197,
+          "\u001E" : 0.5577737
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 4494444434035671162,
+    "headers" : {
+      "imei" : 790912474,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "MESSAGE_TOO_LARGE",
+      "mo_msn" : 677210006,
+      "mt_msn" : 1987128615,
+      "location" : {
+        "cep_radius" : 1167603204,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.0024417043
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.96546507
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : 1134150428,
+      "rf_ais_decoded_rssi" : null,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -6952901533553776302,
+    "headers" : {
+      "imei" : -635899493,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "RF_LINK_LOST",
+      "mo_msn" : -1083873200,
+      "mt_msn" : 1484481101,
+      "location" : {
+        "cep_radius" : -967035583,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.29370475
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.3414539
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : {
+        "float" : 0.6697144
+      },
+      "rf_ais_decoded_rssi" : 1081695190,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -2082107215818982765,
+    "headers" : {
+      "imei" : -419216380,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "TIMEOUT",
+      "mo_msn" : -1127814101,
+      "mt_msn" : -1765092060,
+      "location" : {
+        "cep_radius" : -409688909,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.36083
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.8768216
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : 339274247,
+      "rf_ais_decoded_rssi" : 265772710,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -1523929243028233982,
+    "headers" : {
+      "imei" : -583913872,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "LOCATION_UNACCEPTABLE",
+      "mo_msn" : 261434437,
+      "mt_msn" : 1984005280,
+      "location" : {
+        "cep_radius" : 55042650,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.8499107
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.90629584
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : null,
+      "rf_ais_decoded_rssi" : 2065468820,
+      "misc" : {
+        "map" : {
+          "P" : 0.45751858,
+          "4" : 0.4153034,
+          "5" : 0.40685743,
+          "F" : 0.48093522,
+          "\n" : 0.23219103,
+          "l" : 0.853659,
+          "<" : 0.4556861,
+          "\r" : 0.5422966,
+          "\u000F" : 0.7186719,
+          "/" : 0.51272964
+        }
+      }
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : -7405120817302825951,
+    "headers" : {
+      "imei" : -287541656,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "PROHIBITED",
+      "mo_msn" : -782100579,
+      "mt_msn" : -1992864077,
+      "location" : {
+        "cep_radius" : -1050882952,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.5550299
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.13368458
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : null,
+      "rf_ais_decoded_rssi" : -698626933,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  },
+  {
+    "cdr_reference" : 2717923189620943940,
+    "headers" : {
+      "imei" : 1835527354,
+      "iridium_ts" : 1558640014,
+      "sbd_session_status" : "PROTOCOL_ANOMALY",
+      "mo_msn" : -2031692926,
+      "mt_msn" : -513611055,
+      "location" : {
+        "cep_radius" : 1109089126,
+        "latitude" : {
+          "degrees" : 34,
+          "minutes" : 0.9743011
+        },
+        "longitude" : {
+          "degrees" : -118,
+          "minutes" : 0.7855561
+        }
+      }
+    },
+    "values" : {
+      "mission_ts" : null,
+      "rf_ais_decoded_rssi" : 1375110969,
+      "misc" : null
+    },
+    "mfr" : "Numerus"
+  }
+]

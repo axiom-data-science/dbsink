@@ -4,6 +4,7 @@ import json
 import uuid
 
 import sqlalchemy as sql
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import insert
 
 import click
@@ -36,9 +37,10 @@ L.addHandler(stream)
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
 @click.option('--logfile',  type=str, default='', help="File to log messages to. Defaults to stdout.")
+@click.option('--mockfile',  type=str, default='', help="File to pull messages from, for testsing.")
 @click.option('--setup-only/--no-setup-only', default=False, help="Setup or drop tables but do not consume messages")
 @click.option('-v', '--verbose', count=True)
-def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile, setup_only, verbose):
+def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile, mockfile, setup_only, verbose):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -97,20 +99,20 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
     engine.execute("CREATE EXTENSION if not exists hstore cascade")
 
     # Get the column definitions and the message to table conversion function
-    cols, message_to_values = columns_and_message_conversion(topic)
+    newtopic, cols, message_to_values = columns_and_message_conversion(topic)
 
     if drop is True:
-        L.info(f'Dropping column {topic}')
-        engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{topic}\"'))
+        L.info(f'Dropping table {newtopic}')
+        engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{newtopic}\"'))
 
     # Reflect to see if this table already exists. Create or update it.
     meta = sql.MetaData(engine, schema=schema)
     meta.reflect()
-    if f'{schema}.{topic}' not in meta.tables:
-        table = sql.Table(topic, meta, *cols)
+    if f'{schema}.{newtopic}' not in meta.tables:
+        table = sql.Table(newtopic, meta, *cols)
     else:
         table = sql.Table(
-            topic,
+            newtopic,
             meta,
             *cols,
             autoload=True,
@@ -135,24 +137,14 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
         # https://gist.github.com/bhtucker/c40578a2fb3ca50b324e42ef9dce58e1
         insert_cmd = insert(table).values(newvalues)
         upsert_cmd = insert_cmd.on_conflict_do_update(
-            constraint=f'{topic}_unique_constraint'.replace('-', '_'),
+            constraint=f'{newtopic}_unique_constraint'.replace('-', '_'),
             set_=newvalues
         )
         res = engine.execute(upsert_cmd)
         res.close()
         L.debug(f'inserted/updated row {res.inserted_primary_key}')
 
-    # recs = [
-    #     packing_func({'uid': '1', 'gid': None, 'time': '2019-05-07T19:57:56', 'lat': 33.9266471862793, 'lon': -118.7137451171875, 'z': None, 'values': {'float_id': 47645, '_7': 55800.0, '_8': -118.7137451171875, '_9': 33.9266471862793, '_10': 0.0, '_11': 25.598445892333984, '_12': 33.13822937011719, '_13': 0.0, '_14': 21.14401626586914, '_15': 25.598445892333984, '_16': 0.0, '_17': 20.705978393554688, '_18': 21.14401626586914, '_19': 0.0, '_20': 16.726125717163086, '_21': 20.705978393554688, '_22': 0.0, '_23': 16.674354553222656, '_24': 16.726125717163086, '_25': 0.0, '_26': 16.57587432861328, '_27': 16.674354553222656, '_28': 0.0, '_29': 14.853745460510254, '_30': 16.57587432861328, '_31': 0.0, '_32': 14.835172653198242, '_33': 14.853745460510254, '_34': 0.0, '_35': 14.226363182067871, '_36': 14.835172653198242}}),
-    #     packing_func({'uid': '1', 'gid': None, 'time': '2019-05-07T19:57:56', 'lat': 33.925960540771484, 'lon': -118.71289825439453, 'z': None, 'values': {'float_id': 47645, '_7': 56700.0, '_8': -118.71289825439453, '_9': 33.925960540771484, '_10': 0.0, '_11': 25.681798934936523, '_12': 33.28643798828125, '_13': 0.0, '_14': 21.236486434936523, '_15': 25.681798934936523, '_16': 0.0, '_17': 20.78787612915039, '_18': 21.236486434936523, '_19': 0.0, '_20': 16.809663772583008, '_21': 20.78787612915039, '_22': 0.0, '_23': 16.67538833618164, '_24': 16.809663772583008, '_25': 0.0, '_26': 16.65082550048828, '_27': 16.67538833618164, '_28': 0.0, '_29': 14.887101173400879, '_30': 16.65082550048828, '_31': 0.0, '_32': 14.873950004577637, '_33': 14.887101173400879, '_34': 0.0, '_35': 14.287884712219238, '_36': 14.873950004577637}}),
-    #     packing_func({'uid': '1', 'gid': None, 'time': '2019-05-07T19:57:56', 'lat': 33.9253044128418, 'lon': -118.71210479736328, 'z': None, 'values': {'float_id': 47645, '_7': 57600.0, '_8': -118.71210479736328, '_9': 33.9253044128418, '_10': 0.0, '_11': 25.760086059570312, '_12': 33.425289154052734, '_13': 0.0, '_14': 21.31116485595703, '_15': 25.760086059570312, '_16': 0.0, '_17': 20.872238159179688, '_18': 21.31116485595703, '_19': 0.0, '_20': 16.889360427856445, '_21': 20.872238159179688, '_22': 0.0, '_23': 16.721893310546875, '_24': 16.889360427856445, '_25': 0.0, '_26': 16.679943084716797, '_27': 16.721893310546875, '_28': 0.0, '_29': 14.944218635559082, '_30': 16.679943084716797, '_31': 0.0, '_32': 14.900228500366211, '_33': 14.944218635559082, '_34': 0.0, '_35': 14.355060577392578, '_36': 14.900228500366211}}),
-    #     packing_func({'uid': '1', 'gid': None, 'time': '2019-05-07T19:57:56', 'lat': 33.92466735839844, 'lon': -118.71137237548828, 'z': None, 'values': {'float_id': 47645, '_7': 58500.0, '_8': -118.71137237548828, '_9': 33.92466735839844, '_10': 0.0, '_11': 25.832063674926758, '_12': 33.55484390258789, '_13': 0.0, '_14': 21.33756446838379, '_15': 25.832063674926758, '_16': 0.0, '_17': 20.961849212646484, '_18': 21.33756446838379, '_19': 0.0, '_20': 16.96350860595703, '_21': 20.961849212646484, '_22': 0.0, '_23': 16.789194107055664, '_24': 16.96350860595703, '_25': 0.0, '_26': 16.67693328857422, '_27': 16.789194107055664, '_28': 0.0, '_29': 15.00782585144043, '_30': 16.67693328857422, '_31': 0.0, '_32': 14.932941436767578, '_33': 15.00782585144043, '_34': 0.0, '_35': 14.422245979309082, '_36': 14.932941436767578}}),
-    # ]
-
-    # for r in recs:
-    #     on_recieve(None, r)
-
-    if not setup_only:
+    if not mockfile and setup_only:
         c.consume(
             on_recieve=on_recieve,
             initial_wait=1,
@@ -160,6 +152,12 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
             cleanup_every=100,
             loop=True
         )
+    elif mockfile:
+        # Purposly undocumented
+        with open(mockfile) as f:
+            messages = json.load(f)
+            for m in messages:
+                on_recieve(None, packing_func(m))
 
 
 def run():
