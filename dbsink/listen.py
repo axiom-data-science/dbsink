@@ -144,7 +144,7 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
         res.close()
         L.debug(f'inserted/updated row {res.inserted_primary_key}')
 
-    if not mockfile and setup_only:
+    if not mockfile and not setup_only:
         c.consume(
             on_recieve=on_recieve,
             initial_wait=1,
