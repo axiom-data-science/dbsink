@@ -33,6 +33,7 @@ L.addHandler(stream)
 @click.option('--db',       type=str, required=True, default='postgresql+psycopg2://sink:sink@localhost:30300/sink', help="SQLAlchemy compatible postgres connection string")
 @click.option('--schema',   type=str, required=True, default='public', help="Database schema to use (default: public)")
 @click.option('--consumer', type=str, required=True, help="Consumer group to listen with")
+@click.option('--offset',   type=str, required=True, default='largest', help="Kafka offset to start with")
 @click.option('--packing',  type=click.Choice(['json', 'avro', 'msgpack']), default='json', help="The data unpacking algorithm to use")
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
@@ -40,7 +41,7 @@ L.addHandler(stream)
 @click.option('--mockfile',  type=str, default='', help="File to pull messages from, for testsing.")
 @click.option('--setup-only/--no-setup-only', default=False, help="Setup or drop tables but do not consume messages")
 @click.option('-v', '--verbose', count=True)
-def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile, mockfile, setup_only, verbose):
+def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop, logfile, mockfile, setup_only, verbose):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -63,6 +64,7 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
             kafka_topic=topic,
+            offset=offset
         )
     elif packing == 'msgpack':
         unpacking_func = lambda x: msgpack.loads(x, use_list=False, raw=False)  # noqa
@@ -71,6 +73,7 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
             kafka_topic=topic,
+            offset=offset
         )
     elif packing == 'json':
         unpacking_func = json.loads
@@ -79,6 +82,7 @@ def setup(brokers, topic, db, schema, consumer, packing, registry, drop, logfile
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
             kafka_topic=topic,
+            offset=offset
         )
 
     engine = sql.create_engine(
