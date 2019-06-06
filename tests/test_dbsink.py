@@ -90,7 +90,6 @@ def test_numurus_status_live():
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/numurus.status.json').resolve()),
     ])
-
     assert result.exit_code == 0
 
 
@@ -103,7 +102,6 @@ def test_health_and_status_live():
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/health_and_status.json').resolve()),
     ])
-
     assert result.exit_code == 0
 
 
@@ -116,7 +114,6 @@ def test_ncreplayer_live():
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/replayer.json').resolve()),
     ])
-
     assert result.exit_code == 0
 
 
@@ -129,7 +126,6 @@ def test_environmental_live():
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
-
     assert result.exit_code == 0
 
 
@@ -142,5 +138,4 @@ def test_mission_sensors_live():
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
     ])
-
     assert result.exit_code == 0

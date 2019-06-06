@@ -59,7 +59,8 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
     # Setup the kafka consuimer
     if packing == 'avro':
         unpacking_func = None
-        c = EasyAvroConsumer(
+        consumer_class = EasyAvroConsumer
+        consumer_kwargs = dict(
             schema_registry_url=registry,
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
@@ -69,7 +70,8 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
     elif packing == 'msgpack':
         unpacking_func = lambda x: msgpack.loads(x, use_list=False, raw=False)  # noqa
         packing_func = lambda x: msgpack.packb(x, use_bin_type=True)  # noqa
-        c = EasyConsumer(
+        consumer_class = EasyConsumer
+        consumer_kwargs = dict(
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
             kafka_topic=topic,
@@ -78,52 +80,58 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
     elif packing == 'json':
         unpacking_func = json.loads
         packing_func = json.dumps
-        c = EasyConsumer(
+        consumer_class = EasyConsumer
+        consumer_kwargs = dict(
             kafka_brokers=brokers.split(','),
             consumer_group=consumer,
             kafka_topic=topic,
             offset=offset
         )
 
-    engine = sql.create_engine(
-        db,
-        pool_size=5,
-        max_overflow=100,
-        pool_recycle=3600,
-        pool_pre_ping=True,
-        client_encoding='utf8',
-        use_native_hstore=True,
-        echo=verbose >= 2
-    )
-
-    # Create schema
-    engine.execute(f"CREATE SCHEMA if not exists {schema}")
-
-    # Add HSTORE extension
-    engine.execute("CREATE EXTENSION if not exists hstore cascade")
-
     # Get the column definitions and the message to table conversion function
     newtopic, cols, message_to_values = columns_and_message_conversion(topic)
 
-    if drop is True:
-        L.info(f'Dropping table {newtopic}')
-        engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{newtopic}\"'))
+    if not mockfile:
+        """ Database connection and setup
+        """
 
-    # Reflect to see if this table already exists. Create or update it.
-    meta = sql.MetaData(engine, schema=schema)
-    meta.reflect()
-    if f'{schema}.{newtopic}' not in meta.tables:
-        table = sql.Table(newtopic, meta, *cols)
-    else:
-        table = sql.Table(
-            newtopic,
-            meta,
-            *cols,
-            autoload=True,
-            keep_existing=False,
-            extend_existing=True
+        engine = sql.create_engine(
+            db,
+            pool_size=5,
+            max_overflow=100,
+            pool_recycle=3600,
+            pool_pre_ping=True,
+            client_encoding='utf8',
+            use_native_hstore=True,
+            echo=verbose >= 2
         )
-    meta.create_all(tables=[table])
+        # Create schema
+        engine.execute(f"CREATE SCHEMA if not exists {schema}")
+
+        # Add HSTORE extension
+        engine.execute("CREATE EXTENSION if not exists hstore cascade")
+
+
+
+        if drop is True:
+            L.info(f'Dropping table {newtopic}')
+            engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{newtopic}\"'))
+
+        # Reflect to see if this table already exists. Create or update it.
+        meta = sql.MetaData(engine, schema=schema)
+        meta.reflect()
+        if f'{schema}.{newtopic}' not in meta.tables:
+            table = sql.Table(newtopic, meta, *cols)
+        else:
+            table = sql.Table(
+                newtopic,
+                meta,
+                *cols,
+                autoload=True,
+                keep_existing=False,
+                extend_existing=True
+            )
+        meta.create_all(tables=[table])
 
     def on_recieve(k, v):
         if v is not None and unpacking_func:
@@ -136,24 +144,25 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
         # Custom conversion function for the table
         try:
             newkey, newvalues = message_to_values(k, v)
-        except BaseException:
-            L.error(f'Skipping {v}, message could not be converted to a row')
+        except BaseException as e:
+            L.error(f'Skipping {v}, message could not be converted to a row - {repr(e)}')
             return
 
-        # I wonder if we can just do set_=v? Other seem to extract the
-        # exact columns to update but this method is currently working...
-        # https://gist.github.com/bhtucker/c40578a2fb3ca50b324e42ef9dce58e1
-        insert_cmd = insert(table).values(newvalues)
-        upsert_cmd = insert_cmd.on_conflict_do_update(
-            constraint=f'{newtopic}_unique_constraint'.replace('-', '_'),
-            set_=newvalues
-        )
-        res = engine.execute(upsert_cmd)
-        res.close()
-        L.debug(f'inserted/updated row {res.inserted_primary_key}')
-        return
+        if not mockfile:
+            # I wonder if we can just do set_=v? Other seem to extract the
+            # exact columns to update but this method is currently working...
+            # https://gist.github.com/bhtucker/c40578a2fb3ca50b324e42ef9dce58e1
+            insert_cmd = insert(table).values(newvalues)
+            upsert_cmd = insert_cmd.on_conflict_do_update(
+                constraint=f'{newtopic}_unique_constraint'.replace('-', '_'),
+                set_=newvalues
+            )
+            res = engine.execute(upsert_cmd)
+            res.close()
+            L.debug(f'inserted/updated row {res.inserted_primary_key}')
 
     if not mockfile and not setup_only:
+        c = consumer_class(**consumer_kwargs)
         c.consume(
             on_recieve=on_recieve,
             initial_wait=1,
