@@ -1,4 +1,5 @@
 click
+python-dateutil
 easyavro>=2.5.0
 msgpack-python
 sqlalchemy

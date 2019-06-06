@@ -66,6 +66,34 @@ def test_health_and_status():
     assert len(to_send) == 10
 
 
+def test_numurus_status():
+    newtopic, cols, message_to_value = columns_and_message_conversion('numurus.status')
+
+    to_send = []
+
+    with open('./tests/numurus.status.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(message_to_value('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 87
+
+
+def test_numurus_status_live():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'numurus_status',
+        '--packing', 'json',
+        '--consumer', 'dbsink-test',
+        '--mockfile', str(Path('tests/numurus.status.json').resolve()),
+    ])
+
+    assert result.exit_code == 0
+
+
 def test_health_and_status_live():
 
     runner = CliRunner()

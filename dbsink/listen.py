@@ -134,7 +134,11 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
                 return
 
         # Custom conversion function for the table
-        newkey, newvalues = message_to_values(k, v)
+        try:
+            newkey, newvalues = message_to_values(k, v)
+        except BaseException:
+            L.error(f'Skipping {v}, message could not be converted to a row')
+            return
 
         # I wonder if we can just do set_=v? Other seem to extract the
         # exact columns to update but this method is currently working...
@@ -147,6 +151,7 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
         res = engine.execute(upsert_cmd)
         res.close()
         L.debug(f'inserted/updated row {res.inserted_primary_key}')
+        return
 
     if not mockfile and not setup_only:
         c.consume(

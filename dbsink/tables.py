@@ -2,6 +2,8 @@
 # coding=utf-8
 from datetime import datetime
 
+from dateutil.parser import parse as dtparse
+
 import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import UUID, HSTORE, JSON
 
@@ -62,6 +64,63 @@ def generic_float_data(topic):
 
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v }
+
+    return newtopic, cols, message_to_values
+
+
+def numurus_status(topic):
+    """
+    {
+        "float_id":54,
+        "status_record_id":1,
+        "software_revision":0,
+        "heading":98,
+        "latitude":91,
+        "longitude":46.782272,
+        "timestamp":"2019-04-29T21:35:20.000Z",
+        "battery_charge":0,
+        "bus_voltage":0,
+        "temperature":25,
+        "node_cfg":64,
+        "geofence_cfg":0,
+        "task_cfg":0,
+        "rule_cfg":0,
+        "trig_cfg":0,
+        "sensor_cfg":0,
+        "trigger_wake_count":0,
+        "wake_event_id":1,
+        "wake_event_type":0,
+        "navsat_fix_time":"2019-04-28T00:00:00.000Z",
+        "scuttle_state":null,
+        "imei":"300234067991490"
+    }
+    """
+    newtopic, cols = generic_cols(topic)
+
+    def message_to_values(key, value):
+
+        skips = ['timestamp', 'imei', 'latitude', 'longitude']
+
+        top_level = {
+            'uid':  value['imei'],
+            'gid':  'numurus.status',
+            'time': dtparse(value['timestamp']).isoformat(),
+            'lat':  value['latitude'],
+            'lon':  value['longitude'],
+            'z':    None,
+        }
+
+        # All HSTORE values need to be strings
+        values = { k: str(x) if x else None for k, x in value.items() if k not in skips }
+        values['mfr'] = 'numurus'
+
+        fullvalues = {
+            **top_level,
+            'values': values
+        }
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in fullvalues.items() if v }
 
     return newtopic, cols, message_to_values
 
@@ -129,6 +188,7 @@ topic_to_func = {
     'oot.reports.mission_sensors':   float_reports,
     'oot.reports.environmental':     float_reports,
     'oot.reports.health_and_status': float_reports,
+    'numurus.status':                numurus_status,
 }
 
 
