@@ -85,7 +85,7 @@ def test_numurus_status_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'numurus_status',
+        '--topic', 'numurus.status',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--mockfile', str(Path('tests/numurus.status.json').resolve()),
