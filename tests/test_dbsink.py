@@ -63,7 +63,37 @@ def test_health_and_status():
         messages = json.load(f)
         for m in messages:
             to_send.append(message_to_value('fake', m))
-    assert len(to_send) == 10
+    assert len(to_send) == 516
+
+    f = to_send[0][1]
+    assert f['uid'] == '300434063547170'
+    assert f['lat'] == 32.704426
+    assert f['lon'] == -117.23662
+    assert f['time'] == '2019-05-31T20:39:50'
+    assert f['values']['status_ts'] == '1559335190'
+    assert f['values']['iridium_ts'] == '1559335196'
+    assert f['values']['iridium_lat'] == '32.70308'
+    assert f['values']['iridium_lon'] == '-116.72858'
+    assert f['values']['latitude'] == '32.704426'
+    assert f['values']['longitude'] == '-117.23662'
+    assert f['values']['speed'] == '2.72'
+    assert f['values']['test_num'] == 'T240'
+    assert f['values']['mfr'] == 'usna'
+
+    l = to_send[-1][1]
+    assert l['uid'] == '300434063946390'
+    assert l['lat'] == 39.01338
+    assert l['lon'] == -75.47597
+    assert l['time'] == '2019-06-06T18:19:56'
+    assert 'status_ts' not in l['values']
+    assert l['values']['iridium_ts'] == '1559845196'
+    assert l['values']['iridium_lat'] == '39.01338'
+    assert l['values']['iridium_lon'] == '-75.47597'
+    assert 'latitude' not in l['values']
+    assert l['values']['longitude'] == None
+    assert l['values']['speed'] == '0.01'
+    assert l['values']['test_num'] == 'T76'
+    assert l['values']['mfr'] == 'usna'
 
 
 def test_numurus_status():

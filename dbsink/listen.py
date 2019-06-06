@@ -111,8 +111,6 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
         # Add HSTORE extension
         engine.execute("CREATE EXTENSION if not exists hstore cascade")
 
-
-
         if drop is True:
             L.info(f'Dropping table {newtopic}')
             engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{newtopic}\"'))

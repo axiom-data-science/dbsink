@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+from copy import copy
 from datetime import datetime
 
 from dateutil.parser import parse as dtparse
@@ -138,18 +139,33 @@ def float_reports(topic):
         values['cdr_reference'] = value['cdr_reference']
         values['cep_radius'] = headers['location']['cep_radius']
 
-        # Location
+        # Time - use float timestamp and fall back to Iridium
+        if 'status_ts' in values and values['status_ts']:
+            timestamp = datetime.utcfromtimestamp(values['status_ts'])
+        else:
+            timestamp = datetime.utcfromtimestamp(headers['iridium_ts'])
+
+        # Location - Use value locations and fall back to Iridium
         latdeg = float(headers['location']['latitude']['degrees'])
         latmin = float(headers['location']['latitude']['minutes'])
+        values['iridium_lat'] = latdeg + (latmin / 60)
+        if 'latitude' in values and values['latitude']:
+            latdd = values['latitude']
+        else:
+            latdd = values['iridium_lat']
+
         londeg = float(headers['location']['longitude']['degrees'])
         lonmin = float(headers['location']['longitude']['minutes'])
-        latdd = latdeg + (latmin / 60)
-        londd = londeg + (lonmin / 60)
+        values['iridium_lon'] = londeg + (lonmin / 60)
+        if 'longitude' in values and values['longitude']:
+            londd = values['longitude']
+        else:
+            londd = values['iridium_lon']
 
         top_level = {
             'uid': str(headers['imei']),
             'gid': None,
-            'time': datetime.utcfromtimestamp(headers['iridium_ts']).isoformat(),
+            'time': timestamp.isoformat(),
             'lat': latdd,
             'lon': londd,
             'z': None,
@@ -157,7 +173,6 @@ def float_reports(topic):
 
         del headers['imei']
         del headers['location']
-        del headers['iridium_ts']
 
         misc = {}
         if values['misc']:
