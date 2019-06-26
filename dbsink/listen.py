@@ -30,6 +30,7 @@ L.addHandler(stream)
 @click.command()
 @click.option('--brokers',  type=str, required=True, default='localhost:4001', help="Kafka broker string (comman separated)")
 @click.option('--topic',    type=str, required=True, default='axds-netcdf-replayer-data', help="Kafka topic to send the data to. '-value' is auto appended if using avro packing")
+@click.option('--lookup',   type=str, required=False, default='', help="Lookup name to use to find the correct table format, will default to the topic name")
 @click.option('--db',       type=str, required=True, default='postgresql+psycopg2://sink:sink@localhost:30300/sink', help="SQLAlchemy compatible postgres connection string")
 @click.option('--schema',   type=str, required=True, default='public', help="Database schema to use (default: public)")
 @click.option('--consumer', type=str, required=True, help="Consumer group to listen with")
@@ -41,7 +42,7 @@ L.addHandler(stream)
 @click.option('--mockfile',  type=str, default='', help="File to pull messages from, for testsing.")
 @click.option('--setup-only/--no-setup-only', default=False, help="Setup or drop tables but do not consume messages")
 @click.option('-v', '--verbose', count=True)
-def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop, logfile, mockfile, setup_only, verbose):
+def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registry, drop, logfile, mockfile, setup_only, verbose):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -89,7 +90,7 @@ def setup(brokers, topic, db, schema, consumer, offset, packing, registry, drop,
         )
 
     # Get the column definitions and the message to table conversion function
-    newtopic, cols, message_to_values = columns_and_message_conversion(topic)
+    newtopic, cols, message_to_values = columns_and_message_conversion(topic, lookup)
 
     if not mockfile:
         """ Database connection and setup

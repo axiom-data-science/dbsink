@@ -65,6 +65,17 @@ def test_health_and_status():
             to_send.append(message_to_value('fake', m))
     assert len(to_send) == 516
 
+def test_health_and_status_with_lookup():
+    newtopic, cols, message_to_value = columns_and_message_conversion('somethingelse', lookup='float_reports')
+
+    to_send = []
+
+    with open('./tests/health_and_status.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            to_send.append(message_to_value('fake', m))
+    assert len(to_send) == 516
+
     f = to_send[0][1]
     assert f['uid'] == '300434063547170'
     assert f['lat'] == 32.704426
@@ -166,6 +177,18 @@ def test_mission_sensors_live():
         '--topic', 'oot.reports.mission_sensors',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
+    ])
+    assert result.exit_code == 0
+
+def test_lookup():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'something_not_in_lookup',
+        '--packing', 'json',
+        '--lookup', 'oot.reports.mission_sensors',
+        '--consumer', 'dbsink-test-lookup',
         '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
     ])
     assert result.exit_code == 0

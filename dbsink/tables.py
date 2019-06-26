@@ -9,9 +9,12 @@ import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import UUID, HSTORE, JSON
 
 
-def columns_and_message_conversion(topic):
-    if topic in topic_to_func:
-        return topic_to_func[topic](topic)
+def columns_and_message_conversion(topic, lookup=None):
+
+    lookup = lookup or topic
+
+    if lookup in topic_to_func:
+        return topic_to_func[lookup](topic)
     else:
         return default_func(topic)
 
@@ -199,6 +202,8 @@ def float_reports(topic):
 
 
 topic_to_func = {
+    'float_reports':                 float_reports,
+    'netcdf_replayer':               generic_float_data,
     'axds-netcdf-replayer-data':     generic_float_data,
     'oot.reports.mission_sensors':   float_reports,
     'oot.reports.environmental':     float_reports,
