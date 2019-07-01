@@ -122,6 +122,51 @@ def test_numurus_status():
     assert len(to_send) == 87
 
 
+def test_just_json():
+    newtopic, cols, message_to_value = columns_and_message_conversion('just_json')
+
+    to_send = []
+
+    with open('./tests/mission_sensors.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(message_to_value('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 10
+
+    assert to_send[0][1]['key'] == 'fake'
+
+    assert to_send[0][1]['payload'] == {
+        "cdr_reference" : -5699810423388316158,
+        "headers" : {
+          "imei" : -1556323178,
+          "iridium_ts" : 1558640014,
+          "sbd_session_status" : "PROTOCOL_ANOMALY",
+          "mo_msn" : -725951606,
+          "mt_msn" : -419825455,
+          "location" : {
+            "cep_radius" : 158880407,
+            "latitude" : {
+              "degrees" : 34,
+              "minutes" : 0.803512
+            },
+            "longitude" : {
+              "degrees" : -118,
+              "minutes" : 0.3486771
+            }
+          }
+        },
+        "values" : {
+          "mission_ts" : 1194313350,
+          "rf_ais_decoded_rssi" : 1825254200,
+          "misc" : None
+        },
+        "mfr" : "Numerus"
+    }
+
+
 def test_numurus_status_live():
 
     runner = CliRunner()
@@ -190,5 +235,17 @@ def test_lookup():
         '--lookup', 'oot.reports.mission_sensors',
         '--consumer', 'dbsink-test-lookup',
         '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
+    ])
+    assert result.exit_code == 0
+
+def test_json_payload():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'something_not_in_lookup',
+        '--packing', 'json',
+        '--lookup', 'just_json',
+        '--consumer', 'dbsink-test-lookup',
+        '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0

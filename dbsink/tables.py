@@ -129,6 +129,46 @@ def numurus_status(topic):
     return newtopic, cols, message_to_values
 
 
+def just_json(topic):
+    """
+    {
+        ...whatever
+    }
+    """
+    newtopic = topic.replace('.', '-')
+
+    cols = [
+        sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
+        sql.Column('sinked',   sql.DateTime(timezone=False), index=True),
+        sql.Column('key',      sql.String, default='', index=True),
+        sql.Column('payload',  JSON),
+        sql.Index(
+            f'{newtopic}_unique_idx'.replace('-', '_'),
+            'key',
+            'payload',
+            unique=True,
+        ),
+        sql.UniqueConstraint(
+            'key',
+            'payload',
+            name=f'{newtopic}_unique_constraint'.replace('-', '_'),
+        )
+    ]
+
+    def message_to_values(key, value):
+
+        values = {
+            'sinked':  datetime.utcnow().isoformat(),
+            'key':     key,
+            'payload': value,
+        }
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in values.items() if v }
+
+    return newtopic, cols, message_to_values
+
+
 def float_reports(topic):
 
     newtopic, cols = generic_cols(topic)
@@ -202,6 +242,7 @@ def float_reports(topic):
 
 
 topic_to_func = {
+    'just_json':                     just_json,
     'float_reports':                 float_reports,
     'netcdf_replayer':               generic_float_data,
     'axds-netcdf-replayer-data':     generic_float_data,
