@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.parser import parse as dtparse
 
 import sqlalchemy as sql
-from sqlalchemy.dialects.postgresql import UUID, HSTORE, JSON
+from sqlalchemy.dialects.postgresql import UUID, HSTORE, JSON, JSONB
 
 
 def columns_and_message_conversion(topic, lookup=None):
@@ -141,7 +141,7 @@ def just_json(topic):
         sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
         sql.Column('sinked',   sql.DateTime(timezone=False), index=True),
         sql.Column('key',      sql.String, default='', index=True),
-        sql.Column('payload',  JSON),
+        sql.Column('payload',  JSONB),
         sql.Index(
             f'{newtopic}_unique_idx'.replace('-', '_'),
             'key',
