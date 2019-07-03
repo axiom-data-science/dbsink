@@ -1,7 +1,7 @@
 #!python
 # coding=utf-8
-import json
 from pathlib import Path
+import simplejson as json
 
 from click.testing import CliRunner
 
@@ -64,6 +64,19 @@ def test_health_and_status():
         for m in messages:
             to_send.append(message_to_value('fake', m))
     assert len(to_send) == 516
+
+def test_null_infinity():
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('whatever', lookup='just_json')
+
+    to_send = []
+
+    with open('./tests/null_infinity.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            to_send.append(message_to_value('fake', m))
+    assert len(to_send) == 2
+    assert to_send[0][1]['payload']['bus_voltage'] == None
+    assert to_send[1][1]['payload']['bus_voltage'] == None
 
 def test_health_and_status_with_lookup():
     newtopic, cols, _, message_to_value = columns_and_message_conversion('somethingelse', lookup='float_reports')

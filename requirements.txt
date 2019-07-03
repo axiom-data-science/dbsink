@@ -4,3 +4,4 @@ easyavro>=2.5.0
 msgpack-python
 sqlalchemy
 psycopg2
+simplejson

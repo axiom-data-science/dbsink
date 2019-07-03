@@ -1,7 +1,7 @@
 #!python
 # coding=utf-8
-import json
 import uuid
+import simplejson as json
 
 import sqlalchemy as sql
 from sqlalchemy.dialects import postgresql
@@ -80,7 +80,7 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
         )
     elif packing == 'json':
         unpacking_func = json.loads
-        packing_func = json.dumps
+        packing_func = lambda x: json.dumps(x, ignore_nan=True)  # noqa
         consumer_class = EasyConsumer
         consumer_kwargs = dict(
             kafka_brokers=brokers.split(','),

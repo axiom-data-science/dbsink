@@ -1,6 +1,7 @@
 #!python
 # coding=utf-8
 from copy import copy
+import simplejson as json
 from datetime import datetime
 
 from dateutil.parser import parse as dtparse
@@ -147,6 +148,13 @@ def just_json(topic):
     ]
 
     def message_to_values(key, value):
+
+        # Make sure we have valid JSON and remove any
+        # Infinity and NaN values in the process
+        try:
+            value = json.loads(json.dumps(value, ignore_nan=True))
+        except BaseException as e:
+            raise ValueError(f'Could not parse message as valid JSON - {repr(e)}')
 
         values = {
             'sinked':  datetime.utcnow().isoformat(),

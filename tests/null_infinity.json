@@ -1,0 +1,4 @@
+[
+    { "float_id": 0, "bus_voltage": Infinity },
+    { "float_id": 1, "bus_voltage": NaN }
+]
