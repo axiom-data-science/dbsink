@@ -23,6 +23,8 @@ def generic_cols(topic):
 
     newtopic = topic.replace('.', '-')
 
+    constraint_name = f'{newtopic}_unique_constraint'.replace('-', '_')
+
     cols = [
         sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
         sql.Column('uid',      sql.String, index=True),
@@ -50,16 +52,16 @@ def generic_cols(topic):
             'lat',
             'lon',
             'z',
-            name=f'{newtopic}_unique_constraint'.replace('-', '_'),
+            name=constraint_name
         )
     ]
 
-    return newtopic, cols
+    return newtopic, cols, constraint_name
 
 
 def generic_float_data(topic):
 
-    newtopic, cols = generic_cols(topic)
+    newtopic, cols, constraint_name = generic_cols(topic)
 
     def message_to_values(key, value):
         # All HSTORE values need to be strings
@@ -69,7 +71,7 @@ def generic_float_data(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v }
 
-    return newtopic, cols, message_to_values
+    return newtopic, cols, constraint_name, message_to_values
 
 
 def numurus_status(topic):
@@ -99,7 +101,7 @@ def numurus_status(topic):
         "imei":"300234067991490"
     }
     """
-    newtopic, cols = generic_cols(topic)
+    newtopic, cols, constraint_name = generic_cols(topic)
 
     def message_to_values(key, value):
 
@@ -126,7 +128,7 @@ def numurus_status(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v }
 
-    return newtopic, cols, message_to_values
+    return newtopic, cols, constraint_name, message_to_values
 
 
 def just_json(topic):
@@ -141,18 +143,7 @@ def just_json(topic):
         sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
         sql.Column('sinked',   sql.DateTime(timezone=False), index=True),
         sql.Column('key',      sql.String, default='', index=True),
-        sql.Column('payload',  JSONB),
-        sql.Index(
-            f'{newtopic}_unique_idx'.replace('-', '_'),
-            'key',
-            'payload',
-            unique=True,
-        ),
-        sql.UniqueConstraint(
-            'key',
-            'payload',
-            name=f'{newtopic}_unique_constraint'.replace('-', '_'),
-        )
+        sql.Column('payload',  JSONB)
     ]
 
     def message_to_values(key, value):
@@ -166,12 +157,13 @@ def just_json(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in values.items() if v }
 
-    return newtopic, cols, message_to_values
+    constraint_name = None
+    return newtopic, cols, constraint_name, message_to_values
 
 
 def float_reports(topic):
 
-    newtopic, cols = generic_cols(topic)
+    newtopic, cols, constraint_name = generic_cols(topic)
 
     def message_to_values(key, value):
 
@@ -238,7 +230,7 @@ def float_reports(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v }
 
-    return newtopic, cols, message_to_values
+    return newtopic, cols, constraint_name, message_to_values
 
 
 topic_to_func = {

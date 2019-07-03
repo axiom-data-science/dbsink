@@ -90,7 +90,7 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
         )
 
     # Get the column definitions and the message to table conversion function
-    newtopic, cols, message_to_values = columns_and_message_conversion(topic, lookup)
+    newtopic, cols, constraint_name, message_to_values = columns_and_message_conversion(topic, lookup)
 
     if not mockfile:
         """ Database connection and setup
@@ -152,11 +152,14 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
             # exact columns to update but this method is currently working...
             # https://gist.github.com/bhtucker/c40578a2fb3ca50b324e42ef9dce58e1
             insert_cmd = insert(table).values(newvalues)
-            upsert_cmd = insert_cmd.on_conflict_do_update(
-                constraint=f'{newtopic}_unique_constraint'.replace('-', '_'),
-                set_=newvalues
-            )
-            res = engine.execute(upsert_cmd)
+            if constraint_name is not None:
+                upsert_cmd = insert_cmd.on_conflict_do_update(
+                    constraint=constraint_name,
+                    set_=newvalues
+                )
+                res = engine.execute(upsert_cmd)
+            else:
+                res = engine.execute(insert_cmd)
             res.close()
             L.debug(f'inserted/updated row {res.inserted_primary_key}')
 

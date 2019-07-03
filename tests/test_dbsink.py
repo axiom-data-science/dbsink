@@ -19,7 +19,7 @@ def test_listen_help():
 
 
 def test_ncreplayer():
-    newtopic, cols, message_to_value = columns_and_message_conversion('axds-netcdf-replayer-data')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('axds-netcdf-replayer-data')
 
     to_send = []
 
@@ -31,7 +31,7 @@ def test_ncreplayer():
 
 
 def test_mission_sensors():
-    newtopic, cols, message_to_value = columns_and_message_conversion('oot.reports.mission_sensors')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.mission_sensors')
 
     to_send = []
 
@@ -43,7 +43,7 @@ def test_mission_sensors():
 
 
 def test_environmental():
-    newtopic, cols, message_to_value = columns_and_message_conversion('oot.reports.environmental')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.environmental')
 
     to_send = []
 
@@ -55,7 +55,7 @@ def test_environmental():
 
 
 def test_health_and_status():
-    newtopic, cols, message_to_value = columns_and_message_conversion('oot.reports.health_and_status')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.health_and_status')
 
     to_send = []
 
@@ -66,7 +66,7 @@ def test_health_and_status():
     assert len(to_send) == 516
 
 def test_health_and_status_with_lookup():
-    newtopic, cols, message_to_value = columns_and_message_conversion('somethingelse', lookup='float_reports')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('somethingelse', lookup='float_reports')
 
     to_send = []
 
@@ -108,7 +108,7 @@ def test_health_and_status_with_lookup():
 
 
 def test_numurus_status():
-    newtopic, cols, message_to_value = columns_and_message_conversion('numurus.status')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('numurus.status')
 
     to_send = []
 
@@ -123,7 +123,7 @@ def test_numurus_status():
 
 
 def test_just_json():
-    newtopic, cols, message_to_value = columns_and_message_conversion('just_json')
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('just_json')
 
     to_send = []
 
