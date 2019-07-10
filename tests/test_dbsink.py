@@ -239,6 +239,7 @@ def test_mission_sensors_live():
     ])
     assert result.exit_code == 0
 
+
 def test_lookup():
 
     runner = CliRunner()
@@ -251,6 +252,7 @@ def test_lookup():
     ])
     assert result.exit_code == 0
 
+
 def test_json_payload():
 
     runner = CliRunner()
@@ -259,6 +261,18 @@ def test_json_payload():
         '--packing', 'json',
         '--lookup', 'just_json',
         '--consumer', 'dbsink-test-lookup',
+        '--mockfile', str(Path('tests/environmental.json').resolve()),
+    ])
+    assert result.exit_code == 0
+
+
+def test_generate_consumer():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'something_not_in_lookup',
+        '--packing', 'json',
+        '--lookup', 'just_json',
         '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0

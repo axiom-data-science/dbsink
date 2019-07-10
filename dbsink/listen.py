@@ -33,7 +33,7 @@ L.addHandler(stream)
 @click.option('--lookup',   type=str, required=False, default='', help="Lookup name to use to find the correct table format, will default to the topic name")
 @click.option('--db',       type=str, required=True, default='postgresql+psycopg2://sink:sink@localhost:30300/sink', help="SQLAlchemy compatible postgres connection string")
 @click.option('--schema',   type=str, required=True, default='public', help="Database schema to use (default: public)")
-@click.option('--consumer', type=str, required=True, help="Consumer group to listen with")
+@click.option('--consumer', type=str, default='', help="Consumer group to listen with")
 @click.option('--offset',   type=str, required=True, default='largest', help="Kafka offset to start with")
 @click.option('--packing',  type=click.Choice(['json', 'avro', 'msgpack']), default='json', help="The data unpacking algorithm to use")
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
@@ -56,6 +56,12 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
     elif verbose >= 1:
         ea.setLevel(logging.DEBUG)
         L.setLevel(logging.DEBUG)
+
+    # Generate a random consumer if one was not provided.
+    # This guarentees a unique consumer ID for each run
+    if not consumer:
+        consumer = f'dbsink-{topic}-{uuid.uuid4().hex[0:20]}'
+        L.info(f'Setting consumer to {consumer}')
 
     # Setup the kafka consuimer
     if packing == 'avro':
