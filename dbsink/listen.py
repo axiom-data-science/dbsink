@@ -24,8 +24,7 @@ ea.addHandler(stream)
 
 L = logging.getLogger()
 L.setLevel(logging.INFO)
-L.addHandler(stream)
-
+L.handlers = [stream]
 
 @click.command()
 @click.option('--brokers',  type=str, required=True, default='localhost:4001', help="Kafka broker string (comman separated)")

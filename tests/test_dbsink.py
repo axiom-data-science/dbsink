@@ -135,6 +135,21 @@ def test_numurus_status():
     assert len(to_send) == 87
 
 
+def test_arete_data_parse():
+    newtopic, cols, _, message_to_value = columns_and_message_conversion('arete.data')
+
+    to_send = []
+
+    with open('./tests/arete_data.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(message_to_value('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 6
+
+
 def test_just_json():
     newtopic, cols, _, message_to_value = columns_and_message_conversion('just_json')
 
@@ -187,7 +202,21 @@ def test_numurus_status_live():
         '--topic', 'numurus.status',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--drop',
         '--mockfile', str(Path('tests/numurus.status.json').resolve()),
+    ])
+    assert result.exit_code == 0
+
+
+def test_arete_data_live():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'arete.data',
+        '--packing', 'json',
+        '--consumer', 'dbsink-test',
+        '--drop',
+        '--mockfile', str(Path('tests/arete_data.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -199,6 +228,7 @@ def test_health_and_status_live():
         '--topic', 'oot.reports.health_and_status',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--drop',
         '--mockfile', str(Path('tests/health_and_status.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -211,6 +241,7 @@ def test_ncreplayer_live():
         '--topic', 'axds-netcdf-replayer-data',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--drop',
         '--mockfile', str(Path('tests/replayer.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -223,6 +254,7 @@ def test_environmental_live():
         '--topic', 'oot.reports.environmental',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--drop',
         '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -235,6 +267,7 @@ def test_mission_sensors_live():
         '--topic', 'oot.reports.mission_sensors',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
+        '--drop',
         '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -248,6 +281,7 @@ def test_lookup():
         '--packing', 'json',
         '--lookup', 'oot.reports.mission_sensors',
         '--consumer', 'dbsink-test-lookup',
+        '--drop',
         '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -261,6 +295,7 @@ def test_json_payload():
         '--packing', 'json',
         '--lookup', 'just_json',
         '--consumer', 'dbsink-test-lookup',
+        '--drop',
         '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0
@@ -273,6 +308,7 @@ def test_generate_consumer():
         '--topic', 'something_not_in_lookup',
         '--packing', 'json',
         '--lookup', 'just_json',
+        '--drop',
         '--mockfile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0
