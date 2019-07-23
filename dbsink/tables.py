@@ -204,13 +204,13 @@ def numurus_status(topic):
     def message_to_values(key, value):
         payload = payload_parse(value)
 
-        skips = ['timestamp', 'imei', 'latitude', 'longitude']
+        skips = ['timestamp', 'navsat_fix_time', 'imei', 'latitude', 'longitude']
 
         top_level = {
             'uid':     value['imei'],
             'gid':     None,
             'time':    dtparse(value['timestamp']).isoformat(),
-            'reftime': dtparse(value['timestamp']).isoformat(),
+            'reftime': dtparse(value['navsat_fix_time']).isoformat(),
             'lat':     value['latitude'],
             'lon':     value['longitude'],
             'z':       None,
