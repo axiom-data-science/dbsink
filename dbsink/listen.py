@@ -3,12 +3,10 @@
 import uuid
 import simplejson as json
 
-import sqlalchemy as sql
-from sqlalchemy.dialects import postgresql
-from sqlalchemy.dialects.postgresql import insert
-
 import click
 import msgpack
+import sqlalchemy as sql
+from sqlalchemy.dialects.postgresql import insert
 from easyavro import EasyAvroConsumer, EasyConsumer
 
 from dbsink.tables import columns_and_message_conversion
@@ -25,6 +23,7 @@ ea.addHandler(stream)
 L = logging.getLogger()
 L.setLevel(logging.INFO)
 L.handlers = [stream]
+
 
 @click.command()
 @click.option('--brokers',  type=str, required=True, default='localhost:4001', help="Kafka broker string (comman separated).")
@@ -66,33 +65,33 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
     if packing == 'avro':
         unpacking_func = None
         consumer_class = EasyAvroConsumer
-        consumer_kwargs = dict(
-            schema_registry_url=registry,
-            kafka_brokers=brokers.split(','),
-            consumer_group=consumer,
-            kafka_topic=topic,
-            offset=offset
-        )
+        consumer_kwargs = {
+            'schema_registry_url': registry,
+            'kafka_brokers': brokers.split(','),
+            'consumer_group': consumer,
+            'kafka_topic': topic,
+            'offset': offset
+        }
     elif packing == 'msgpack':
         unpacking_func = lambda x: msgpack.loads(x, use_list=False, raw=False)  # noqa
         packing_func = lambda x: msgpack.packb(x, use_bin_type=True)  # noqa
         consumer_class = EasyConsumer
-        consumer_kwargs = dict(
-            kafka_brokers=brokers.split(','),
-            consumer_group=consumer,
-            kafka_topic=topic,
-            offset=offset
-        )
+        consumer_kwargs = {
+            'kafka_brokers': brokers.split(','),
+            'consumer_group': consumer,
+            'kafka_topic': topic,
+            'offset': offset
+        }
     elif packing == 'json':
         unpacking_func = json.loads
         packing_func = lambda x: json.dumps(x, ignore_nan=True)  # noqa
         consumer_class = EasyConsumer
-        consumer_kwargs = dict(
-            kafka_brokers=brokers.split(','),
-            consumer_group=consumer,
-            kafka_topic=topic,
-            offset=offset
-        )
+        consumer_kwargs = {
+            'kafka_brokers': brokers.split(','),
+            'consumer_group': consumer,
+            'kafka_topic': topic,
+            'offset': offset
+        }
 
     # Get the column definitions and the message to table conversion function
     newtopic, cols, constraint_name, message_to_values = columns_and_message_conversion(topic, lookup)

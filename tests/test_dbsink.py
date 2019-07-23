@@ -19,7 +19,7 @@ def test_listen_help():
 
 
 def test_ncreplayer():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('axds-netcdf-replayer-data')
+    _, _, _, message_to_value = columns_and_message_conversion('axds-netcdf-replayer-data')
 
     to_send = []
 
@@ -32,7 +32,7 @@ def test_ncreplayer():
 
 
 def test_mission_sensors():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.mission_sensors')
+    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.mission_sensors')
 
     to_send = []
 
@@ -44,7 +44,7 @@ def test_mission_sensors():
 
 
 def test_environmental():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.environmental')
+    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.environmental')
 
     to_send = []
 
@@ -56,7 +56,7 @@ def test_environmental():
 
 
 def test_health_and_status():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('oot.reports.health_and_status')
+    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.health_and_status')
 
     to_send = []
 
@@ -66,8 +66,9 @@ def test_health_and_status():
             to_send.append(message_to_value('fake', m))
     assert len(to_send) == 516
 
+
 def test_null_infinity():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('whatever', lookup='just_json')
+    _, _, _, message_to_value = columns_and_message_conversion('whatever', lookup='just_json')
 
     to_send = []
 
@@ -76,11 +77,14 @@ def test_null_infinity():
         for m in messages:
             to_send.append(message_to_value('fake', m))
     assert len(to_send) == 2
-    assert to_send[0][1]['payload']['bus_voltage'] == None
-    assert to_send[1][1]['payload']['bus_voltage'] == None
+    assert to_send[0][1]['payload']['bus_voltage'] is None
+    assert to_send[1][1]['payload']['bus_voltage'] is None
+
 
 def test_health_and_status_with_lookup():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('somethingelse', lookup='float_reports')
+    _, _, _, message_to_value = columns_and_message_conversion(
+        'somethingelse', lookup='float_reports'
+    )
 
     to_send = []
 
@@ -115,14 +119,14 @@ def test_health_and_status_with_lookup():
     assert l['values']['iridium_lat'] == '39.01338'
     assert l['values']['iridium_lon'] == '-75.47597'
     assert 'latitude' not in l['values']
-    assert l['values']['longitude'] == None
+    assert l['values']['longitude'] is None
     assert l['values']['speed'] == '0.01'
     assert l['values']['test_num'] == 'T76'
     assert l['values']['mfr'] == 'usna'
 
 
 def test_numurus_status():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('numurus.status')
+    _, _, _, message_to_value = columns_and_message_conversion('numurus.status')
 
     to_send = []
 
@@ -137,7 +141,7 @@ def test_numurus_status():
 
 
 def test_arete_data_parse():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('arete.data')
+    _, _, _, message_to_value = columns_and_message_conversion('arete.data')
 
     to_send = []
 
@@ -152,7 +156,7 @@ def test_arete_data_parse():
 
 
 def test_just_json():
-    newtopic, cols, _, message_to_value = columns_and_message_conversion('just_json')
+    _, _, _, message_to_value = columns_and_message_conversion('just_json')
 
     to_send = []
 
@@ -170,27 +174,27 @@ def test_just_json():
     assert to_send[0][1]['payload'] == {
         "cdr_reference" : -5699810423388316158,
         "headers" : {
-          "imei" : -1556323178,
-          "iridium_ts" : 1558640014,
-          "sbd_session_status" : "PROTOCOL_ANOMALY",
-          "mo_msn" : -725951606,
-          "mt_msn" : -419825455,
-          "location" : {
-            "cep_radius" : 158880407,
-            "latitude" : {
-              "degrees" : 34,
-              "minutes" : 0.803512
-            },
-            "longitude" : {
-              "degrees" : -118,
-              "minutes" : 0.3486771
+            "imei" : -1556323178,
+            "iridium_ts" : 1558640014,
+            "sbd_session_status" : "PROTOCOL_ANOMALY",
+            "mo_msn" : -725951606,
+            "mt_msn" : -419825455,
+            "location" : {
+                "cep_radius" : 158880407,
+                "latitude" : {
+                    "degrees" : 34,
+                    "minutes" : 0.803512
+                },
+                "longitude" : {
+                    "degrees" : -118,
+                    "minutes" : 0.3486771
+                }
             }
-          }
         },
         "values" : {
-          "mission_ts" : 1194313350,
-          "rf_ais_decoded_rssi" : 1825254200,
-          "misc" : None
+            "mission_ts" : 1194313350,
+            "rf_ais_decoded_rssi" : 1825254200,
+            "misc" : None
         },
         "mfr" : "Numerus"
     }

@@ -1,14 +1,12 @@
 #!python
 # coding=utf-8
 import re
-from copy import copy
 import simplejson as json
 from datetime import datetime
 
-from dateutil.parser import parse as dtparse
-
 import sqlalchemy as sql
-from sqlalchemy.dialects.postgresql import UUID, HSTORE, JSON, JSONB
+from dateutil.parser import parse as dtparse
+from sqlalchemy.dialects.postgresql import HSTORE, JSONB
 
 import logging
 log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
