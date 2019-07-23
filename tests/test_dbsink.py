@@ -28,6 +28,7 @@ def test_ncreplayer():
         for m in messages:
             to_send.append(message_to_value('fake', m))
     assert len(to_send) == 4
+    assert to_send[0][1]['time'] == to_send[0][1]['reftime']
 
 
 def test_mission_sensors():

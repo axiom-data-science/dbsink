@@ -115,6 +115,8 @@ def generic_float_data(topic):
             value['values'] = { k: make_valid_string(str(x)) for k, x in value['values'].items() }
 
         value['payload'] = json.dumps(payload, allow_nan=False)
+        if 'reftime' not in value:
+            value['reftime'] = value['time']
 
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v }
@@ -140,6 +142,8 @@ def arete_data(topic):
 
         # Time - use float timestamp and fall back to Iridium
         reftime = datetime.utcfromtimestamp(headers['iridium_ts'])
+        # TODO: There is no status_ts yet, but this is here for
+        # if one does show up eventually
         if 'status_ts' in values and values['status_ts']:
             timestamp = datetime.utcfromtimestamp(values['status_ts'])
         else:
