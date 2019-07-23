@@ -1,0 +1,109 @@
+[
+    {"id":5484,"float_id":49,"software_revision":0,"heading":221.19,"latitude":47.550865,"longitude":-122.377328,"timestamp":"2019-07-18T17:11:20.000Z","battery_charge":93,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T17:10:12.000Z","status_record_id":306,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T17:12:16.000Z","node_code":18,"instance":7,"index":62,"data_change":false,"status_record_id":306,"heading":221.5,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {
+      "id": 5484,
+      "float_id": 49,
+      "software_revision": 0,
+      "heading": 221.19,
+      "latitude": 47.550865,
+      "longitude": -122.377328,
+      "timestamp": "2019-07-18T17:11:20.000Z",
+      "battery_charge": 93,
+      "bus_voltage": 1,
+      "temperature": 22,
+      "node_cfg": 0,
+      "geofence_cfg": 0,
+      "task_cfg": 0,
+      "rule_cfg": 0,
+      "sensor_cfg": 0,
+      "trigger_wake_count": 1,
+      "wake_event_id": 4,
+      "wake_event_type": "1",
+      "navsat_fix_time": "2019-07-18T17:10:12.000Z",
+      "status_record_id": 306,
+      "scuttle_state": "no scuttle",
+      "trig_cfg": 0,
+      "imei": "300234068308000",
+      "ping_count": 1,
+      "hd_usage": "less than 50%",
+      "uptime": "1 day to 3 days",
+      "config_index_bypass_count": 0,
+      "data_segment": {
+        "float_id": 49,
+        "timestamp": "2019-07-18T17:12:16.000Z",
+        "node_code": 18,
+        "instance": 5,
+        "index": 63,
+        "data_change": false,
+        "status_record_id": 306,
+        "heading": 220.69,
+        "pitch": 1,
+        "roll": -2,
+        "channels": 1,
+        "data_type": 0,
+        "samples": 9,
+        "rows": 1,
+        "columns": 1,
+        "data": [
+          33,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "data_product_pipeline": [
+          {
+            "name": "Sine Wave",
+            "data_product_pipeline_description": "Generates a sine wave with a specified amplitude and frequency",
+            "sensor_pipeline": [
+              {
+                "name": "Simulated Sine Sensor",
+                "sensor_pipeline description": "No real sensor was used",
+                "sensor_manufacturer": "N/A",
+                "analog_gain_db": 0,
+                "analog_filter": "N/A"
+              }
+            ],
+            "sampling_pipeline": [
+              {
+                "name": "Simulated Sine Sampling",
+                "sampling_pipeline description": "No real sampling was performed",
+                "sampling_process_description": "N/A",
+                "sampling_resolution": "N/A",
+                "sampling_rate_hz": 0,
+                "sample_size": 0
+              }
+            ],
+            "processing_pipeline": [
+              {
+                "name": "Simulated Sine Wave",
+                "processing_pipeline description": "Produce a random seaded sign wave",
+                "processing_modules": [
+                  {
+                    "name": "Sine Wave Generator",
+                    "processing_module_description": "Given a frequency and amplitude generate a randomly seeded sign wave",
+                    "frequency_hz": 30000,
+                    "amplitude_%": 100
+                  },
+                  {
+                    "name": "Sine Wave Compressor/Decompressor",
+                    "processing_module_description": "Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {"id":5484,"float_id":49,"software_revision":0,"heading":221.19,"latitude":47.550865,"longitude":-122.377328,"timestamp":"2019-07-18T17:11:20.000Z","battery_charge":93,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T17:10:12.000Z","status_record_id":306,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T17:12:16.000Z","node_code":18,"instance":5,"index":63,"data_change":false,"status_record_id":306,"heading":220.69,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {"id":5484,"float_id":49,"software_revision":0,"heading":221.19,"latitude":47.550865,"longitude":-122.377328,"timestamp":"2019-07-18T17:11:20.000Z","battery_charge":93,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T17:10:12.000Z","status_record_id":306,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T17:12:16.000Z","node_code":18,"instance":5,"index":63,"data_change":false,"status_record_id":306,"heading":220.69,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {"id":5484,"float_id":49,"software_revision":0,"heading":221.19,"latitude":47.550865,"longitude":-122.377328,"timestamp":"2019-07-18T17:11:20.000Z","battery_charge":93,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T17:10:12.000Z","status_record_id":306,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T17:12:16.000Z","node_code":18,"instance":4,"index":58,"data_change":false,"status_record_id":306,"heading":220.69,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {"id":5484,"float_id":49,"software_revision":0,"heading":221.19,"latitude":47.550865,"longitude":-122.377328,"timestamp":"2019-07-18T17:11:20.000Z","battery_charge":93,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T17:10:12.000Z","status_record_id":306,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T17:12:16.000Z","node_code":18,"instance":4,"index":58,"data_change":false,"status_record_id":306,"heading":220.69,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {"id":5486,"float_id":49,"software_revision":0,"heading":220.39,"latitude":47.550865,"longitude":-122.377266,"timestamp":"2019-07-18T15:38:33.000Z","battery_charge":92,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T15:29:02.000Z","status_record_id":296,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T15:38:40.000Z","node_code":18,"instance":6,"index":63,"data_change":false,"status_record_id":296,"heading":219.6,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}},
+    {"id":5486,"float_id":49,"software_revision":0,"heading":220.39,"latitude":47.550865,"longitude":-122.377266,"timestamp":"2019-07-18T15:38:33.000Z","battery_charge":92,"bus_voltage":1,"temperature":22,"node_cfg":0,"geofence_cfg":0,"task_cfg":0,"rule_cfg":0,"sensor_cfg":0,"trigger_wake_count":1,"wake_event_id":4,"wake_event_type":"1","navsat_fix_time":"2019-07-18T15:29:02.000Z","status_record_id":296,"scuttle_state":"no scuttle","trig_cfg":0,"imei":"300234068308000","ping_count":1,"hd_usage":"less than 50%","uptime":"1 day to 3 days","config_index_bypass_count":0,"data_segment":{"float_id":49,"timestamp":"2019-07-18T15:38:40.000Z","node_code":18,"instance":6,"index":63,"data_change":false,"status_record_id":296,"heading":219.6,"pitch":1,"roll":-2,"channels":1,"data_type":0,"samples":9,"rows":1,"columns":1,"data":[33,1,1,1,0,0,0,0,0],"data_product_pipeline":[{"name":"Sine Wave","data_product_pipeline_description":"Generates a sine wave with a specified amplitude and frequency","sensor_pipeline":[{"name":"Simulated Sine Sensor","sensor_pipeline description":"No real sensor was used","sensor_manufacturer":"N/A","analog_gain_db":0,"analog_filter":"N/A"}],"sampling_pipeline":[{"name":"Simulated Sine Sampling","sampling_pipeline description":"No real sampling was performed","sampling_process_description":"N/A","sampling_resolution":"N/A","sampling_rate_hz":0,"sample_size":0}],"processing_pipeline":[{"name":"Simulated Sine Wave","processing_pipeline description":"Produce a random seaded sign wave","processing_modules":[{"name":"Sine Wave Generator","processing_module_description":"Given a frequency and amplitude generate a randomly seeded sign wave","frequency_hz":30000,"amplitude_%":100},{"name":"Sine Wave Compressor/Decompressor","processing_module_description":"Provides a data specific Sine Wave Compression/Decompression routine applied on Edge/Cloud"}]}]}]}}
+]

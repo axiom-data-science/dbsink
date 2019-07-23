@@ -199,8 +199,43 @@ def arete_data(topic):
     return newtopic, cols, constraint_name, message_to_values
 
 
-def numurus_status(topic):
+def numurus_data(topic):
+    newtopic, cols, constraint_name = generic_cols(topic)
 
+    def message_to_values(key, value):
+        payload = payload_parse(value)
+
+        # We are skipping the "data_segment" portion, no idea how to interpret this. It is
+        # carried through in the "payload" and could be used if someone wanted to
+        skips = ['timestamp', 'navsat_fix_time', 'imei', 'latitude', 'longitude', 'data_segment']
+
+        top_level = {
+            'uid':     value['imei'],
+            'gid':     None,
+            'time':    dtparse(value['timestamp']).isoformat(),
+            'reftime': dtparse(value['navsat_fix_time']).isoformat(),
+            'lat':     value['latitude'],
+            'lon':     value['longitude'],
+            'z':       None,
+            'payload': json.dumps(payload, allow_nan=False)
+        }
+
+        # All HSTORE values need to be strings
+        values = { k: make_valid_string(str(x)) if x else None for k, x in value.items() if k not in skips }
+        values['mfr'] = 'numurus'
+
+        fullvalues = {
+            **top_level,
+            'values': values
+        }
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in fullvalues.items() if v }
+
+    return newtopic, cols, constraint_name, message_to_values
+
+
+def numurus_status(topic):
     newtopic, cols, constraint_name = generic_cols(topic)
 
     def message_to_values(key, value):
@@ -352,6 +387,7 @@ topic_to_func = {
     'just_json':                     just_json,
     'netcdf_replayer':               generic_float_data,
     'numurus.status':                numurus_status,
+    'numurus.data':                  numurus_data,
     'oot.reports.environmental':     float_reports,
     'oot.reports.health_and_status': float_reports,
     'oot.reports.mission_sensors':   float_reports,

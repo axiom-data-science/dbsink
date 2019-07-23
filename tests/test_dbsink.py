@@ -140,6 +140,22 @@ def test_numurus_status():
     assert len(to_send) == 87
 
 
+def test_numurus_data():
+    _, _, _, message_to_value = columns_and_message_conversion('numurus.data')
+
+    to_send = []
+
+    with open('./tests/numurus.data.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(message_to_value('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 8
+    print(to_send)
+
+
 def test_arete_data_parse():
     _, _, _, message_to_value = columns_and_message_conversion('arete.data')
 
@@ -209,6 +225,19 @@ def test_numurus_status_live():
         '--consumer', 'dbsink-test',
         '--drop',
         '--mockfile', str(Path('tests/numurus.status.json').resolve()),
+    ])
+    assert result.exit_code == 0
+
+
+def test_numurus_data_live():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'numurus.data',
+        '--packing', 'json',
+        '--consumer', 'dbsink-test',
+        '--drop',
+        '--mockfile', str(Path('tests/numurus.data.json').resolve()),
     ])
     assert result.exit_code == 0
 
