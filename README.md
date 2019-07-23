@@ -6,8 +6,7 @@ This is not unlike the Kafka Connect JdbcConnector. This project has a much lowe
 
 You can choose to unpack the data as `avro`, `msgpack` or the default `json`. `avro` requires an additional `registry` parameter.
 
-This assumes a certain structure of the data (see `schema.avsc`).
-
+Docker images: https://hub.docker.com/r/axiom/dbsink/builds
 
 ## WHY?
 
@@ -28,24 +27,32 @@ $ dbsink --help
 Usage: dbsink [OPTIONS]
 
 Options:
-  --brokers TEXT                  Kafka broker string (comman separated)
+  --brokers TEXT                  Kafka broker string (comman separated).
                                   [required]
   --topic TEXT                    Kafka topic to send the data to. '-value' is
-                                  auto appended if using avro packing
+                                  auto appended if using avro packing.
                                   [required]
+  --lookup TEXT                   Lookup name to use to find the correct table
+                                  format (default: the topic name).
   --db TEXT                       SQLAlchemy compatible postgres connection
-                                  string  [required]
-  --schema TEXT                   Database schema to use (default: public)
+                                  string.  [required]
+  --schema TEXT                   Database schema to use (default: public).
                                   [required]
-  --consumer TEXT                 Consumer group to listen with  [required]
+  --consumer TEXT                 Consumer group to listen with (default:
+                                  random).
+  --offset TEXT                   Kafka offset to start with (default:
+                                  largest).  [required]
   --packing [json|avro|msgpack]   The data unpacking algorithm to use
+                                  (default: json).
   --registry TEXT                 URL to a Schema Registry if avro packing is
                                   requested
   --drop / --no-drop              Drop the table first
-  --logfile TEXT                  File to log messages to. Defaults to stdout.
+  --logfile TEXT                  File to log messages to (default: stdout).
+  --mockfile TEXT                 File to pull messages from, for testing.
   --setup-only / --no-setup-only  Setup or drop tables but do not consume
                                   messages
-  -v, --verbose
+  -v, --verbose                   Control the output verbosity, use up to 3
+                                  times (-vvv)
   --help                          Show this message and exit.
 ```
 
@@ -57,5 +64,8 @@ All configuration options can be specified with environmental variables using th
 DBSINK_TOPIC="axds-netcdf-replayer-data" \
 DBSINK_CONSUMER="myconsumer" \
 DBSINK_PACKING="msgpack" \
+DBSINK_OFFSET="earlist" \
+DBSINK_DROP="true" \
+DBSINK_VERBOSE="1" \
     dbsink
 ```
