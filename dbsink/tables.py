@@ -281,6 +281,10 @@ def float_reports(topic):
         reftime = datetime.utcfromtimestamp(headers['iridium_ts'])
         if 'status_ts' in values and values['status_ts']:
             timestamp = datetime.utcfromtimestamp(values['status_ts'])
+        elif 'environmental_ts' in values and values['environmental_ts']:
+            timestamp = datetime.utcfromtimestamp(values['environmental_ts'])
+        elif 'mission_ts' in values and values['mission_ts']:
+            timestamp = datetime.utcfromtimestamp(values['mission_ts'])
         else:
             timestamp = reftime
 

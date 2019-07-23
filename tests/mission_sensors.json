@@ -47,7 +47,7 @@
       }
     },
     "values" : {
-      "mission_ts" : -1324605492,
+      "mission_ts" : 1324605492,
       "rf_ais_decoded_rssi" : -1201808279,
       "misc" : {
         "map" : {
@@ -87,9 +87,7 @@
       }
     },
     "values" : {
-      "mission_ts" : {
-        "float" : 0.3767385
-      },
+      "mission_ts" : 3767385,
       "rf_ais_decoded_rssi" : -304534174,
       "misc" : null
     },
@@ -187,9 +185,7 @@
       }
     },
     "values" : {
-      "mission_ts" : {
-        "float" : 0.6697144
-      },
+      "mission_ts" : 0.6697144,
       "rf_ais_decoded_rssi" : 1081695190,
       "misc" : null
     },
