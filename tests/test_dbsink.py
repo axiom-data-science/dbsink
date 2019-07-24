@@ -153,7 +153,6 @@ def test_numurus_data():
             except BaseException as e:
                 listen.L.error(repr(e))
     assert len(to_send) == 8
-    print(to_send)
 
 
 def test_arete_data_parse():
