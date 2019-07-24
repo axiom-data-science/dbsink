@@ -127,7 +127,8 @@ def arete_data(topic):
 
     def message_to_values(key, value):
 
-        value['json']['not_decoded'] = value['json']['not_decoded'].encode('utf-8').decode()
+        if 'not_decoded' in value['json']:
+            value['json']['not_decoded'] = value['json']['not_decoded'].encode('utf-8').decode()
 
         payload = payload_parse(value)
 
