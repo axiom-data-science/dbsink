@@ -167,7 +167,11 @@ def test_arete_data_parse():
                 to_send.append(message_to_value('fake', m))
             except BaseException as e:
                 listen.L.error(repr(e))
-    assert len(to_send) == 6
+    assert len(to_send) == 133
+
+    l = to_send[-1][1]
+    assert to_send[-1][1]['lat'] == 38.859378814697266
+    assert to_send[-1][1]['lon'] == -77.0494384765625
 
 
 def test_just_json():

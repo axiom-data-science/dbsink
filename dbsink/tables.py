@@ -76,7 +76,7 @@ def generic_cols(topic):
         sql.Column('z',        sql.REAL, default=0.0, index=True),
         sql.Column('values',   HSTORE, default={}),
         sql.Column('meta',     JSONB, default={}),
-        sql.Column('payload',  sql.Text, default=''),
+        sql.Column('payload',  JSONB, default={}),
         sql.Index(
             f'{newtopic}_unique_idx'.replace('-', '_'),
             'uid',
@@ -112,12 +112,11 @@ def generic_float_data(topic):
         if value['values']:
             value['values'] = { k: make_valid_string(str(x)) for k, x in value['values'].items() }
 
-        value['payload'] = json.dumps(payload, allow_nan=False)
         if 'reftime' not in value:
             value['reftime'] = value['time']
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in value.items() if v }
+        return key, { k: v for k, v in value.items() if v is not None }
 
     return newtopic, cols, constraint_name, message_to_values
 
@@ -127,13 +126,16 @@ def arete_data(topic):
 
     def message_to_values(key, value):
 
-        if 'not_decoded' in value['json']:
-            value['json']['not_decoded'] = value['json']['not_decoded'].encode('utf-8').decode()
-
-        payload = payload_parse(value)
-
         headers = value['headers'].copy()
         values = value['json'].copy()
+
+        # Remove some randoms
+        removes = ['not_decoded', 'Compressed_Data']
+        for r in removes:
+            if r in values:
+                del values[r]
+
+        payload = payload_parse(values)
 
         values['mfr'] = value['mfr']
         values['cdr_reference'] = value['cdr_reference']
@@ -152,17 +154,19 @@ def arete_data(topic):
         latdeg = float(headers['location']['latitude']['degrees'])
         latmin = float(headers['location']['latitude']['minutes'])
         values['iridium_lat'] = latdeg + (latmin / 60)
-        if 'latitude' in values and values['latitude']:
-            latdd = values['latitude']
-        else:
-            latdd = values['iridium_lat']
-
         londeg = float(headers['location']['longitude']['degrees'])
         lonmin = float(headers['location']['longitude']['minutes'])
         values['iridium_lon'] = londeg + (lonmin / 60)
-        if 'longitude' in values and values['longitude']:
-            londd = values['longitude']
+
+        if (
+            'Full_ll' in values and
+            isinstance(values['Full_ll'], list)
+           ):
+            latdd = values['Full_ll'][0]
+            londd = values['Full_ll'][1]
+            del values['Full_ll']
         else:
+            latdd = values['iridium_lat']
             londd = values['iridium_lon']
 
         top_level = {
@@ -173,7 +177,7 @@ def arete_data(topic):
             'lat':     latdd,
             'lon':     londd,
             'z':       None,
-            'payload': json.dumps(payload, allow_nan=False)
+            'payload': payload
         }
 
         del headers['imei']
@@ -190,12 +194,12 @@ def arete_data(topic):
         # All HSTORE values need to be strings
         if fullvalues['values']:
             fullvalues['values'] = {
-                k: make_valid_string(str(x)) if x else None
+                k: make_valid_string(str(x)) if x is not None else None
                 for k, x in fullvalues['values'].items()
             }
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in fullvalues.items() if v }
+        return key, { k: v for k, v in fullvalues.items() if v is not None }
 
     return newtopic, cols, constraint_name, message_to_values
 
@@ -218,11 +222,11 @@ def numurus_data(topic):
             'lat':     value['latitude'],
             'lon':     value['longitude'],
             'z':       None,
-            'payload': json.dumps(payload, allow_nan=False)
+            'payload': payload
         }
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x else None for k, x in value.items() if k not in skips }
+        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in value.items() if k not in skips }
         values['mfr'] = 'numurus'
 
         fullvalues = {
@@ -231,7 +235,7 @@ def numurus_data(topic):
         }
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in fullvalues.items() if v }
+        return key, { k: v for k, v in fullvalues.items() if v is not None }
 
     return newtopic, cols, constraint_name, message_to_values
 
@@ -252,11 +256,11 @@ def numurus_status(topic):
             'lat':     value['latitude'],
             'lon':     value['longitude'],
             'z':       None,
-            'payload': json.dumps(payload, allow_nan=False)
+            'payload': payload
         }
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x else None for k, x in value.items() if k not in skips }
+        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in value.items() if k not in skips }
         values['mfr'] = 'numurus'
 
         fullvalues = {
@@ -265,7 +269,7 @@ def numurus_status(topic):
         }
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in fullvalues.items() if v }
+        return key, { k: v for k, v in fullvalues.items() if v is not None }
 
     return newtopic, cols, constraint_name, message_to_values
 
@@ -295,7 +299,7 @@ def just_json(topic):
         }
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in values.items() if v }
+        return key, { k: v for k, v in values.items() if v is not None }
 
     constraint_name = None
     return newtopic, cols, constraint_name, message_to_values
@@ -351,7 +355,7 @@ def float_reports(topic):
             'lat':     latdd,
             'lon':     londd,
             'z':       None,
-            'payload': json.dumps(payload, allow_nan=False)
+            'payload': payload
         }
 
         del headers['imei']
@@ -373,10 +377,10 @@ def float_reports(topic):
 
         # All HSTORE values need to be strings
         if fullvalues['values']:
-            fullvalues['values'] = { k: make_valid_string(str(x)) if x else None for k, x in fullvalues['values'].items() }
+            fullvalues['values'] = { k: make_valid_string(str(x)) if x is not None else None for k, x in fullvalues['values'].items() }
 
         # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in fullvalues.items() if v }
+        return key, { k: v for k, v in fullvalues.items() if v is not None }
 
     return newtopic, cols, constraint_name, message_to_values
 
