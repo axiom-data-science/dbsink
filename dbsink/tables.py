@@ -186,7 +186,13 @@ class GenericFloat(BaseMap):
         if value['values']:
             value['values'] = { k: make_valid_string(str(x)) for k, x in value['values'].items() }
 
-        if 'reftime' not in value:
+        value['lat'] = float(value['lat'])
+        value['lon'] = float(value['lon'])
+
+        value['time'] = dtparse(value['time']).replace(tzinfo=pytz.utc).isoformat()
+        if 'reftime' in value:
+            value['reftime'] = dtparse(value['reftime']).replace(tzinfo=pytz.utc).isoformat()
+        else:
             value['reftime'] = value['time']
 
         value['payload'] = payload

@@ -301,6 +301,7 @@ def test_numurus_status_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/numurus.status.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -317,6 +318,7 @@ def test_numurus_data_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -333,6 +335,7 @@ def test_arete_data_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/arete_data.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -349,6 +352,7 @@ def test_health_and_status_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/health_and_status.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -365,6 +369,7 @@ def test_ncreplayer_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/replayer.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -381,6 +386,7 @@ def test_environmental_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -397,6 +403,7 @@ def test_mission_sensors_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/mission_sensors.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
@@ -412,6 +419,7 @@ def test_json_payload():
         '--no-do-inserts',
         '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
+    print(result)
     assert result.exit_code == 0
 
 
