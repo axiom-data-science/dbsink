@@ -180,7 +180,12 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
             res.close()
             L.debug(f'inserted/updated row {res.inserted_primary_key}')
 
-    if listen is True:
+    if datafile:
+        with open(datafile) as f:
+            messages = json.load(f)
+            for m in messages:
+                on_recieve(None, packing_func(m))
+    elif listen is True:
         c = consumer_class(**consumer_kwargs)
         c.consume(
             on_recieve=on_recieve,
@@ -189,12 +194,7 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
             cleanup_every=100,
             loop=True
         )
-    elif datafile:
-        # Purposly undocumented
-        with open(datafile) as f:
-            messages = json.load(f)
-            for m in messages:
-                on_recieve(None, packing_func(m))
+
 
 
 def run():

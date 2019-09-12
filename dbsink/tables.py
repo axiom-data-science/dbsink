@@ -220,7 +220,7 @@ class AreteData(GenericFloat):
         else:
             timestamp = reftime
 
-        # Location - Use value locations and fall back to Iridium
+        # Location - Use values locations and fall back to Iridium
         latdeg = float(values['headers_location_latitude_degrees'])
         latmin = float(values['headers_location_latitude_minutes'])
         latdd = latdeg + (latmin / 60)

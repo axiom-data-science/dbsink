@@ -467,3 +467,21 @@ def test_genericfloat_integration():
     ])
     print(result)
     assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_nwicfloat_integration():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'nwicfloat-integration-test',
+        '--table', 'my-nwicfloat-table',
+        '--lookup', 'NwicFloatReports',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/health_and_status.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
