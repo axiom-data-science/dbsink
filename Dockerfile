@@ -58,6 +58,6 @@ ENV PROJECT_ROOT /code
 RUN mkdir -p "$PROJECT_ROOT"
 COPY . $PROJECT_ROOT
 RUN cd $PROJECT_ROOT && pip install --no-deps .
-WORKDIR /code
+WORKDIR $PROJECT_ROOT
 
 CMD ['dbsink']

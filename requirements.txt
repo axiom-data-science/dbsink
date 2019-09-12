@@ -1,7 +1,10 @@
 click
-python-dateutil
 easyavro>=2.5.0
+geoalchemy2
 msgpack-python
-sqlalchemy
 psycopg2
+python-dateutil
+pytz
+shapely
 simplejson
+sqlalchemy

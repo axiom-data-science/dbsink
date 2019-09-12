@@ -12,6 +12,10 @@ def readme():
 
 
 reqs = [line.strip() for line in open('requirements.txt') if not line.startswith('#')]
+# `msgpack-python` and `msgpack` have different names between pypa and conda
+# Fix any libraries that end in '-python'
+# import re
+# reqs = [ re.sub(r'-python$', '', r) for r in reqs ]
 
 setup(
     name                          = "dbsink",
@@ -28,6 +32,16 @@ setup(
     entry_points                  = {
         'console_scripts': [
             'dbsink = dbsink.listen:run'
+        ],
+        'dbsink.maps': [
+            'JsonMap          = dbsink.maps:JsonMap',
+            'StringMap        = dbsink.maps:StringMap',
+            'GenericGeography = dbsink.tables:GenericGeography',
+            'GenericFloat     = dbsink.tables:GenericFloat',
+            'AreteData        = dbsink.tables:AreteData',
+            'NumurusData      = dbsink.tables:NumurusData',
+            'NumurusStatus    = dbsink.tables:NumurusStatus',
+            'NwicFloatReports = dbsink.tables:NwicFloatReports'
         ]
     },
     classifiers         = [
@@ -38,6 +52,5 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering',
-    ],
-    include_package_data = True,
+    ]
 )

@@ -1,6 +1,7 @@
 #!python
 # coding=utf-8
 import uuid
+import pkg_resources
 import simplejson as json
 
 import click
@@ -8,8 +9,6 @@ import msgpack
 import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import insert
 from easyavro import EasyAvroConsumer, EasyConsumer
-
-from dbsink.tables import columns_and_message_conversion
 
 import logging
 log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -25,10 +24,17 @@ L.setLevel(logging.INFO)
 L.handlers = [stream]
 
 
+def get_mappings():
+    return {
+        e.name: e.resolve() for e in pkg_resources.iter_entry_points('dbsink.maps')
+    }
+
+
 @click.command()
 @click.option('--brokers',  type=str, required=True, default='localhost:4001', help="Kafka broker string (comman separated).")
 @click.option('--topic',    type=str, required=True, default='axds-netcdf-replayer-data', help="Kafka topic to send the data to. '-value' is auto appended if using avro packing.")
-@click.option('--lookup',   type=str, required=False, default='', help="Lookup name to use to find the correct table format (default: the topic name).")
+@click.option('--table',    type=str, required=False, default='', help="Name of the table to sink into. Defaults to the topic name.")
+@click.option('--lookup',   type=str, required=False, default='JsonMap', help="Lookup name to use to find the correct table format (default: the topic name).")
 @click.option('--db',       type=str, required=True, default='postgresql+psycopg2://sink:sink@localhost:30300/sink', help="SQLAlchemy compatible postgres connection string.")
 @click.option('--schema',   type=str, required=True, default='public', help="Database schema to use (default: public).")
 @click.option('--consumer', type=str, default='', help="Consumer group to listen with (default: random).")
@@ -37,10 +43,11 @@ L.handlers = [stream]
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
 @click.option('--logfile',  type=str, default='', help="File to log messages to (default: stdout).")
-@click.option('--mockfile',  type=str, default='', help="File to pull messages from, for testing.")
-@click.option('--setup-only/--no-setup-only', default=False, help="Setup or drop tables but do not consume messages")
+@click.option('--listen/--no-listen', default=True, help="Whether to listen for messages.")
+@click.option('--do-inserts/--no-do-inserts', default=True, help="Whether to insert data into a database.")
+@click.option('--datafile', type=str, default='', help="File to pull messages from instead of listening for messages.")
 @click.option('-v', '--verbose', count=True, help="Control the output verbosity, use up to 3 times (-vvv)")
-def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registry, drop, logfile, mockfile, setup_only, verbose):
+def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, registry, drop, logfile, listen, do_inserts, datafile, verbose):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -60,6 +67,10 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
     if not consumer:
         consumer = f'dbsink-{topic}-{uuid.uuid4().hex[0:20]}'
         L.info(f'Setting consumer to {consumer}')
+
+    # If no specific table was specified, use the topic name
+    if not table:
+        table = topic
 
     # Setup the kafka consuimer
     if packing == 'avro':
@@ -93,10 +104,12 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
             'offset': offset
         }
 
-    # Get the column definitions and the message to table conversion function
-    newtopic, cols, constraint_name, message_to_values = columns_and_message_conversion(topic, lookup)
+    # Get the mapping object from the lookup parameter
+    mappings = get_mappings()
+    mapping = mappings[lookup](topic, table=table)
+    L.debug(f'Using mapping: {lookup}, topic: {topic}, table: {mapping.table}')
 
-    if not mockfile:
+    if do_inserts is True:
         """ Database connection and setup
         """
 
@@ -117,24 +130,24 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
         engine.execute("CREATE EXTENSION if not exists hstore cascade")
 
         if drop is True:
-            L.info(f'Dropping table {newtopic}')
-            engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{newtopic}\"'))
+            L.info(f'Dropping table {mapping.table}')
+            engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{mapping.table}\"'))
 
         # Reflect to see if this table already exists. Create or update it.
         meta = sql.MetaData(engine, schema=schema)
         meta.reflect()
-        if f'{schema}.{newtopic}' not in meta.tables:
-            table = sql.Table(newtopic, meta, *cols)
+        if f'{schema}.{mapping.table}' not in meta.tables:
+            sqltable = sql.Table(mapping.table, meta, *mapping.schema)
         else:
-            table = sql.Table(
-                newtopic,
+            sqltable = sql.Table(
+                mapping.table,
                 meta,
-                *cols,
+                *mapping.schema,
                 autoload=True,
                 keep_existing=False,
                 extend_existing=True
             )
-        meta.create_all(tables=[table])
+        meta.create_all(tables=[sqltable])
 
     def on_recieve(k, v):
         if v is not None and unpacking_func:
@@ -146,19 +159,19 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
 
         # Custom conversion function for the table
         try:
-            newkey, newvalues = message_to_values(k, v)
+            newkey, newvalues = mapping.message_to_values(k, v)
         except BaseException as e:
             L.error(f'Skipping {v}, message could not be converted to a row - {repr(e)}')
             return
 
-        if not mockfile:
+        if do_inserts:
             # I wonder if we can just do set_=v? Other seem to extract the
             # exact columns to update but this method is currently working...
             # https://gist.github.com/bhtucker/c40578a2fb3ca50b324e42ef9dce58e1
-            insert_cmd = insert(table).values(newvalues)
-            if constraint_name is not None:
+            insert_cmd = insert(sqltable).values(newvalues)
+            if mapping.upsert_constraint_name is not None:
                 upsert_cmd = insert_cmd.on_conflict_do_update(
-                    constraint=constraint_name,
+                    constraint=mapping.upsert_constraint_name,
                     set_=newvalues
                 )
                 res = engine.execute(upsert_cmd)
@@ -167,7 +180,7 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
             res.close()
             L.debug(f'inserted/updated row {res.inserted_primary_key}')
 
-    if not mockfile and not setup_only:
+    if listen is True:
         c = consumer_class(**consumer_kwargs)
         c.consume(
             on_recieve=on_recieve,
@@ -176,9 +189,9 @@ def setup(brokers, topic, lookup, db, schema, consumer, offset, packing, registr
             cleanup_every=100,
             loop=True
         )
-    elif mockfile:
+    elif datafile:
         # Purposly undocumented
-        with open(mockfile) as f:
+        with open(datafile) as f:
             messages = json.load(f)
             for m in messages:
                 on_recieve(None, packing_func(m))

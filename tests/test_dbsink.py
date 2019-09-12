@@ -3,10 +3,12 @@
 from pathlib import Path
 import simplejson as json
 
+import pytest
 from click.testing import CliRunner
 
 from dbsink import listen
-from dbsink.tables import columns_and_message_conversion
+from dbsink.maps import *  # noqa
+from dbsink.tables import *  # noqa
 
 
 def test_listen_help():
@@ -19,114 +21,105 @@ def test_listen_help():
 
 
 def test_ncreplayer():
-    _, _, _, message_to_value = columns_and_message_conversion('axds-netcdf-replayer-data')
+    mapp = GenericFloat('axds-netcdf-replayer-data')
 
     to_send = []
-
     with open('./tests/replayer.json') as f:
         messages = json.load(f)
         for m in messages:
-            to_send.append(message_to_value('fake', m))
+            to_send.append(mapp.message_to_values('fake', m))
+
     assert len(to_send) == 4
     assert to_send[0][1]['time'] == to_send[0][1]['reftime']
 
 
 def test_mission_sensors():
-    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.mission_sensors')
+    mapp = NwicFloatReports('oot.reports.mission_sensors')
 
     to_send = []
 
     with open('./tests/mission_sensors.json') as f:
         messages = json.load(f)
         for m in messages:
-            to_send.append(message_to_value('fake', m))
+            to_send.append(mapp.message_to_values('fake', m))
+
     assert len(to_send) == 10
 
 
 def test_environmental():
-    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.environmental')
+
+    mapp = NwicFloatReports('oot.reports.environmental')
 
     to_send = []
 
     with open('./tests/environmental.json') as f:
         messages = json.load(f)
         for m in messages:
-            to_send.append(message_to_value('fake', m))
+            to_send.append(mapp.message_to_values('fake', m))
+
     assert len(to_send) == 10
 
 
-def test_health_and_status():
-    _, _, _, message_to_value = columns_and_message_conversion('oot.reports.health_and_status')
-
-    to_send = []
-
-    with open('./tests/health_and_status.json') as f:
-        messages = json.load(f)
-        for m in messages:
-            to_send.append(message_to_value('fake', m))
-    assert len(to_send) == 516
-
-
 def test_null_infinity():
-    _, _, _, message_to_value = columns_and_message_conversion('whatever', lookup='just_json')
+    mapp = JsonMap('whatever')
 
     to_send = []
 
     with open('./tests/null_infinity.json') as f:
         messages = json.load(f)
         for m in messages:
-            to_send.append(message_to_value('fake', m))
+            to_send.append(mapp.message_to_values('fake', m))
+
     assert len(to_send) == 2
     assert to_send[0][1]['payload']['bus_voltage'] is None
     assert to_send[1][1]['payload']['bus_voltage'] is None
 
 
-def test_health_and_status_with_lookup():
-    _, _, _, message_to_value = columns_and_message_conversion(
-        'somethingelse', lookup='float_reports'
-    )
+def test_health_and_status():
+    mapp = NwicFloatReports('foo')
 
     to_send = []
 
     with open('./tests/health_and_status.json') as f:
         messages = json.load(f)
         for m in messages:
-            to_send.append(message_to_value('fake', m))
+            to_send.append(mapp.message_to_values('fake', m))
+
     assert len(to_send) == 516
 
-    f = to_send[0][1]
-    assert f['uid'] == '300434063547170'
-    assert f['lat'] == 32.704426
-    assert f['lon'] == -117.23662
-    assert f['time'] == '2019-05-31T20:39:50'
-    assert f['values']['status_ts'] == '1559335190'
-    assert f['values']['iridium_ts'] == '1559335196'
-    assert f['values']['iridium_lat'] == '32.70308'
-    assert f['values']['iridium_lon'] == '-116.72858'
-    assert f['values']['latitude'] == '32.704426'
-    assert f['values']['longitude'] == '-117.23662'
-    assert f['values']['speed'] == '2.72'
-    assert f['values']['test_num'] == 'T240'
-    assert f['values']['mfr'] == 'usna'
+    m1 = to_send[0][1]
+    assert m1['uid'] == '300434063547170'
+    assert m1['lat'] == 32.704426
+    assert m1['lon'] == -117.23662
+    assert m1['time'] == '2019-05-31T20:39:50+00:00'
+    assert m1['values']['status_ts'] == '1559335190'
+    assert m1['values']['iridium_ts'] == '1559335196'
+    assert m1['values']['iridium_lat'] == '32.70308'
+    assert m1['values']['iridium_lon'] == '-116.72858'
+    assert m1['values']['latitude'] == '32.704426'
+    assert m1['values']['longitude'] == '-117.23662'
+    assert m1['values']['speed'] == '2.72'
+    assert m1['values']['test_num'] == 'T240'
+    assert m1['values']['mfr'] == 'usna'
 
-    l = to_send[-1][1]
-    assert l['uid'] == '300434063946390'
-    assert l['lat'] == 39.01338
-    assert l['lon'] == -75.47597
-    assert l['time'] == '2019-06-06T18:19:56'
-    assert 'status_ts' not in l['values']
-    assert l['values']['iridium_ts'] == '1559845196'
-    assert l['values']['iridium_lat'] == '39.01338'
-    assert l['values']['iridium_lon'] == '-75.47597'
-    assert 'latitude' not in l['values']
-    assert l['values']['longitude'] is None
-    assert l['values']['speed'] == '0.01'
-    assert l['values']['test_num'] == 'T76'
-    assert l['values']['mfr'] == 'usna'
+    m2 = to_send[-1][1]
+    assert m2['uid'] == '300434063946390'
+    assert m2['lat'] == 39.01338
+    assert m2['lon'] == -75.47597
+    assert m2['time'] == '2019-06-06T18:19:56+00:00'
+    assert 'status_ts' not in m2['values']
+    assert m2['values']['iridium_ts'] == '1559845196'
+    assert m2['values']['iridium_lat'] == '39.01338'
+    assert m2['values']['iridium_lon'] == '-75.47597'
+    assert 'latitude' not in m2['values']
+    assert m2['values']['longitude'] is None
+    assert m2['values']['speed'] == '0.01'
+    assert m2['values']['test_num'] == 'T76'
+    assert m2['values']['mfr'] == 'usna'
 
 
 def test_numurus_status():
-    _, _, _, message_to_value = columns_and_message_conversion('numurus.status')
+    mapp = NumurusStatus('topic')
 
     to_send = []
 
@@ -134,14 +127,15 @@ def test_numurus_status():
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(message_to_value('fake', m))
+                to_send.append(mapp.message_to_values('fake', m))
             except BaseException as e:
                 listen.L.error(repr(e))
+
     assert len(to_send) == 87
 
 
 def test_numurus_data():
-    _, _, _, message_to_value = columns_and_message_conversion('numurus.data')
+    mapp = NumurusData('topic')
 
     to_send = []
 
@@ -149,14 +143,15 @@ def test_numurus_data():
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(message_to_value('fake', m))
+                to_send.append(mapp.message_to_values('fake', m))
             except BaseException as e:
                 listen.L.error(repr(e))
+
     assert len(to_send) == 8
 
 
 def test_arete_data_parse():
-    _, _, _, message_to_value = columns_and_message_conversion('arete.data')
+    mapp = AreteData('topic')
 
     to_send = []
 
@@ -164,18 +159,19 @@ def test_arete_data_parse():
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(message_to_value('fake', m))
+                to_send.append(mapp.message_to_values('fake', m))
             except BaseException as e:
                 listen.L.error(repr(e))
+
     assert len(to_send) == 133
 
-    l = to_send[-1][1]
-    assert to_send[-1][1]['lat'] == 38.859378814697266
-    assert to_send[-1][1]['lon'] == -77.0494384765625
+    msg = to_send[-1][1]
+    assert msg['lat'] == 38.859378814697266
+    assert msg['lon'] == -77.0494384765625
 
 
 def test_just_json():
-    _, _, _, message_to_value = columns_and_message_conversion('just_json')
+    mapp = JsonMap('topic')
 
     to_send = []
 
@@ -183,9 +179,10 @@ def test_just_json():
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(message_to_value('fake', m))
+                to_send.append(mapp.message_to_values('fake', m))
             except BaseException as e:
                 listen.L.error(repr(e))
+
     assert len(to_send) == 10
 
     assert to_send[0][1]['key'] == 'fake'
@@ -219,15 +216,90 @@ def test_just_json():
     }
 
 
+# def test_geography_driftworker_trajectories():
+#     mapp = GenericGeography('topic')
+
+#     to_send = []
+
+#     with open('./tests/driftworker-trajectories.json') as f:
+#         messages = json.load(f)
+#         for m in messages:
+#             try:
+#                 to_send.append(mapp.message_to_values('fake', m))
+#             except BaseException as e:
+#                 listen.L.error(repr(e))
+
+
+# def test_geography_driftworker_envelopes():
+#     mapp = GenericGeography('topic')
+
+#     to_send = []
+
+#     with open('./tests/driftworker-envelopes.json') as f:
+#         messages = json.load(f)
+#         for m in messages:
+#             try:
+#                 to_send.append(mapp.message_to_values('fake', m))
+#             except BaseException as e:
+#                 listen.L.error(repr(e))
+
+
+def test_geography_scuttle_watch_regions():
+    mapp = GenericGeography('topic')
+
+    to_send = []
+
+    with open('./tests/scuttle-watch-regions.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 6
+
+    assert to_send[0][1]['uid'] == "Keepin Hi"
+    assert 'gid' not in to_send[0][1]
+    assert to_send[0][1]['time'] == "2019-09-06T00:00:00+00:00"
+    assert to_send[2][1]['values'] == {}
+
+    assert to_send[1][1]['uid'] == "Keepin HiHi"
+    assert 'gid' not in to_send[1][1]
+    assert to_send[1][1]['time'] == "2019-09-06T00:00:00+00:00"
+    assert to_send[2][1]['values'] == {}
+
+    assert to_send[2][1]['uid'] == "Keepin Med"
+    assert 'gid' not in to_send[1][1]
+    assert to_send[2][1]['time'] == "2019-09-06T00:00:00+00:00"
+    assert to_send[2][1]['values'] == {}
+
+
+# def test_geography_scuttle_boundary_forecast():
+#     mapp = GenericGeography('topic')
+
+#     to_send = []
+
+#     with open('./tests/scuttle-boundary-forecast.json') as f:
+#         messages = json.load(f)
+#         for m in messages:
+#             try:
+#                 to_send.append(mapp.message_to_values('fake', m))
+#             except BaseException as e:
+#                 listen.L.error(repr(e))
+
+
 def test_numurus_status_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'numurus.status',
+        '--topic', 'topic',
+        '--lookup', 'NumurusStatus',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/numurus.status.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/numurus.status.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -236,11 +308,14 @@ def test_numurus_data_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'numurus.data',
+        '--topic', 'topic',
+        '--lookup', 'NumurusData',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/numurus.data.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/numurus.data.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -249,11 +324,14 @@ def test_arete_data_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'arete.data',
+        '--topic', 'topic',
+        '--lookup', 'AreteData',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/arete_data.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/arete_data.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -262,11 +340,14 @@ def test_health_and_status_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'oot.reports.health_and_status',
+        '--topic', 'topic',
+        '--lookup', 'NwicFloatReports',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/health_and_status.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/health_and_status.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -275,11 +356,14 @@ def test_ncreplayer_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'axds-netcdf-replayer-data',
+        '--topic', 'topic',
+        '--lookup', 'GenericFloat',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/replayer.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/replayer.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -288,11 +372,14 @@ def test_environmental_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'oot.reports.environmental',
+        '--topic', 'topic',
+        '--lookup', 'NwicFloatReports',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/environmental.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -301,25 +388,14 @@ def test_mission_sensors_live():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'oot.reports.mission_sensors',
+        '--topic', 'topic',
+        '--lookup', 'NwicFloatReports',
         '--packing', 'json',
         '--consumer', 'dbsink-test',
         '--drop',
-        '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
-    ])
-    assert result.exit_code == 0
-
-
-def test_lookup():
-
-    runner = CliRunner()
-    result = runner.invoke(listen.setup, [
-        '--topic', 'something_not_in_lookup',
-        '--packing', 'json',
-        '--lookup', 'oot.reports.mission_sensors',
-        '--consumer', 'dbsink-test-lookup',
-        '--drop',
-        '--mockfile', str(Path('tests/mission_sensors.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/mission_sensors.json').resolve()),
     ])
     assert result.exit_code == 0
 
@@ -328,24 +404,48 @@ def test_json_payload():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'something_not_in_lookup',
+        '--topic', 'topic',
+        '--lookup', 'JsonMap',
         '--packing', 'json',
-        '--lookup', 'just_json',
-        '--consumer', 'dbsink-test-lookup',
         '--drop',
-        '--mockfile', str(Path('tests/environmental.json').resolve()),
+        '--no-listen',
+        '--no-do-inserts',
+        '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
     assert result.exit_code == 0
 
 
-def test_generate_consumer():
+@pytest.mark.integration
+def test_geography_integration():
 
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
-        '--topic', 'something_not_in_lookup',
+        '--topic', 'geography-integration-test',
+        '--table', 'my-geography-table',
+        '--lookup', 'GenericGeography',
         '--packing', 'json',
-        '--lookup', 'just_json',
         '--drop',
-        '--mockfile', str(Path('tests/environmental.json').resolve()),
+        '--no-listen',
+        '--datafile', str(Path('tests/scuttle-watch-regions.json').resolve()),
+        '-vvv'
     ])
+    print(result)
+    assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_json_integration():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'json-integration-test',
+        '--table', 'my-json-table',
+        '--lookup', 'JsonMap',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/environmental.json').resolve()),
+        '-v'
+    ])
+    print(result)
     assert result.exit_code == 0

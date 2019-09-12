@@ -4,9 +4,15 @@ import re
 import simplejson as json
 from datetime import datetime
 
+import pytz
 import sqlalchemy as sql
+from shapely.geometry import shape
+from shapely.ops import unary_union
+from geoalchemy2.types import Geography
 from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB
+
+from dbsink.maps import BaseMap, payload_parse
 
 import logging
 log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -40,72 +46,127 @@ def make_valid_string(obj):
         return obj
 
 
-def payload_parse(payload):
-    # Make sure we have valid JSON and remove any
-    # Infinity and NaN values in the process
-    try:
-        return json.loads(json.dumps(payload, ignore_nan=True))
-    except BaseException as e:
-        raise ValueError(f'Could not parse message as valid JSON - {repr(e)}')
+class GenericGeography(BaseMap):
+
+    @property
+    def schema(self):
+        return [
+            sql.Column('id',       sql.Integer, sql.Sequence(self.sequence_name), primary_key=True),
+            sql.Column('uid',      sql.String, default='', index=True),
+            sql.Column('gid',      sql.String, default='', index=True),
+            sql.Column('time',     sql.DateTime(timezone=True), index=True),
+            sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
+            sql.Column('values',   HSTORE, default={}),
+            sql.Column('payload',  JSONB, default={}),
+            sql.Column('geom',     Geography(srid=4326)),
+            sql.Index(
+                self.unique_index_name,
+                'uid',
+                'gid',
+                'time',
+                unique=True,
+            ),
+            sql.UniqueConstraint(
+                'uid',
+                'gid',
+                'time',
+                name=self.upsert_constraint_name
+            )
+        ]
+
+    def message_to_values(self, key, value):
+        payload = payload_parse(value)
+
+        tops = ['id', 'uid', 'gid', 'time', 'reftime', 'values', 'payload', 'geom', 'geojson']
+        top_level = value.copy()
+
+        # Save GeoJSON
+        if isinstance(top_level['geojson'], str):
+            geojson = json.loads(top_level['geojson'])
+        else:
+            geojson = top_level['geojson']
+
+        features = []
+        if 'features' in geojson:
+            # This is a FeatureCollection
+            features = geojson['features']
+        elif 'coordinates' in geojson:
+            # This is a geometry object, make a feature
+            features = [{ "type": "Feature", "properties": {}, "geometry": geojson }]
+        elif 'geometry' in geojson:
+            # This is a Feature, cool.
+            features = [geojson]
+
+        del top_level['geojson']
+        # Merge any geometries into one
+        top_level['geom'] = unary_union([ shape(f['geometry']) for f in features ]).wkt
+
+        # Start values with the properties of each GeoJSON Feature.
+        # There overwrite as they iterate. Finally they are overridden
+        # with the passed in "values".
+        values = {}
+        for f in features:
+            values.update(f['properties'])
+        if 'values' in value:
+            values.update(value['values'])
+
+        for k, v in value.items():
+            if k not in tops:
+                # All HSTORE values need to be strings or None
+                v = v if v is not None else None
+                values[k] = make_valid_string(str(v))
+                del top_level[k]  # Remove from the top level
+
+        if 'reftime' not in top_level:
+            top_level['reftime'] = top_level['time']
+
+        top_level['time'] = dtparse(top_level['time']).replace(tzinfo=pytz.utc).isoformat()
+        top_level['reftime'] = dtparse(top_level['reftime']).replace(tzinfo=pytz.utc).isoformat()
+        top_level['values'] = values
+        top_level['payload'] = payload
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in top_level.items() if v is not None }
 
 
-def columns_and_message_conversion(topic, lookup=None):
+class GenericFloat(BaseMap):
 
-    lookup = lookup or topic
+    @property
+    def schema(self):
+        return [
+            sql.Column('id',       sql.Integer, sql.Sequence(self.sequence_name), primary_key=True),
+            sql.Column('uid',      sql.String, index=True),
+            sql.Column('gid',      sql.String, default='', index=True),
+            sql.Column('time',     sql.DateTime(timezone=True), index=True),
+            sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
+            sql.Column('lat',      sql.REAL, index=True, default=0),
+            sql.Column('lon',      sql.REAL, index=True, default=0),
+            sql.Column('z',        sql.REAL, default=0.0, index=True),
+            sql.Column('values',   HSTORE, default={}),
+            sql.Column('meta',     JSONB, default={}),
+            sql.Column('payload',  JSONB, default={}),
+            sql.Index(
+                self.unique_index_name,
+                'uid',
+                'gid',
+                'time',
+                'lat',
+                'lon',
+                'z',
+                unique=True,
+            ),
+            sql.UniqueConstraint(
+                'uid',
+                'gid',
+                'time',
+                'lat',
+                'lon',
+                'z',
+                name=self.upsert_constraint_name
+            )
+        ]
 
-    if lookup in topic_to_func:
-        return topic_to_func[lookup](topic)
-    else:
-        return default_func(topic)
-
-
-def generic_cols(topic):
-
-    newtopic = topic.replace('.', '-')
-
-    constraint_name = f'{newtopic}_unique_constraint'.replace('-', '_')
-
-    cols = [
-        sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
-        sql.Column('uid',      sql.String, index=True),
-        sql.Column('gid',      sql.String, default='', index=True),
-        sql.Column('time',     sql.DateTime(timezone=False), index=True),
-        sql.Column('reftime',  sql.DateTime(timezone=False), index=True),
-        sql.Column('lat',      sql.REAL, index=True, default=0),
-        sql.Column('lon',      sql.REAL, index=True, default=0),
-        sql.Column('z',        sql.REAL, default=0.0, index=True),
-        sql.Column('values',   HSTORE, default={}),
-        sql.Column('meta',     JSONB, default={}),
-        sql.Column('payload',  JSONB, default={}),
-        sql.Index(
-            f'{newtopic}_unique_idx'.replace('-', '_'),
-            'uid',
-            'gid',
-            'time',
-            'lat',
-            'lon',
-            'z',
-            unique=True,
-        ),
-        sql.UniqueConstraint(
-            'uid',
-            'gid',
-            'time',
-            'lat',
-            'lon',
-            'z',
-            name=constraint_name
-        )
-    ]
-
-    return newtopic, cols, constraint_name
-
-
-def generic_float_data(topic):
-
-    newtopic, cols, constraint_name = generic_cols(topic)
-
-    def message_to_values(key, value):
+    def message_to_values(self, key, value):
         payload = payload_parse(value)
 
         # All HSTORE values need to be strings
@@ -115,16 +176,15 @@ def generic_float_data(topic):
         if 'reftime' not in value:
             value['reftime'] = value['time']
 
+        value['payload'] = payload
+
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v is not None }
 
-    return newtopic, cols, constraint_name, message_to_values
 
+class AreteData(GenericFloat):
 
-def arete_data(topic):
-    newtopic, cols, constraint_name = generic_cols(topic)
-
-    def message_to_values(key, value):
+    def message_to_values(self, key, value):
 
         headers = value['headers'].copy()
         values = value['json'].copy()
@@ -142,11 +202,11 @@ def arete_data(topic):
         values['cep_radius'] = headers['location']['cep_radius']
 
         # Time - use float timestamp and fall back to Iridium
-        reftime = datetime.utcfromtimestamp(headers['iridium_ts'])
+        reftime = datetime.fromtimestamp(headers['iridium_ts'], pytz.utc)
         # TODO: There is no status_ts yet, but this is here for
         # if one does show up eventually
         if 'status_ts' in values and values['status_ts']:
-            timestamp = datetime.utcfromtimestamp(values['status_ts'])
+            timestamp = datetime.fromtimestamp(values['status_ts'], pytz.utc)
         else:
             timestamp = reftime
 
@@ -158,10 +218,7 @@ def arete_data(topic):
         lonmin = float(headers['location']['longitude']['minutes'])
         values['iridium_lon'] = londeg + (lonmin / 60)
 
-        if (
-            'Full_ll' in values and
-            isinstance(values['Full_ll'], list)
-           ):
+        if 'Full_ll' in values and isinstance(values['Full_ll'], list):
             latdd = values['Full_ll'][0]
             londd = values['Full_ll'][1]
             del values['Full_ll']
@@ -201,13 +258,10 @@ def arete_data(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
-    return newtopic, cols, constraint_name, message_to_values
 
+class NumurusData(GenericFloat):
 
-def numurus_data(topic):
-    newtopic, cols, constraint_name = generic_cols(topic)
-
-    def message_to_values(key, value):
+    def message_to_values(self, key, value):
         payload = payload_parse(value)
 
         # We are skipping the "data_segment" portion, no idea how to interpret this. It is
@@ -217,8 +271,8 @@ def numurus_data(topic):
         top_level = {
             'uid':     value['imei'],
             'gid':     None,
-            'time':    dtparse(value['timestamp']).isoformat(),
-            'reftime': dtparse(value['navsat_fix_time']).isoformat(),
+            'time':    dtparse(value['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'reftime': dtparse(value['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
             'lat':     value['latitude'],
             'lon':     value['longitude'],
             'z':       None,
@@ -237,13 +291,10 @@ def numurus_data(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
-    return newtopic, cols, constraint_name, message_to_values
 
+class NumurusStatus(GenericFloat):
 
-def numurus_status(topic):
-    newtopic, cols, constraint_name = generic_cols(topic)
-
-    def message_to_values(key, value):
+    def message_to_values(self, key, value):
         payload = payload_parse(value)
 
         skips = ['timestamp', 'navsat_fix_time', 'imei', 'latitude', 'longitude']
@@ -251,8 +302,8 @@ def numurus_status(topic):
         top_level = {
             'uid':     value['imei'],
             'gid':     None,
-            'time':    dtparse(value['timestamp']).isoformat(),
-            'reftime': dtparse(value['navsat_fix_time']).isoformat(),
+            'time':    dtparse(value['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'reftime': dtparse(value['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
             'lat':     value['latitude'],
             'lon':     value['longitude'],
             'z':       None,
@@ -271,45 +322,10 @@ def numurus_status(topic):
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
-    return newtopic, cols, constraint_name, message_to_values
 
+class NwicFloatReports(GenericFloat):
 
-def just_json(topic):
-    """
-    {
-        ...whatever
-    }
-    """
-    newtopic = topic.replace('.', '-')
-
-    cols = [
-        sql.Column('id',       sql.Integer, sql.Sequence(f'{newtopic}_id_seq'), primary_key=True),
-        sql.Column('sinked',   sql.DateTime(timezone=False), index=True),
-        sql.Column('key',      sql.String, default='', index=True),
-        sql.Column('payload',  JSONB)
-    ]
-
-    def message_to_values(key, value):
-        payload = payload_parse(value)
-
-        values = {
-            'sinked':  datetime.utcnow().isoformat(),
-            'key':     key,
-            'payload': payload,
-        }
-
-        # Remove None to use the defaults defined in the table definition
-        return key, { k: v for k, v in values.items() if v is not None }
-
-    constraint_name = None
-    return newtopic, cols, constraint_name, message_to_values
-
-
-def float_reports(topic):
-
-    newtopic, cols, constraint_name = generic_cols(topic)
-
-    def message_to_values(key, value):
+    def message_to_values(self, key, value):
         payload = payload_parse(value)
 
         headers = value['headers'].copy()
@@ -320,13 +336,13 @@ def float_reports(topic):
         values['cep_radius'] = headers['location']['cep_radius']
 
         # Time - use float timestamp and fall back to Iridium
-        reftime = datetime.utcfromtimestamp(headers['iridium_ts'])
+        reftime = datetime.fromtimestamp(headers['iridium_ts'], pytz.utc)
         if 'status_ts' in values and values['status_ts']:
-            timestamp = datetime.utcfromtimestamp(values['status_ts'])
+            timestamp = datetime.fromtimestamp(values['status_ts'], pytz.utc)
         elif 'environmental_ts' in values and values['environmental_ts']:
-            timestamp = datetime.utcfromtimestamp(values['environmental_ts'])
+            timestamp = datetime.fromtimestamp(values['environmental_ts'], pytz.utc)
         elif 'mission_ts' in values and values['mission_ts']:
-            timestamp = datetime.utcfromtimestamp(values['mission_ts'])
+            timestamp = datetime.fromtimestamp(values['mission_ts'], pytz.utc)
         else:
             timestamp = reftime
 
@@ -381,23 +397,3 @@ def float_reports(topic):
 
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
-
-    return newtopic, cols, constraint_name, message_to_values
-
-
-topic_to_func = {
-    'arete.data':                    arete_data,
-    'axds-netcdf-replayer-data':     generic_float_data,
-    'float_reports':                 float_reports,
-    'just_json':                     just_json,
-    'netcdf_replayer':               generic_float_data,
-    'numurus.status':                numurus_status,
-    'numurus.data':                  numurus_data,
-    'oot.reports.environmental':     float_reports,
-    'oot.reports.health_and_status': float_reports,
-    'oot.reports.mission_sensors':   float_reports,
-}
-
-
-def default_func(topic):
-    return generic_float_data(topic)
