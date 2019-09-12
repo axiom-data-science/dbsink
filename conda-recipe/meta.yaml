@@ -18,7 +18,7 @@ requirements:
     - python
     - click
     - python-dateutil
-    - easyavro >=2.5.0
+    - easyavro >=3.0.0
     - msgpack-python
     - sqlalchemy
     - psycopg2
