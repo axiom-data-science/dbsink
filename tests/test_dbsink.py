@@ -92,14 +92,14 @@ def test_health_and_status():
     assert m1['lat'] == 32.704426
     assert m1['lon'] == -117.23662
     assert m1['time'] == '2019-05-31T20:39:50+00:00'
-    assert m1['values']['status_ts'] == '1559335190'
-    assert m1['values']['iridium_ts'] == '1559335196'
-    assert m1['values']['iridium_lat'] == '32.70308'
-    assert m1['values']['iridium_lon'] == '-116.72858'
-    assert m1['values']['latitude'] == '32.704426'
-    assert m1['values']['longitude'] == '-117.23662'
-    assert m1['values']['speed'] == '2.72'
-    assert m1['values']['test_num'] == 'T240'
+    assert m1['values']['values_status_ts'] == '1559335190'
+    assert m1['values']['headers_iridium_ts'] == '1559335196'
+    assert m1['values']['headers_location_latitude_degrees'] == '32'
+    assert m1['values']['headers_location_longitude_degrees'] == '-117'
+    assert m1['values']['values_latitude'] == '32.704426'
+    assert m1['values']['values_longitude'] == '-117.23662'
+    assert m1['values']['values_misc_speed'] == '2.72'
+    assert m1['values']['values_misc_test_num'] == 'T240'
     assert m1['values']['mfr'] == 'usna'
 
     m2 = to_send[-1][1]
@@ -108,13 +108,13 @@ def test_health_and_status():
     assert m2['lon'] == -75.47597
     assert m2['time'] == '2019-06-06T18:19:56+00:00'
     assert 'status_ts' not in m2['values']
-    assert m2['values']['iridium_ts'] == '1559845196'
-    assert m2['values']['iridium_lat'] == '39.01338'
-    assert m2['values']['iridium_lon'] == '-75.47597'
+    assert m2['values']['headers_iridium_ts'] == '1559845196'
+    assert m2['values']['headers_location_latitude_degrees'] == '39'
+    assert m2['values']['headers_location_longitude_degrees'] == '-76'
     assert 'latitude' not in m2['values']
-    assert m2['values']['longitude'] is None
-    assert m2['values']['speed'] == '0.01'
-    assert m2['values']['test_num'] == 'T76'
+    assert m2['values']['values_longitude'] is None
+    assert m2['values']['values_misc_speed'] == '0.01'
+    assert m2['values']['values_misc_test_num'] == 'T76'
     assert m2['values']['mfr'] == 'usna'
 
 
@@ -445,6 +445,24 @@ def test_json_integration():
         '--drop',
         '--no-listen',
         '--datafile', str(Path('tests/environmental.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_genericfloat_integration():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'genericfloat-integration-test',
+        '--table', 'my-genericfloat-table',
+        '--lookup', 'GenericFloat',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/replayer.json').resolve()),
         '-v'
     ])
     print(result)

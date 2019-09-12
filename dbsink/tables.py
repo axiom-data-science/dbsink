@@ -1,14 +1,15 @@
 #!python
 # coding=utf-8
 import re
+import collections
 import simplejson as json
 from datetime import datetime
 
 import pytz
 import sqlalchemy as sql
-from shapely.geometry import shape
 from shapely.ops import unary_union
 from geoalchemy2.types import Geography
+from shapely.geometry import shape, Point
 from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB
 
@@ -25,6 +26,18 @@ L.handlers = [stream]
 
 xx = re.compile(r'[\x00-\x1f\\"]')
 ux = re.compile(r'[\\u[0-9A-Fa-f]]')
+
+
+def flatten(d, parent_key='', sep='_'):
+    # https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
 
 def make_valid_string(obj):
@@ -139,11 +152,11 @@ class GenericFloat(BaseMap):
             sql.Column('gid',      sql.String, default='', index=True),
             sql.Column('time',     sql.DateTime(timezone=True), index=True),
             sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
-            sql.Column('lat',      sql.REAL, index=True, default=0),
-            sql.Column('lon',      sql.REAL, index=True, default=0),
-            sql.Column('z',        sql.REAL, default=0.0, index=True),
+            sql.Column('lat',      sql.REAL, index=True, default=0.0),
+            sql.Column('lon',      sql.REAL, index=True, default=0.0),
+            sql.Column('z',        sql.REAL, index=True, default=0.0),
+            sql.Column('geom',     Geography(srid=4326)),
             sql.Column('values',   HSTORE, default={}),
-            sql.Column('meta',     JSONB, default={}),
             sql.Column('payload',  JSONB, default={}),
             sql.Index(
                 self.unique_index_name,
@@ -177,6 +190,7 @@ class GenericFloat(BaseMap):
             value['reftime'] = value['time']
 
         value['payload'] = payload
+        value['geom'] = Point(value['lon'], value['lat']).wkt
 
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v is not None }
@@ -186,48 +200,41 @@ class AreteData(GenericFloat):
 
     def message_to_values(self, key, value):
 
-        headers = value['headers'].copy()
-        values = value['json'].copy()
+        values_copy = value.copy()
 
         # Remove some randoms
         removes = ['not_decoded', 'Compressed_Data']
         for r in removes:
-            if r in values:
-                del values[r]
+            if r in value['json']:
+                del values_copy['json'][r]
 
-        payload = payload_parse(values)
-
-        values['mfr'] = value['mfr']
-        values['cdr_reference'] = value['cdr_reference']
-        values['cep_radius'] = headers['location']['cep_radius']
+        payload = payload_parse(values_copy)
+        values = flatten(values_copy)
 
         # Time - use float timestamp and fall back to Iridium
-        reftime = datetime.fromtimestamp(headers['iridium_ts'], pytz.utc)
+        reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
         # TODO: There is no status_ts yet, but this is here for
         # if one does show up eventually
-        if 'status_ts' in values and values['status_ts']:
-            timestamp = datetime.fromtimestamp(values['status_ts'], pytz.utc)
+        if 'headers_status_ts' in values and values['headers_status_ts']:
+            timestamp = datetime.fromtimestamp(values['headers_status_ts'], pytz.utc)
         else:
             timestamp = reftime
 
         # Location - Use value locations and fall back to Iridium
-        latdeg = float(headers['location']['latitude']['degrees'])
-        latmin = float(headers['location']['latitude']['minutes'])
-        values['iridium_lat'] = latdeg + (latmin / 60)
-        londeg = float(headers['location']['longitude']['degrees'])
-        lonmin = float(headers['location']['longitude']['minutes'])
-        values['iridium_lon'] = londeg + (lonmin / 60)
+        latdeg = float(values['headers_location_latitude_degrees'])
+        latmin = float(values['headers_location_latitude_minutes'])
+        latdd = latdeg + (latmin / 60)
 
-        if 'Full_ll' in values and isinstance(values['Full_ll'], list):
-            latdd = values['Full_ll'][0]
-            londd = values['Full_ll'][1]
-            del values['Full_ll']
-        else:
-            latdd = values['iridium_lat']
-            londd = values['iridium_lon']
+        londeg = float(values['headers_location_longitude_degrees'])
+        lonmin = float(values['headers_location_longitude_minutes'])
+        londd = londeg + (lonmin / 60)
+
+        if 'json_Full_ll' in values and isinstance(values['json_Full_ll'], list):
+            latdd = values['json_Full_ll'][0]
+            londd = values['json_Full_ll'][1]
 
         top_level = {
-            'uid':     str(headers['imei']),
+            'uid':     str(values['headers_imei']),
             'gid':     None,
             'time':    timestamp.isoformat(),
             'reftime': reftime.isoformat(),
@@ -236,15 +243,12 @@ class AreteData(GenericFloat):
             'z':       None,
             'payload': payload
         }
-
-        del headers['imei']
-        del headers['location']
+        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
         fullvalues = {
             **top_level,
             'values': {
-                **values,
-                **headers,
+                **values
             }
         }
 
@@ -264,28 +268,38 @@ class NumurusData(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        # We are skipping the "data_segment" portion, no idea how to interpret this. It is
-        # carried through in the "payload" and could be used if someone wanted to
-        skips = ['timestamp', 'navsat_fix_time', 'imei', 'latitude', 'longitude', 'data_segment']
+        values = flatten(value)
 
         top_level = {
-            'uid':     value['imei'],
+            'uid':     values['imei'],
             'gid':     None,
-            'time':    dtparse(value['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
-            'reftime': dtparse(value['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
-            'lat':     value['latitude'],
-            'lon':     value['longitude'],
+            'time':    dtparse(values['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'reftime': dtparse(values['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
+            'lat':     values['latitude'],
+            'lon':     values['longitude'],
             'z':       None,
-            'payload': payload
+            'payload': payload,
         }
+        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
+
+        skips = [
+            # No eacy ay to represent this as a flat dict. We can write a db view to extract this
+            # data from the `payload` if required.
+            'data_segment_data_product_pipeline'
+        ]
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in value.items() if k not in skips }
+        values = {
+            k: make_valid_string(str(x)) if x is not None else None for k, x in values.items()
+            if k not in skips
+        }
         values['mfr'] = 'numurus'
 
         fullvalues = {
             **top_level,
-            'values': values
+            'values': {
+                **values
+            }
         }
 
         # Remove None to use the defaults defined in the table definition
@@ -297,26 +311,29 @@ class NumurusStatus(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        skips = ['timestamp', 'navsat_fix_time', 'imei', 'latitude', 'longitude']
+        values = flatten(value)
 
         top_level = {
-            'uid':     value['imei'],
+            'uid':     values['imei'],
             'gid':     None,
-            'time':    dtparse(value['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
-            'reftime': dtparse(value['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
-            'lat':     value['latitude'],
-            'lon':     value['longitude'],
+            'time':    dtparse(values['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'reftime': dtparse(values['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
+            'lat':     values['latitude'],
+            'lon':     values['longitude'],
             'z':       None,
             'payload': payload
         }
+        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in value.items() if k not in skips }
+        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in values.items() }
         values['mfr'] = 'numurus'
 
         fullvalues = {
             **top_level,
-            'values': values
+            'values': {
+                **values
+            }
         }
 
         # Remove None to use the defaults defined in the table definition
@@ -328,43 +345,33 @@ class NwicFloatReports(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        headers = value['headers'].copy()
-        values = value['values'].copy()
-
-        values['mfr'] = value['mfr']
-        values['cdr_reference'] = value['cdr_reference']
-        values['cep_radius'] = headers['location']['cep_radius']
+        values = flatten(value)
 
         # Time - use float timestamp and fall back to Iridium
-        reftime = datetime.fromtimestamp(headers['iridium_ts'], pytz.utc)
-        if 'status_ts' in values and values['status_ts']:
-            timestamp = datetime.fromtimestamp(values['status_ts'], pytz.utc)
-        elif 'environmental_ts' in values and values['environmental_ts']:
-            timestamp = datetime.fromtimestamp(values['environmental_ts'], pytz.utc)
-        elif 'mission_ts' in values and values['mission_ts']:
-            timestamp = datetime.fromtimestamp(values['mission_ts'], pytz.utc)
-        else:
-            timestamp = reftime
+        reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
+        timestamp = reftime
 
-        # Location - Use value locations and fall back to Iridium
-        latdeg = float(headers['location']['latitude']['degrees'])
-        latmin = float(headers['location']['latitude']['minutes'])
-        values['iridium_lat'] = latdeg + (latmin / 60)
-        if 'latitude' in values and values['latitude']:
-            latdd = values['latitude']
-        else:
-            latdd = values['iridium_lat']
+        # Try to extract a better timestamp
+        for k in ['values_status_ts', 'values_environmental_ts', 'values_mission_ts']:
+            if values.get(k):
+                timestamp = datetime.fromtimestamp(values[k], pytz.utc)
+                break
 
-        londeg = float(headers['location']['longitude']['degrees'])
-        lonmin = float(headers['location']['longitude']['minutes'])
-        values['iridium_lon'] = londeg + (lonmin / 60)
-        if 'longitude' in values and values['longitude']:
-            londd = values['longitude']
-        else:
-            londd = values['iridium_lon']
+        # Location - Use values locations and fall back to Iridium
+        latdeg = float(values['headers_location_latitude_degrees'])
+        latmin = float(values['headers_location_latitude_minutes'])
+        latdd = latdeg + (latmin / 60)
+        if values.get('values_latitude'):
+            latdd = values['values_latitude']
+
+        londeg = float(values['headers_location_longitude_degrees'])
+        lonmin = float(values['headers_location_longitude_minutes'])
+        londd = londeg + (lonmin / 60)
+        if values.get('values_longitude'):
+            londd = values['values_longitude']
 
         top_level = {
-            'uid':     str(headers['imei']),
+            'uid':     str(values['headers_imei']),
             'gid':     None,
             'time':    timestamp.isoformat(),
             'reftime': reftime.isoformat(),
@@ -373,27 +380,17 @@ class NwicFloatReports(GenericFloat):
             'z':       None,
             'payload': payload
         }
+        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
-        del headers['imei']
-        del headers['location']
-
-        misc = {}
-        if 'misc' in values and values['misc']:
-            misc = values['misc']
-        del values['misc']
+        # All HSTORE values need to be strings
+        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in values.items() }
 
         fullvalues = {
             **top_level,
             'values': {
-                **values,
-                **headers,
-                **misc
+                **values
             }
         }
-
-        # All HSTORE values need to be strings
-        if fullvalues['values']:
-            fullvalues['values'] = { k: make_valid_string(str(x)) if x is not None else None for k, x in fullvalues['values'].items() }
 
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
