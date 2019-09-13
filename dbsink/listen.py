@@ -1,6 +1,7 @@
 #!python
 # coding=utf-8
 import uuid
+import logging
 import pkg_resources
 import simplejson as json
 
@@ -10,18 +11,7 @@ import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import insert
 from easyavro import EasyAvroConsumer, EasyConsumer
 
-import logging
-log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stream = logging.StreamHandler()
-stream.setFormatter(log_format)
-
-ea = logging.getLogger('easyavro')
-ea.setLevel(logging.INFO)
-ea.addHandler(stream)
-
-L = logging.getLogger()
-L.setLevel(logging.INFO)
-L.handlers = [stream]
+from dbsink import L, ea
 
 
 def get_mappings():

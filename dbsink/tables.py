@@ -14,15 +14,7 @@ from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB
 
 from dbsink.maps import BaseMap, payload_parse
-
-import logging
-log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stream = logging.StreamHandler()
-stream.setFormatter(log_format)
-
-L = logging.getLogger()
-L.setLevel(logging.INFO)
-L.handlers = [stream]
+from dbsink import L
 
 xx = re.compile(r'[\x00-\x1f\\"]')
 ux = re.compile(r'[\\u[0-9A-Fa-f]]')
