@@ -8,6 +8,8 @@ import pytz
 import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import JSONB
 
+from dbsink import L
+
 
 def payload_parse(payload):
     # Make sure we have valid JSON and remove any
@@ -59,6 +61,21 @@ class BaseMap:
             unique index check to upsert data
         """
         raise NotImplementedError
+
+    def match_columns(self, inserts):
+        """ Throws away insert data that does not match a defined
+            column name.
+        """
+        # Get column names
+        column_names = [ s.name for s in self.schema if isinstance(s, sql.Column) ]
+        # Throw away keys that are not column names
+        matched_inserts = { k: v for k, v in inserts.items() if k in column_names }
+
+        if inserts.keys() != matched_inserts.keys():
+            unmatched = [ x for x in inserts.keys() if x not in matched_inserts ]
+            L.info(f'Threw away data with no columns: {unmatched}')
+
+        return matched_inserts
 
     def message_to_values(self, key, value):
         raise NotImplementedError

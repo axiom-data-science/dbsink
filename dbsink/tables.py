@@ -130,6 +130,8 @@ class GenericGeography(BaseMap):
         top_level['values'] = values
         top_level['payload'] = payload
 
+        # Throw away non-column data
+        top_level = self.match_columns(top_level)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in top_level.items() if v is not None }
 
@@ -190,6 +192,8 @@ class GenericFloat(BaseMap):
         value['payload'] = payload
         value['geom'] = Point(value['lon'], value['lat']).wkt
 
+        # Throw away non-column data
+        value = self.match_columns(value)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in value.items() if v is not None }
 
@@ -213,7 +217,7 @@ class AreteData(GenericFloat):
         reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
         # TODO: There is no status_ts yet, but this is here for
         # if one does show up eventually
-        if 'headers_status_ts' in values and values['headers_status_ts']:
+        if values.get('headers_status_ts'):
             timestamp = datetime.fromtimestamp(values['headers_status_ts'], pytz.utc)
         else:
             timestamp = reftime
@@ -243,6 +247,12 @@ class AreteData(GenericFloat):
         }
         top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
+        # All HSTORE values need to be strings
+        values = {
+            k: make_valid_string(str(x)) if x is not None else None
+            for k, x in values.items()
+        }
+
         fullvalues = {
             **top_level,
             'values': {
@@ -250,13 +260,8 @@ class AreteData(GenericFloat):
             }
         }
 
-        # All HSTORE values need to be strings
-        if fullvalues['values']:
-            fullvalues['values'] = {
-                k: make_valid_string(str(x)) if x is not None else None
-                for k, x in fullvalues['values'].items()
-            }
-
+        # Throw away non-column data
+        fullvalues = self.match_columns(fullvalues)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
@@ -281,14 +286,15 @@ class NumurusData(GenericFloat):
         top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
         skips = [
-            # No eacy ay to represent this as a flat dict. We can write a db view to extract this
+            # No easy way to represent this as a flat dict. We can write a db view to extract this
             # data from the `payload` if required.
             'data_segment_data_product_pipeline'
         ]
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None for k, x in values.items()
+            k: make_valid_string(str(x)) if x is not None else None
+            for k, x in values.items()
             if k not in skips
         }
         values['mfr'] = 'numurus'
@@ -300,6 +306,8 @@ class NumurusData(GenericFloat):
             }
         }
 
+        # Throw away non-column data
+        fullvalues = self.match_columns(fullvalues)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
@@ -324,7 +332,10 @@ class NumurusStatus(GenericFloat):
         top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in values.items() }
+        values = {
+            k: make_valid_string(str(x)) if x is not None else None
+            for k, x in values.items()
+        }
         values['mfr'] = 'numurus'
 
         fullvalues = {
@@ -334,6 +345,8 @@ class NumurusStatus(GenericFloat):
             }
         }
 
+        # Throw away non-column data
+        fullvalues = self.match_columns(fullvalues)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
 
@@ -381,7 +394,10 @@ class NwicFloatReports(GenericFloat):
         top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
 
         # All HSTORE values need to be strings
-        values = { k: make_valid_string(str(x)) if x is not None else None for k, x in values.items() }
+        values = {
+            k: make_valid_string(str(x)) if x is not None else None
+            for k, x in values.items()
+        }
 
         fullvalues = {
             **top_level,
@@ -390,5 +406,7 @@ class NwicFloatReports(GenericFloat):
             }
         }
 
+        # Throw away non-column data
+        fullvalues = self.match_columns(fullvalues)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
