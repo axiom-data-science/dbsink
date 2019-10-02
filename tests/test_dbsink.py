@@ -216,32 +216,49 @@ def test_just_json():
     }
 
 
-# def test_geography_driftworker_trajectories():
-#     mapp = GenericGeography('topic')
+def test_geography_driftworker_trajectories_individual():
+    mapp = GenericGeography('topic')
 
-#     to_send = []
+    to_send = []
 
-#     with open('./tests/driftworker-trajectories.json') as f:
-#         messages = json.load(f)
-#         for m in messages:
-#             try:
-#                 to_send.append(mapp.message_to_values('fake', m))
-#             except BaseException as e:
-#                 listen.L.error(repr(e))
+    with open('./tests/driftworker-traj-ind.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 10
 
 
-# def test_geography_driftworker_envelopes():
-#     mapp = GenericGeography('topic')
+def test_geography_driftworker_trajectories_multi():
+    mapp = GenericGeography('topic')
 
-#     to_send = []
+    to_send = []
 
-#     with open('./tests/driftworker-envelopes.json') as f:
-#         messages = json.load(f)
-#         for m in messages:
-#             try:
-#                 to_send.append(mapp.message_to_values('fake', m))
-#             except BaseException as e:
-#                 listen.L.error(repr(e))
+    with open('./tests/driftworker-traj-multi.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 1
+
+
+def test_geography_driftworker_envelopes():
+    mapp = GenericGeography('topic')
+
+    to_send = []
+
+    with open('./tests/driftworker-envelopes.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 4
 
 
 def test_geography_scuttle_watch_regions():
@@ -435,7 +452,7 @@ def test_geography_integration():
         '--drop',
         '--no-listen',
         '--datafile', str(Path('tests/scuttle-watch-regions.json').resolve()),
-        '-vvv'
+        '-v'
     ])
     print(result)
     assert result.exit_code == 0
@@ -489,6 +506,57 @@ def test_nwicfloat_integration():
         '--drop',
         '--no-listen',
         '--datafile', str(Path('tests/health_and_status.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+@pytest.mark.integration
+def test_geography_envelopes():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'driftworker-envelopes-test',
+        '--table', 'driftworker-envelopes',
+        '--lookup', 'GenericGeography',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/driftworker-envelopes.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+@pytest.mark.integration
+def test_geography_traj_ind():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'driftworker-traj-ind-test',
+        '--table', 'driftworker-traj-ind',
+        '--lookup', 'GenericGeography',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/driftworker-traj-ind.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+@pytest.mark.integration
+def test_geography_traj_multi():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'driftworker-traj-multi-test',
+        '--table', 'driftworker-traj-multi',
+        '--lookup', 'GenericGeography',
+        '--packing', 'json',
+        '--drop',
+        '--no-listen',
+        '--datafile', str(Path('tests/driftworker-traj-multi.json').resolve()),
         '-v'
     ])
     print(result)

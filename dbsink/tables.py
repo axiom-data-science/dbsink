@@ -125,6 +125,12 @@ class GenericGeography(BaseMap):
         if 'reftime' not in top_level:
             top_level['reftime'] = top_level['time']
 
+        # All HSTORE values need to be strings
+        values = {
+            k: make_valid_string(str(x)) if x is not None else None
+            for k, x in values.items()
+        }
+
         top_level['time'] = dtparse(top_level['time']).replace(tzinfo=pytz.utc).isoformat()
         top_level['reftime'] = dtparse(top_level['reftime']).replace(tzinfo=pytz.utc).isoformat()
         top_level['values'] = values
