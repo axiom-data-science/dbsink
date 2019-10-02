@@ -32,12 +32,13 @@ def get_mappings():
 @click.option('--packing',  type=click.Choice(['json', 'avro', 'msgpack']), default='json', help="The data unpacking algorithm to use (default: json).")
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
+@click.option('--truncate/--no-truncate', default=False, help="Truncate the table first")
 @click.option('--logfile',  type=str, default='', help="File to log messages to (default: stdout).")
 @click.option('--listen/--no-listen', default=True, help="Whether to listen for messages.")
 @click.option('--do-inserts/--no-do-inserts', default=True, help="Whether to insert data into a database.")
 @click.option('--datafile', type=str, default='', help="File to pull messages from instead of listening for messages.")
 @click.option('-v', '--verbose', count=True, help="Control the output verbosity, use up to 3 times (-vvv)")
-def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, registry, drop, logfile, listen, do_inserts, datafile, verbose):
+def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, registry, drop, truncate, logfile, listen, do_inserts, datafile, verbose):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -122,6 +123,13 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         if drop is True:
             L.info(f'Dropping table {mapping.table}')
             engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{mapping.table}\"'))
+
+        if truncate is True:
+            L.info(f'Truncating table {mapping.table}')
+            try:
+                engine.execute(sql.text(f'TRUNCATE TABLE \"{mapping.table}\" RESTART IDENTITY'))
+            except BaseException as e:
+                L.error(f'Could not truncate table: {e}')
 
         # Reflect to see if this table already exists. Create or update it.
         meta = sql.MetaData(engine, schema=schema)

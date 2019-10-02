@@ -538,6 +538,7 @@ def test_geography_traj_ind():
         '--lookup', 'GenericGeography',
         '--packing', 'json',
         '--drop',
+        '--truncate',
         '--no-listen',
         '--datafile', str(Path('tests/driftworker-traj-ind.json').resolve()),
         '-v'
@@ -554,7 +555,7 @@ def test_geography_traj_multi():
         '--table', 'driftworker-traj-multi',
         '--lookup', 'GenericGeography',
         '--packing', 'json',
-        '--drop',
+        '--truncate',
         '--no-listen',
         '--datafile', str(Path('tests/driftworker-traj-multi.json').resolve()),
         '-v'
