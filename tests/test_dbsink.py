@@ -147,6 +147,9 @@ def test_numurus_data():
             except BaseException as e:
                 listen.L.error(repr(e))
 
+    assert to_send[0][1]['values']['data_segment_data_0'] == '33'
+    # , 1, 1, 1, 0, 0, 0, 0, 0]'
+    assert to_send[0][1]['values']['data_segment_data'] == '[33, 1, 1, 1, 0, 0, 0, 0, 0]'
     assert len(to_send) == 8
 
 
@@ -511,6 +514,7 @@ def test_nwicfloat_integration():
     print(result)
     assert result.exit_code == 0
 
+
 @pytest.mark.integration
 def test_geography_envelopes():
 
@@ -527,6 +531,7 @@ def test_geography_envelopes():
     ])
     print(result)
     assert result.exit_code == 0
+
 
 @pytest.mark.integration
 def test_geography_traj_ind():
@@ -546,6 +551,7 @@ def test_geography_traj_ind():
     print(result)
     assert result.exit_code == 0
 
+
 @pytest.mark.integration
 def test_geography_traj_multi():
 
@@ -562,3 +568,23 @@ def test_geography_traj_multi():
     ])
     print(result)
     assert result.exit_code == 0
+
+
+def test_flatten():
+    mapp = NumurusData('topic')
+
+    to_send = []
+
+    with open('./tests/numurus.data.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(expand_value_lists(flatten(m)))
+            except BaseException as e:
+                listen.L.error(repr(e))
+
+    assert to_send[0]['data_segment_data'] == [33, 1, 1, 1, 0, 0, 0, 0, 0]
+    assert to_send[0]['data_segment_data_0'] == 33
+
+    assert make_valid_string(to_send[0]['data_segment_data']) == '[33, 1, 1, 1, 0, 0, 0, 0, 0]'
+    assert make_valid_string(to_send[0]['data_segment_data_0']) == '33'

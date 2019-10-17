@@ -2,6 +2,7 @@
 # coding=utf-8
 import re
 import collections
+from copy import copy
 import simplejson as json
 from datetime import datetime
 
@@ -14,7 +15,7 @@ from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB
 
 from dbsink.maps import BaseMap, payload_parse
-from dbsink import L
+from dbsink import L  # noqa
 
 xx = re.compile(r'[\x00-\x1f\\"]')
 ux = re.compile(r'[\\u[0-9A-Fa-f]]')
@@ -32,23 +33,37 @@ def flatten(d, parent_key='', sep='_'):
     return dict(items)
 
 
+def expand_value_lists(d, sep='_'):
+    """ For every list item, expand it to include the individual members
+    """
+    newd = copy(d)
+    for k, v in d.items():
+        if isinstance(v, list):
+            for i, litem in enumerate(v):
+                newd[f'{k}{sep}{i}'] = litem
+    return newd
+
+
 def make_valid_string(obj):
-    try:
-        return ux.sub(
-            '',
-            xx.sub(
+    if isinstance(obj, str):
+        try:
+            return ux.sub(
                 '',
-                obj
+                xx.sub(
+                    '',
+                    obj
+                )
+            ).replace(
+                '\x80',
+                ''
+            ).replace(
+                '\x00',
+                ''
             )
-        ).replace(
-            '\x80',
-            ''
-        ).replace(
-            '\x00',
-            ''
-        )
-    except BaseException:
-        return obj
+        except BaseException:
+            return obj
+    else:
+        return str(obj)
 
 
 class GenericGeography(BaseMap):
@@ -119,7 +134,7 @@ class GenericGeography(BaseMap):
             if k not in tops:
                 # All HSTORE values need to be strings or None
                 v = v if v is not None else None
-                values[k] = make_valid_string(str(v))
+                values[k] = make_valid_string(v)
                 del top_level[k]  # Remove from the top level
 
         if 'reftime' not in top_level:
@@ -127,7 +142,7 @@ class GenericGeography(BaseMap):
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None
+            k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
         }
 
@@ -184,7 +199,7 @@ class GenericFloat(BaseMap):
 
         # All HSTORE values need to be strings
         if value['values']:
-            value['values'] = { k: make_valid_string(str(x)) for k, x in value['values'].items() }
+            value['values'] = { k: make_valid_string(x) for k, x in value['values'].items() }
 
         value['lat'] = float(value['lat'])
         value['lon'] = float(value['lon'])
@@ -217,7 +232,7 @@ class AreteData(GenericFloat):
                 del values_copy['json'][r]
 
         payload = payload_parse(values_copy)
-        values = flatten(values_copy)
+        values = expand_value_lists(flatten(values_copy))
 
         # Time - use float timestamp and fall back to Iridium
         reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
@@ -255,7 +270,7 @@ class AreteData(GenericFloat):
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None
+            k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
         }
 
@@ -277,7 +292,7 @@ class NumurusData(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = flatten(value)
+        values = expand_value_lists(flatten(value))
 
         top_level = {
             'uid':     values['imei'],
@@ -299,7 +314,7 @@ class NumurusData(GenericFloat):
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None
+            k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
             if k not in skips
         }
@@ -323,7 +338,7 @@ class NumurusStatus(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = flatten(value)
+        values = expand_value_lists(flatten(value))
 
         top_level = {
             'uid':     values['imei'],
@@ -339,7 +354,7 @@ class NumurusStatus(GenericFloat):
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None
+            k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
         }
         values['mfr'] = 'numurus'
@@ -362,7 +377,7 @@ class NwicFloatReports(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = flatten(value)
+        values = expand_value_lists(flatten(value))
 
         # Time - use float timestamp and fall back to Iridium
         reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
@@ -401,7 +416,7 @@ class NwicFloatReports(GenericFloat):
 
         # All HSTORE values need to be strings
         values = {
-            k: make_valid_string(str(x)) if x is not None else None
+            k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
         }
 
