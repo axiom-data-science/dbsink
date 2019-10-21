@@ -9,8 +9,9 @@ from datetime import datetime
 import pytz
 import sqlalchemy as sql
 from shapely.ops import unary_union
-from geoalchemy2.types import Geography
-from shapely.geometry import shape, Point
+from geoalchemy2.types import Geometry
+from geoalchemy2.shape import from_shape
+from shapely.geometry import shape, Point, box
 from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB
 
@@ -19,6 +20,10 @@ from dbsink import L  # noqa
 
 xx = re.compile(r'[\x00-\x1f\\"]')
 ux = re.compile(r'[\\u[0-9A-Fa-f]]')
+
+
+WGS84_BBOX_180 = box(-180, -90, 180, 90)
+WGS84_BBOX_360 = box(0, -90, 360, 90)
 
 
 def flatten(d, parent_key='', sep='_'):
@@ -31,6 +36,37 @@ def flatten(d, parent_key='', sep='_'):
         else:
             items.append((new_key, v))
     return dict(items)
+
+
+def get_point_location_quality(loc_geom, inprecise_location=False):
+    """ QARTOD Flags:
+        1 - Good
+        2 - Not evaluated
+        3 - Questionable/suspect
+        4 - Bad
+        9 - Missing Data
+    """
+    
+    # Avoid locations that are both small decimal numbers.
+    if -1 < loc_geom.x < 1 and -1 < loc_geom.y < 1:
+        return 4
+
+    # Avoid "null island" locations
+    if loc_geom.x == 0 or loc_geom.y == 0:
+        return 4
+
+    # Make sure we have resonable coordinates
+    if not any([
+        loc_geom.within(WGS84_BBOX_180),
+        loc_geom.within(WGS84_BBOX_360)
+    ]):
+        return 4
+
+    # If using an inprecise location (ie. Iridium)
+    if inprecise_location is True:
+        return 3
+
+    return 1
 
 
 def expand_value_lists(d, sep='_'):
@@ -78,7 +114,7 @@ class GenericGeography(BaseMap):
             sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
             sql.Column('values',   HSTORE, default={}),
             sql.Column('payload',  JSONB, default={}),
-            sql.Column('geom',     Geography(srid=4326)),
+            sql.Column('geom',     Geometry(srid=4326)),
             sql.Index(
                 self.unique_index_name,
                 'uid',
@@ -119,7 +155,10 @@ class GenericGeography(BaseMap):
 
         del top_level['geojson']
         # Merge any geometries into one
-        top_level['geom'] = unary_union([ shape(f['geometry']) for f in features ]).wkt
+        top_level['geom'] = from_shape(
+            unary_union([ shape(f['geometry']) for f in features ]),
+            srid=4326
+        )
 
         # Start values with the properties of each GeoJSON Feature.
         # There overwrite as they iterate. Finally they are overridden
@@ -167,10 +206,10 @@ class GenericFloat(BaseMap):
             sql.Column('gid',      sql.String, default='', index=True),
             sql.Column('time',     sql.DateTime(timezone=True), index=True),
             sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
-            sql.Column('lat',      sql.REAL, index=True, default=0.0),
-            sql.Column('lon',      sql.REAL, index=True, default=0.0),
-            sql.Column('z',        sql.REAL, index=True, default=0.0),
-            sql.Column('geom',     Geography(srid=4326)),
+            sql.Column('lat',      sql.REAL, index=True),
+            sql.Column('lon',      sql.REAL, index=True),
+            sql.Column('z',        sql.REAL, index=True),
+            sql.Column('geom',     Geometry('POINT', srid=4326)),
             sql.Column('values',   HSTORE, default={}),
             sql.Column('payload',  JSONB, default={}),
             sql.Index(
@@ -197,12 +236,16 @@ class GenericFloat(BaseMap):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        # All HSTORE values need to be strings
-        if value['values']:
-            value['values'] = { k: make_valid_string(x) for k, x in value['values'].items() }
-
         value['lat'] = float(value['lat'])
         value['lon'] = float(value['lon'])
+        pt = Point(value['lon'], value['lat'])
+        value['geom'] = from_shape(pt, srid=4326)
+
+        if not value['values']:
+            value['values'] = {}
+        value['values']['location_quality'] = get_point_location_quality(pt)
+        # All HSTORE values need to be strings
+        value['values'] = { k: make_valid_string(x) for k, x in value['values'].items() }
 
         value['time'] = dtparse(value['time']).replace(tzinfo=pytz.utc).isoformat()
         if 'reftime' in value:
@@ -211,7 +254,6 @@ class GenericFloat(BaseMap):
             value['reftime'] = value['time']
 
         value['payload'] = payload
-        value['geom'] = Point(value['lon'], value['lat']).wkt
 
         # Throw away non-column data
         value = self.match_columns(value)
@@ -244,6 +286,7 @@ class AreteData(GenericFloat):
             timestamp = reftime
 
         # Location - Use values locations and fall back to Iridium
+        inprecise_location = True
         latdeg = float(values['headers_location_latitude_degrees'])
         latmin = float(values['headers_location_latitude_minutes'])
         latdd = latdeg + (latmin / 60)
@@ -255,6 +298,7 @@ class AreteData(GenericFloat):
         if 'json_Full_ll' in values and isinstance(values['json_Full_ll'], list):
             latdd = values['json_Full_ll'][0]
             londd = values['json_Full_ll'][1]
+            inprecise_location = False
 
         top_level = {
             'uid':     str(values['headers_imei']),
@@ -266,7 +310,12 @@ class AreteData(GenericFloat):
             'z':       None,
             'payload': payload
         }
-        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
+        pt = Point(top_level['lon'], top_level['lat'])
+        top_level['geom'] = from_shape(pt, srid=4326)
+
+        # Set additional values
+        values['location_quality'] = get_point_location_quality(pt, inprecise_location=inprecise_location)
+        values['mfr'] = 'arete'
 
         # All HSTORE values need to be strings
         values = {
@@ -304,7 +353,8 @@ class NumurusData(GenericFloat):
             'z':       None,
             'payload': payload,
         }
-        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
+        pt = Point(top_level['lon'], top_level['lat'])
+        top_level['geom'] = from_shape(pt, srid=4326)
 
         skips = [
             # No easy way to represent this as a flat dict. We can write a db view to extract this
@@ -312,13 +362,16 @@ class NumurusData(GenericFloat):
             'data_segment_data_product_pipeline'
         ]
 
+        # Set additional values
+        values['location_quality'] = get_point_location_quality(pt)
+        values['mfr'] = 'numurus'
+
         # All HSTORE values need to be strings
         values = {
             k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
             if k not in skips
         }
-        values['mfr'] = 'numurus'
 
         fullvalues = {
             **top_level,
@@ -350,14 +403,18 @@ class NumurusStatus(GenericFloat):
             'z':       None,
             'payload': payload
         }
-        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
+        pt = Point(top_level['lon'], top_level['lat'])
+        top_level['geom'] = from_shape(pt, srid=4326)
+
+        # Set additional values
+        values['location_quality'] = get_point_location_quality(pt)
+        values['mfr'] = 'numurus'
 
         # All HSTORE values need to be strings
         values = {
             k: make_valid_string(x) if x is not None else None
             for k, x in values.items()
         }
-        values['mfr'] = 'numurus'
 
         fullvalues = {
             **top_level,
@@ -390,17 +447,19 @@ class NwicFloatReports(GenericFloat):
                 break
 
         # Location - Use values locations and fall back to Iridium
+        inprecise_location = True
         latdeg = float(values['headers_location_latitude_degrees'])
         latmin = float(values['headers_location_latitude_minutes'])
         latdd = latdeg + (latmin / 60)
-        if values.get('values_latitude'):
-            latdd = values['values_latitude']
 
         londeg = float(values['headers_location_longitude_degrees'])
         lonmin = float(values['headers_location_longitude_minutes'])
         londd = londeg + (lonmin / 60)
-        if values.get('values_longitude'):
+
+        if values.get('values_longitude') and values.get('values_latitude'):
+            latdd = values['values_latitude']
             londd = values['values_longitude']
+            inprecise_location = False
 
         top_level = {
             'uid':     str(values['headers_imei']),
@@ -412,7 +471,11 @@ class NwicFloatReports(GenericFloat):
             'z':       None,
             'payload': payload
         }
-        top_level['geom'] = Point(top_level['lon'], top_level['lat']).wkt
+        pt = Point(top_level['lon'], top_level['lat'])
+        top_level['geom'] = from_shape(pt, srid=4326)
+
+        # Set additional values
+        values['location_quality'] = get_point_location_quality(pt, inprecise_location=inprecise_location)
 
         # All HSTORE values need to be strings
         values = {

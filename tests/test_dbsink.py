@@ -560,9 +560,66 @@ def test_geography_traj_multi():
         '--table', 'driftworker-traj-multi',
         '--lookup', 'GenericGeography',
         '--packing', 'json',
+        '--drop',
         '--truncate',
         '--no-listen',
         '--datafile', str(Path('tests/driftworker-traj-multi.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_arete_geography():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'arete-data-test',
+        '--table', 'arete-data',
+        '--lookup', 'AreteData',
+        '--packing', 'json',
+        '--drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/arete_data.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_numurus_data_geography():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'numurus-data-test',
+        '--table', 'numurus-data',
+        '--lookup', 'NumurusData',
+        '--packing', 'json',
+        '--drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/numurus.data.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+@pytest.mark.integration
+def test_numurus_status_geography():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'numurus-status-test',
+        '--table', 'numurus-status',
+        '--lookup', 'NumurusStatus',
+        '--packing', 'json',
+        '--drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/numurus.status.json').resolve()),
         '-v'
     ])
     print(result)
