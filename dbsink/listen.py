@@ -11,7 +11,7 @@ import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import insert
 from easyavro import EasyAvroConsumer, EasyConsumer
 
-from dbsink import L, ea
+from dbsink import L, ea, log_format
 
 
 def get_mappings():
@@ -192,7 +192,6 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
             cleanup_every=100,
             loop=True
         )
-
 
 
 def run():

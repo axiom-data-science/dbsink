@@ -60,4 +60,4 @@ COPY . $PROJECT_ROOT
 RUN cd $PROJECT_ROOT && pip install --no-deps .
 WORKDIR $PROJECT_ROOT
 
-CMD ['dbsink']
+CMD ["dbsink"]

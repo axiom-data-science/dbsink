@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import re
 import simplejson as json
 from datetime import datetime
 
