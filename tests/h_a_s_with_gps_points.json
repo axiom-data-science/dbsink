@@ -1,0 +1,1953 @@
+[
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "pickup_detection",
+                "detection_results": "{'correlated_movement': False, 'tilt_angle': False, 'velocity_and_distance': False}"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1558205808,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063180570,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569362681,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2718020172
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.3",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 4.0,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "status_ts": 1558205819,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063180570,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569362681,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2718020172
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "pickup_detection",
+                "detection_results": "{'correlated_movement': False, 'tilt_angle': False, 'velocity_and_distance': False}"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1558485442,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063181890,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569610803,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2731252290
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.1",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 353.0,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "status_ts": 1558485489,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063181890,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569610803,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2731252290
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "pickup_detection",
+                "detection_results": "{'correlated_movement': False, 'tilt_angle': False, 'velocity_and_distance': False}"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1558548924,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063180890,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569701793,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2735645740
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 11.0,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "status_ts": 1558548970,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063180890,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569701793,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2735645740
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "pickup_detection",
+                "detection_results": "{'correlated_movement': False, 'tilt_angle': False, 'velocity_and_distance': False}"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1558628456,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063317800,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569784757,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2739471830
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.2",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "status_ts": 1558628502,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063317800,
+            "mo_msn": 0,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569784757,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2739471830
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569229443,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 59,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 191,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569229563,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2710948594
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569229930,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 58,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 192,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569230054,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2710974510
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569230420,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 58,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 193,
+            "mt_msn": 5,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569230553,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711000958
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569230921,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 58,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 194,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569231043,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711024438
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569231423,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 58,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 194,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569231536,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711048600
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569231903,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 58,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 195,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569232023,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711071802
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569232390,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 57,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 196,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569232514,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711098846
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569232882,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 57,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 197,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569232995,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711135082
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "GPS_rdp_variable",
+                "points": "[[1569230478.0, 29.2534, -90.6609], [1569230778.0, 29.2534, -90.6609], [1569231078.0, 29.2534, -90.6609], [1569231378.0, 29.2534, -90.6609], [1569231678.0, 29.2534, -90.6609], [1569231978.0, 29.2534, -90.6609], [1569232278.0, 29.2534, -90.6609], [1569232578.0, 29.2534, -90.6609], [1569232878.0, 29.2534, -90.6609]]"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1569232882,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 197,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569232995,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711135082
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569233362,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 57,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 198,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569233484,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711166102
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66100311279297,
+            "status_ts": 1569233849,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 57,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 199,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569233970,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711190326
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 360.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569234336,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 56,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 200,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569234456,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711213348
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569234824,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 56,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 201,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569234949,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711235990
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569235836,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 56,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 202,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569235960,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711283276
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569236327,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 56,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 203,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569236458,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711314680
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "GPS_rdp_variable",
+                "points": "[[1569234423.0, 29.2534, -90.6609], [1569234723.0, 29.2534, -90.6608], [1569235023.0, 29.2534, -90.6609], [1569235323.0, 29.2534, -90.661], [1569235623.0, 29.2534, -90.6609], [1569235923.0, 29.2534, -90.6609], [1569236223.0, 29.2534, -90.6609], [1569236523.0, 29.2534, -90.6608], [1569236823.0, 29.2534, -90.6609]]"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1569236828,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 204,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569236942,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711354134
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569236828,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 56,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 204,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569236942,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711354134
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569237800,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 206,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569237925,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711406450
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569238779,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 207,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569238901,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711451478
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569239270,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 208,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569239392,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711474286
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569239760,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 209,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569239883,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711504170
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569240251,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 210,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569240368,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711547618
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "GPS_rdp_variable",
+                "points": "[[1569238332.0, 29.2534, -90.6609], [1569238632.0, 29.2534, -90.661], [1569238932.0, 29.2534, -90.6608], [1569239232.0, 29.2534, -90.6608], [1569239532.0, 29.2534, -90.6608], [1569239832.0, 29.2534, -90.6609], [1569240132.0, 29.2534, -90.6609], [1569240432.0, 29.2534, -90.6609], [1569240732.0, 29.2534, -90.661]]"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1569240737,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 211,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569240860,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711576654
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66100311279297,
+            "status_ts": 1569240737,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 211,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569240860,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711576654
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569241228,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 212,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569241359,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711602948
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569241728,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 213,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569241847,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711626428
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569242214,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 55,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 214,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569242353,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711651258
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569243215,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 54,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 216,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569243341,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711703946
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569243707,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 54,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 217,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569243842,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2711744544
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66110229492188,
+            "status_ts": 1569249200,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 52,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 221,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569249329,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712042200
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569254201,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 49,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 222,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569254324,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712311668
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569262405,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 44,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 229,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569262531,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712774608
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569262899,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 43,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 230,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569263021,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712798730
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "-1.1",
+                "Velocity_W_to_E": "-0.3"
+            },
+            "sw_rev": null,
+            "heading": 271.0,
+            "latitude": 27.28849983215332,
+            "longitude": -88.02439880371094,
+            "status_ts": 1569263244,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063286290,
+            "mo_msn": 1,
+            "mt_msn": 1,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569263404,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712814044
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569263390,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 43,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 231,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569263509,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712818746
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "-0.2",
+                "Velocity_W_to_E": "0.6"
+            },
+            "sw_rev": null,
+            "heading": 39.0,
+            "latitude": 27.284500122070312,
+            "longitude": -88.02680206298828,
+            "status_ts": 1569264422,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 99,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063286290,
+            "mo_msn": 2,
+            "mt_msn": 2,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569264586,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712866930
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569264859,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 42,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 234,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569264985,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712890362
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.253400802612305,
+            "longitude": -90.66079711914062,
+            "status_ts": 1569265355,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 42,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 235,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569265494,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2712928564
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 0.0,
+            "latitude": 29.25349998474121,
+            "longitude": -90.66089630126953,
+            "status_ts": 1569268964,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 40,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 237,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569269088,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2713119758
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "Sensor_health",
+                "heartbeats": "[{'sensor': 'FuelGauge', 'heartbeat': True}, {'sensor': 'AIS_tracker', 'heartbeat': True}, {'sensor': 'GPS', 'heartbeat': True}, {'sensor': 'BME280_Temp_Pressure_RH', 'heartbeat': True}, {'sensor': 'BNO055_Accelerometer_Gyroscope_Magnetometer', 'heartbeat': True}, {'sensor': 'camera_0', 'heartbeat': False}, {'sensor': 'camera_1', 'heartbeat': False}, {'sensor': 'sdr', 'heartbeat': True}]"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1569269404,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 238,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569269581,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2713147130
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Name": "Iridium_avg_session_time",
+                "value": "8.126984126984127",
+                "reporting_upper_limit": "16"
+            },
+            "sw_rev": null,
+            "heading": null,
+            "latitude": 0,
+            "longitude": 0,
+            "status_ts": 1569269405,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": null,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 238,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569269581,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 2713147130
+    },
+    {
+        "mfr": "parc",
+        "values": {
+            "misc": {
+                "Velocity_S_to_N": "0.0",
+                "Velocity_W_to_E": "0.0"
+            },
+            "sw_rev": null,
+            "heading": 359.0,
+            "latitude": 29.253299713134766,
+            "longitude": -90.66100311279297,
+            "status_ts": 1569269458,
+            "bus_voltage": null,
+            "charge_rate": null,
+            "battery_level": 40,
+            "system_status": null,
+            "operating_temp": null,
+            "geofence_config_index": null
+        },
+        "headers": {
+            "imei": 300434063188450,
+            "mo_msn": 238,
+            "mt_msn": 0,
+            "location": {
+                "latitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "longitude": {
+                    "degrees": 0,
+                    "minutes": 0.0
+                },
+                "cep_radius": 0
+            },
+            "iridium_ts": 1569269581,
+            "sbd_session_status": "SUCCESS"
+        },
+        "cdr_reference": 271314713
+    }
+]

@@ -1,8 +1,8 @@
 #!python
 # coding=utf-8
 import re
+import ast
 import collections
-from copy import copy
 import simplejson as json
 from datetime import datetime
 
@@ -27,15 +27,55 @@ WGS84_BBOX_360 = box(0, -90, 360, 90)
 
 
 def flatten(d, parent_key='', sep='_'):
+    # Adapted from:
     # https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+    # to support nested lists and decoding of JSON objects that might be strings.
     items = []
-    for k, v in d.items():
-        new_key = parent_key + sep + k if parent_key else k
-        if isinstance(v, collections.MutableMapping):
-            items.extend(flatten(v, new_key, sep=sep).items())
-        else:
-            items.append((new_key, v))
+    if isinstance(d, collections.MutableMapping):
+        for k, v in d.items():
+            new_key = f'{parent_key}{sep}{k}' if parent_key else k
+            items.extend(
+                flatten(v, new_key, sep=sep
+            ).items())
+    elif isinstance(d, list):
+        # add the list object and its members as indexed items
+        items.append((parent_key, d))
+        for i, litem in enumerate(d):
+            new_key = f'{parent_key}{sep}{i}' if parent_key else i
+            items.extend(
+                flatten(litem, new_key, sep=sep
+            ).items())
+    elif isinstance(d, str):
+        # Try to expand it
+        try:
+            decoded = expand_json_objects(d)
+            items.extend(
+                flatten(decoded, parent_key, sep=sep
+            ).items())
+        except ValueError:
+            # Not decodable, just set the objects value
+            items.append((parent_key, d))
+    else:
+        items.append((parent_key, d))
+
     return dict(items)
+
+ 
+def expand_json_objects(str_value):
+    decoders = [
+        json.loads,
+        lambda x: json.loads(json.dumps(ast.literal_eval(x)))
+    ]
+
+    for d in decoders:
+        try:
+            # If this decoder object was successful, return it
+            return d(str_value)
+        except BaseException:
+            continue
+
+    # Return the original value if nothing was decoded
+    raise ValueError('Could not decode any JSON object')
 
 
 def get_point_location_quality(loc_geom, inprecise_location=False):
@@ -67,17 +107,6 @@ def get_point_location_quality(loc_geom, inprecise_location=False):
         return 3
 
     return 1
-
-
-def expand_value_lists(d, sep='_'):
-    """ For every list item, expand it to include the individual members
-    """
-    newd = copy(d)
-    for k, v in d.items():
-        if isinstance(v, list):
-            for i, litem in enumerate(v):
-                newd[f'{k}{sep}{i}'] = litem
-    return newd
 
 
 def make_valid_string(obj):
@@ -274,7 +303,7 @@ class AreteData(GenericFloat):
                 del values_copy['json'][r]
 
         payload = payload_parse(values_copy)
-        values = expand_value_lists(flatten(values_copy))
+        values = flatten(values_copy)
 
         # Time - use float timestamp and fall back to Iridium
         reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)
@@ -341,7 +370,7 @@ class NumurusData(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = expand_value_lists(flatten(value))
+        values = flatten(value)
 
         top_level = {
             'uid':     values['imei'],
@@ -359,7 +388,8 @@ class NumurusData(GenericFloat):
         skips = [
             # No easy way to represent this as a flat dict. We can write a db view to extract this
             # data from the `payload` if required.
-            'data_segment_data_product_pipeline'
+            'data_segment_data_product_pipeline',
+            'data_segment_data_segment_data_product_pipeline'
         ]
 
         # Set additional values
@@ -391,7 +421,7 @@ class NumurusStatus(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = expand_value_lists(flatten(value))
+        values = flatten(value)
 
         top_level = {
             'uid':     values['imei'],
@@ -434,7 +464,7 @@ class NwicFloatReports(GenericFloat):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
-        values = expand_value_lists(flatten(value))
+        values = flatten(value)
 
         # Time - use float timestamp and fall back to Iridium
         reftime = datetime.fromtimestamp(values['headers_iridium_ts'], pytz.utc)

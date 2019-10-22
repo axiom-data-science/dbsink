@@ -627,20 +627,86 @@ def test_numurus_status_geography():
 
 
 def test_flatten():
-    mapp = NumurusData('topic')
-
     to_send = []
 
-    with open('./tests/numurus.data.json') as f:
+    with open('./tests/test_expanded_objects.json') as f:
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(expand_value_lists(flatten(m)))
+                to_send.append(flatten(m))
             except BaseException as e:
                 listen.L.error(repr(e))
 
-    assert to_send[0]['data_segment_data'] == [33, 1, 1, 1, 0, 0, 0, 0, 0]
-    assert to_send[0]['data_segment_data_0'] == 33
+    matches = {
+        0: {
+            'values_misc_Name': "pickup_detection",
+            'values_misc_detection_results_correlated_movement': False,
+        },
+        1: {
+            'values_misc_Name': "GPS_rdp_variable",
+            'values_misc_points': [
+                [1569230478.0, 29.2534, -90.6609],
+                [1569230778.0, 29.2534, -90.6609],
+                [1569231078.0, 29.2534, -90.6609],
+                [1569231378.0, 29.2534, -90.6609],
+                [1569231678.0, 29.2534, -90.6609],
+                [1569231978.0, 29.2534, -90.6609],
+                [1569232278.0, 29.2534, -90.6609],
+                [1569232578.0, 29.2534, -90.6609],
+                [1569232878.0, 29.2534, -90.6609]
+            ],
+            'values_misc_points_0': [1569230478.0, 29.2534, -90.6609],
+            'values_misc_points_0_0': 1569230478.0,
+            'values_misc_points_0_1': 29.2534,
+            'values_misc_points_0_2': -90.6609,
+            'values_misc_points_8': [1569232878.0, 29.2534, -90.6609],
+            'values_misc_points_8_0': 1569232878.0,
+            'values_misc_points_8_1': 29.2534,
+            'values_misc_points_8_2': -90.6609,
+        },
+        2: {
+            'data_segment_data': [33, 1, 1, 1, 0, 0, 0, 0, 0],
+            'data_segment_data_0': 33,
+        }
+    }
+    for record, m in matches.items():
+        for k, v in m.items():
+            assert to_send[record][k] == v
 
-    assert make_valid_string(to_send[0]['data_segment_data']) == '[33, 1, 1, 1, 0, 0, 0, 0, 0]'
-    assert make_valid_string(to_send[0]['data_segment_data_0']) == '33'
+
+def test_parsing_string_json_fields():
+    mapp = NwicFloatReports('foo')
+
+    to_send = []
+
+    with open('./tests/h_a_s_with_gps_points.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            to_send.append(mapp.message_to_values('fake', m))
+
+    assert len(to_send) == 50
+    values = to_send[0][1]['values']
+    assert values['values_misc_detection_results_correlated_movement'] == "False"
+    assert values['values_misc_detection_results_tilt_angle'] == "False"
+    assert values['values_misc_detection_results_velocity_and_distance'] == "False"
+
+    values = to_send[16][1]['values']
+    assert values['values_misc_points'] == str([
+        [1569230478.0, 29.2534, -90.6609],
+        [1569230778.0, 29.2534, -90.6609],
+        [1569231078.0, 29.2534, -90.6609],
+        [1569231378.0, 29.2534, -90.6609],
+        [1569231678.0, 29.2534, -90.6609],
+        [1569231978.0, 29.2534, -90.6609],
+        [1569232278.0, 29.2534, -90.6609],
+        [1569232578.0, 29.2534, -90.6609],
+        [1569232878.0, 29.2534, -90.6609]
+    ])
+    assert values['values_misc_points_0'] == str([1569230478.0, 29.2534, -90.6609])
+    assert values['values_misc_points_0_0'] == str(1569230478.0)
+    assert values['values_misc_points_0_1'] == str(29.2534)
+    assert values['values_misc_points_0_2'] == str(-90.6609)
+    assert values['values_misc_points_8'] == str([1569232878.0, 29.2534, -90.6609])
+    assert values['values_misc_points_8_0'] == str(1569232878.0)
+    assert values['values_misc_points_8_1'] == str(29.2534)
+    assert values['values_misc_points_8_2'] == str(-90.6609)
