@@ -56,20 +56,6 @@ after_success:
 
 deploy:
 
-  # Honestly, this isn't working and is eating more time than I am willing to throw at it
-  # - provider: pypi
-  #   user: "kwilcox"
-  #   password:
-  #     secure: "dplwj5hWKitDNvQn2dbw8tjwsAWmwtkmFzkujOUD368DfQb6ICxMwk4bnxgriIsujW9WjUs6uKzKtK+QY0HC60FYr3dX3ve8TzL9dhDia32vn+LkdH4BQLZoRhRqGUGLKjZS5xURzcmJedDq1OY6c9JRSgd3tlp6KgcRtLZ7asTKCd/MEDFUd0r+3aOSYQBmVX5cOclwUJ7FROL94G68mVxcjDDX56qFqDR4O/j0yrnvv7LSMXKaGHIpRNBGY7Sse8nAlE3ozCzMzI35/K2UZBBIDoIij9hR7rb5L5LVXEWck/JLjLLgyy47wQvxNVLB6mS8U1zBIH7nSrgbCMYQpVUJqkNFoSMN17ZK/bE7Dl45h3Mk+Nu3s6QjjStkrKxvcBQ61Ywzvl/7Wpffpx21WUIpVZCzCWm+QR9WjpB8o7ghBP9Dt/AC33MPZAav20ElAMCn9RAAIqMzJ2ekIUy7+kXuVEDrF+8nLq3XxMPoyA4cakds/TGkja+t+iGETWSglf456lH92TuqyCLFaRkL8eRtmDa8rS7cWbOJjaYiCppVDwIRPU7QgopO/BaDZfINKeClizENMBtAQDWMWeGo0G5dhkVuno2/MTzjnghS7sJn2XPqzKa8JRyIcJfyEFhzvsHRqRS/FTUD3eN2m4POXh5frTqEQIx2wEtH7JWIGVw="
-  #   distributions: sdist bdist_wheel
-  #   upload_docs: no
-  #   skip_cleanup: true
-  #   on:
-  #     repo: axiom-data-science/ncreplayer
-  #     tags: true
-  #     all_branches: master
-  #     condition: '$TRAVIS_JOB_NAME == "default"'
-
   - provider: releases
     api_key:
       secure: "E6sh0LyCk/InSb9tg83EWyx6xXak+Cu7ChumiGzYqCsN1r4hF+55SiNNToTmH5rn2EoO5UWhvjEMlA6BtWUDNVLJT8/Pl5DQdGab48xc/Pps1DibaAVLuWmNcUc+AuH0+bDKkjvp0EHtAssJCiuFN/qQDAOF7pCiDREidGmYyRSWOGJ4/8EysTtYstuvSU3vUXp8rmlWakEl8SImBWVWZJ8k4EEBi8DMA1/zVFWM7Hj7Q26QoaHqBkokWHDVN5nZv9rEUhhWLRqOABY345HupigGCjb6yFSvHgiEoSAXP4enPIrjYPDizCeYlJB5FCQS6z6c9zeLkgivG2iO+Rb9K2GG9LGfIyXyVE4+rAvNW5N3BHWtkFOYZgaWLMwPad9Cv1JKMA1J6mY8uUcU7+VE43Gc4PcJCs0VHynLbSgJdzqvLicJlqUaoRwVsD1/pUISavm1VvIXqJ1COU8P28O0kkkr1qbygDk1xxdLEzdykP0SktI9C9fGPLIdkKpTH/wGOGrF1Yh9NgvCpepEawVmGF5aIqOSn2orofuP4NsysdOHKPxfN8jqjaiMU71HpqTN7j/WSC5IsAdUCCHwcOHcVyR3cDfKiEfeUWZEONWU24wHOnl8i5Wdlweg0Gfdqco4tByjB/EgAKXHGQxOWC5Rnp4ExwITymxyZeQkLKBZXoc="
@@ -77,7 +63,7 @@ deploy:
     file: "$HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2"
     skip_cleanup: true
     on:
-      repo: axiom-data-science/ncreplayer
+      repo: axiom-data-science/dbsink
       tags: true
       all_branches: master
       condition: '$TRAVIS_JOB_NAME == "default"'

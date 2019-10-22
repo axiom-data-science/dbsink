@@ -22,6 +22,10 @@ requirements:
     - msgpack-python
     - sqlalchemy
     - psycopg2
+    - geoalchemy2
+    - pytz
+    - shapely
+    - simplejson
 
 test:
   source_files:
