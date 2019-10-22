@@ -40,7 +40,7 @@ install:
 script:
   - if [[ $TRAVIS_JOB_NAME == "default" ]]; then
       cp -r tests/ /tmp ;
-      pushd /tmp && pytest && popd ;
+      pushd /tmp && pytest -m "not integration" && popd ;
     fi
 
   - if [[ $TRAVIS_JOB_NAME == "coding_standards" ]]; then
