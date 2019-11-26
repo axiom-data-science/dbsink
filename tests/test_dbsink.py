@@ -133,6 +133,9 @@ def test_numurus_status():
 
     assert len(to_send) == 87
 
+    # Make sure a 91 latitude trips the quality flag
+    assert to_send[-1][1]['values']['location_quality'] == '4'
+
 
 def test_numurus_data():
     mapp = NumurusData('topic')

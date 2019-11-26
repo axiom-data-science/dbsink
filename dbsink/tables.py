@@ -78,7 +78,7 @@ def expand_json_objects(str_value):
     raise ValueError('Could not decode any JSON object')
 
 
-def get_point_location_quality(loc_geom, inprecise_location=False):
+def get_point_location_quality(loc_geom, inprecise_location=False, disallow_lon=None, disallow_lat=None):
     """ QARTOD Flags:
         1 - Good
         2 - Not evaluated
@@ -86,13 +86,21 @@ def get_point_location_quality(loc_geom, inprecise_location=False):
         4 - Bad
         9 - Missing Data
     """
-    
+
     # Avoid locations that are both small decimal numbers.
     if -1 < loc_geom.x < 1 and -1 < loc_geom.y < 1:
         return 4
 
     # Avoid "null island" locations
     if loc_geom.x == 0 or loc_geom.y == 0:
+        return 4
+
+    # if we need to ignore certain X values
+    if isinstance(disallow_lon, list) and loc_geom.x in disallow_lon:
+        return 4
+
+    # if we need to ignore certain Y values
+    if isinstance(disallow_lat, list) and loc_geom.y in disallow_lat:
         return 4
 
     # Make sure we have resonable coordinates
@@ -427,7 +435,12 @@ class NumurusData(GenericFloat):
         ]
 
         # Set additional values
-        values['location_quality'] = get_point_location_quality(pt)
+        # Lat=91 and Lon=181 should be treated as bad location data
+        values['location_quality'] = get_point_location_quality(
+            pt,
+            disallow_lon=[181],
+            disallow_lat=[91]
+        )
         values['mfr'] = 'numurus'
 
         # All HSTORE values need to be strings
