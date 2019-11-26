@@ -152,6 +152,25 @@ def test_numurus_data():
     assert len(to_send) == 8
 
 
+def test_numurus_data_filter_dates():
+    mapp = NumurusData('topic', filters={
+        'start_date': datetime(2019, 7, 18, 15).replace(tzinfo=pytz.utc),
+        'end_date': datetime(2019, 7, 18, 16).replace(tzinfo=pytz.utc)
+    })
+
+    to_send = []
+
+    with open('./tests/numurus.data.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+
+    assert len(to_send) == 2
+
+
 def test_arete_data_parse():
     mapp = AreteData('topic')
 
@@ -170,6 +189,24 @@ def test_arete_data_parse():
     msg = to_send[-1][1]
     assert msg['lat'] == 38.859378814697266
     assert msg['lon'] == -77.0494384765625
+
+
+def test_arete_data_filter_dates():
+    mapp = AreteData('topic', filters={
+        'start_date': datetime(2019, 8, 9, 0).replace(tzinfo=pytz.utc)
+    })
+
+    to_send = []
+
+    with open('./tests/arete_data.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+
+    assert len(to_send) == 10
 
 
 def test_just_json():
@@ -335,6 +372,25 @@ def test_numurus_data_live():
         '--drop',
         '--no-listen',
         '--no-do-inserts',
+        '--datafile', str(Path('tests/numurus.data.json').resolve()),
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+
+def test_numurus_data_live_filter_dates():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'topic',
+        '--lookup', 'NumurusData',
+        '--packing', 'json',
+        '--consumer', 'dbsink-test',
+        '--drop',
+        '--no-listen',
+        '--no-do-inserts',
+        '--start_date', '2019-07-18T15:00:00',
+        '--end_date', '2019-07-18T16:00:00',
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
     ])
     print(result)

@@ -4,7 +4,9 @@ import uuid
 import logging
 import pkg_resources
 import simplejson as json
+from datetime import datetime
 
+import pytz
 import click
 import msgpack
 import sqlalchemy as sql
@@ -38,7 +40,10 @@ def get_mappings():
 @click.option('--do-inserts/--no-do-inserts', default=True, help="Whether to insert data into a database.")
 @click.option('--datafile', type=str, default='', help="File to pull messages from instead of listening for messages.")
 @click.option('-v', '--verbose', count=True, help="Control the output verbosity, use up to 3 times (-vvv)")
-def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, registry, drop, truncate, logfile, listen, do_inserts, datafile, verbose):
+# Filters
+@click.option('--start_date', type=click.DateTime(), required=False, default=None, help="Start date filter passed to each mapping class (UTC)")
+@click.option('--end_date',   type=click.DateTime(), required=False, default=None, help="End date filter passed to each mapping class (UTC)")
+def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, registry, drop, truncate, logfile, listen, do_inserts, datafile, verbose, start_date, end_date):
 
     if logfile:
         handler = logging.FileHandler(logfile)
@@ -95,10 +100,16 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
             'offset': offset
         }
 
+    filters = {}
+    if isinstance(start_date, datetime):
+        filters['start_date'] = start_date.replace(tzinfo=pytz.utc)
+    if isinstance(end_date, datetime):
+        filters['end_date'] = end_date.replace(tzinfo=pytz.utc)
+
     # Get the mapping object from the lookup parameter
     mappings = get_mappings()
-    mapping = mappings[lookup](topic, table=table)
-    L.debug(f'Using mapping: {lookup}, topic: {topic}, table: {mapping.table}')
+    mapping = mappings[lookup](topic, table=table, filters=filters)
+    L.debug(f'Using mapping: {lookup}, topic: {topic}, table: {mapping.table}, filters: {len(filters)}')
 
     if do_inserts is True:
         """ Database connection and setup

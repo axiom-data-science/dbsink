@@ -60,7 +60,7 @@ def flatten(d, parent_key='', sep='_'):
 
     return dict(items)
 
- 
+
 def expand_json_objects(str_value):
     decoders = [
         json.loads,
@@ -107,6 +107,13 @@ def get_point_location_quality(loc_geom, inprecise_location=False):
         return 3
 
     return 1
+
+
+def apply_start_end_filter(message_time, starting, ending):
+    if isinstance(starting, datetime) and message_time < starting:
+        raise ValueError(f'Filtering out message from {message_time} since it is before {starting}')
+    elif isinstance(ending, datetime) and message_time > ending:
+        raise ValueError(f'Filtering out message from {message_time} since it is after {ending}')
 
 
 def make_valid_string(obj):
@@ -165,6 +172,13 @@ class GenericGeography(BaseMap):
         tops = ['id', 'uid', 'gid', 'time', 'reftime', 'values', 'payload', 'geom', 'geojson']
         top_level = value.copy()
 
+        top_time = dtparse(top_level['time']).replace(tzinfo=pytz.utc)
+        apply_start_end_filter(
+            top_time,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
+
         # Save GeoJSON
         if isinstance(top_level['geojson'], str):
             geojson = json.loads(top_level['geojson'])
@@ -214,7 +228,7 @@ class GenericGeography(BaseMap):
             for k, x in values.items()
         }
 
-        top_level['time'] = dtparse(top_level['time']).replace(tzinfo=pytz.utc).isoformat()
+        top_level['time'] = top_time.isoformat()
         top_level['reftime'] = dtparse(top_level['reftime']).replace(tzinfo=pytz.utc).isoformat()
         top_level['values'] = values
         top_level['payload'] = payload
@@ -265,6 +279,13 @@ class GenericFloat(BaseMap):
     def message_to_values(self, key, value):
         payload = payload_parse(value)
 
+        top_time = dtparse(value['time']).replace(tzinfo=pytz.utc)
+        apply_start_end_filter(
+            top_time,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
+
         value['lat'] = float(value['lat'])
         value['lon'] = float(value['lon'])
         pt = Point(value['lon'], value['lat'])
@@ -276,7 +297,7 @@ class GenericFloat(BaseMap):
         # All HSTORE values need to be strings
         value['values'] = { k: make_valid_string(x) for k, x in value['values'].items() }
 
-        value['time'] = dtparse(value['time']).replace(tzinfo=pytz.utc).isoformat()
+        value['time'] = top_time.isoformat()
         if 'reftime' in value:
             value['reftime'] = dtparse(value['reftime']).replace(tzinfo=pytz.utc).isoformat()
         else:
@@ -313,6 +334,12 @@ class AreteData(GenericFloat):
             timestamp = datetime.fromtimestamp(values['headers_status_ts'], pytz.utc)
         else:
             timestamp = reftime
+
+        apply_start_end_filter(
+            timestamp,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
 
         # Location - Use values locations and fall back to Iridium
         inprecise_location = True
@@ -372,10 +399,17 @@ class NumurusData(GenericFloat):
 
         values = flatten(value)
 
+        top_time = dtparse(values['timestamp']).replace(tzinfo=pytz.utc)
+        apply_start_end_filter(
+            top_time,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
+
         top_level = {
             'uid':     values['imei'],
             'gid':     None,
-            'time':    dtparse(values['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'time':    top_time.isoformat(),
             'reftime': dtparse(values['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
             'lat':     values['latitude'],
             'lon':     values['longitude'],
@@ -423,10 +457,17 @@ class NumurusStatus(GenericFloat):
 
         values = flatten(value)
 
+        top_time = dtparse(values['timestamp']).replace(tzinfo=pytz.utc)
+        apply_start_end_filter(
+            top_time,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
+
         top_level = {
             'uid':     values['imei'],
             'gid':     None,
-            'time':    dtparse(values['timestamp']).replace(tzinfo=pytz.utc).isoformat(),
+            'time':    top_time.isoformat(),
             'reftime': dtparse(values['navsat_fix_time']).replace(tzinfo=pytz.utc).isoformat(),
             'lat':     values['latitude'],
             'lon':     values['longitude'],
@@ -437,7 +478,12 @@ class NumurusStatus(GenericFloat):
         top_level['geom'] = from_shape(pt, srid=4326)
 
         # Set additional values
-        values['location_quality'] = get_point_location_quality(pt)
+        # Lat=91 and Lon=181 should be treated as bad location data
+        values['location_quality'] = get_point_location_quality(
+            pt,
+            disallow_lon=[181],
+            disallow_lat=[91]
+        )
         values['mfr'] = 'numurus'
 
         # All HSTORE values need to be strings
@@ -475,6 +521,12 @@ class NwicFloatReports(GenericFloat):
             if values.get(k):
                 timestamp = datetime.fromtimestamp(values[k], pytz.utc)
                 break
+
+        apply_start_end_filter(
+            timestamp,
+            self.filters.get('start_date'),
+            self.filters.get('end_date')
+        )
 
         # Location - Use values locations and fall back to Iridium
         inprecise_location = True

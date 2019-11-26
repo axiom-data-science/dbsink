@@ -23,6 +23,7 @@ class BaseMap:
     def __init__(self, topic, **kwargs):
         self.topic = topic
         self.table = kwargs.get('table', topic).replace('.', '-')
+        self.filters = kwargs.get('filters', {})
 
     @property
     def upsert_constraint_name(self):
