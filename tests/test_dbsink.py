@@ -187,15 +187,28 @@ def test_arete_data_parse():
             except BaseException as e:
                 listen.L.error(repr(e))
 
-    assert len(to_send) == 134
+    assert len(to_send) == 137
 
-    msg = to_send[-2][1]
+    msg = to_send[-5][1]
     assert msg['lat'] == 38.859378814697266
     assert msg['lon'] == -77.0494384765625
 
-    msg = to_send[-1][1]
+    msg = to_send[-4][1]
     assert msg['lat'] == 32.70533
     assert msg['lon'] == -117.23613
+
+    msg = to_send[-3][1]
+    assert msg['lat'] == 532.6271
+    assert msg['lon'] == -117.89201
+    assert msg['values']['location_quality'] == '4'  # bad
+
+    msg = to_send[-2][1]
+    assert msg['lat'] == 32.627373
+    assert msg['lon'] == -117.91643
+
+    msg = to_send[-1][1]
+    assert msg['lat'] == 32.62755
+    assert msg['lon'] == -117.94065
 
 
 def test_arete_data_filter_dates():
@@ -213,7 +226,7 @@ def test_arete_data_filter_dates():
             except BaseException as e:
                 listen.L.error(repr(e))
 
-    assert len(to_send) == 11
+    assert len(to_send) == 14
 
 
 def test_just_json():
