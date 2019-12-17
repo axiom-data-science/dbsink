@@ -360,8 +360,14 @@ class AreteData(GenericFloat):
         londd = londeg + (lonmin / 60)
 
         if 'json_Full_ll' in values and isinstance(values['json_Full_ll'], list):
+            # Older style positions in early data
             latdd = values['json_Full_ll'][0]
             londd = values['json_Full_ll'][1]
+            inprecise_location = False
+        elif 'json_position_latitude' in values and 'json_position_longitude' in values:
+            # Newer style posititions as of Dec 11, 2019
+            latdd = values['json_position_latitude']
+            londd = values['json_position_longitude']
             inprecise_location = False
 
         top_level = {
