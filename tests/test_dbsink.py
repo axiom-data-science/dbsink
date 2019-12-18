@@ -152,6 +152,10 @@ def test_numurus_data():
 
     assert to_send[0][1]['values']['data_segment_data_0'] == '33'
     assert to_send[0][1]['values']['data_segment_data'] == '[33, 1, 1, 1, 0, 0, 0, 0, 0]'
+
+    assert to_send[0][1]['lat'] == 47.550865
+    assert to_send[0][1]['lon'] == -122.377328
+
     assert len(to_send) == 8
 
 

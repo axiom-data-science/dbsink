@@ -13,7 +13,7 @@ from geoalchemy2.types import Geometry
 from geoalchemy2.shape import from_shape
 from shapely.geometry import shape, Point, box
 from dateutil.parser import parse as dtparse
-from sqlalchemy.dialects.postgresql import HSTORE, JSONB
+from sqlalchemy.dialects.postgresql import HSTORE, JSONB, DOUBLE_PRECISION
 
 from dbsink.maps import BaseMap, payload_parse
 from dbsink import L  # noqa
@@ -257,9 +257,9 @@ class GenericFloat(BaseMap):
             sql.Column('gid',      sql.String, default='', index=True),
             sql.Column('time',     sql.DateTime(timezone=True), index=True),
             sql.Column('reftime',  sql.DateTime(timezone=True), index=True),
-            sql.Column('lat',      sql.REAL, index=True),
-            sql.Column('lon',      sql.REAL, index=True),
-            sql.Column('z',        sql.REAL, index=True),
+            sql.Column('lat',      DOUBLE_PRECISION, index=True),
+            sql.Column('lon',      DOUBLE_PRECISION, index=True),
+            sql.Column('z',        DOUBLE_PRECISION, index=True),
             sql.Column('geom',     Geometry('POINT', srid=4326)),
             sql.Column('values',   HSTORE, default={}),
             sql.Column('payload',  JSONB, default={}),
