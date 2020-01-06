@@ -27,15 +27,15 @@ class BaseMap:
 
     @property
     def upsert_constraint_name(self):
-        return f'{self.table}_unique_constraint'.replace('-', '_')
+        return f'{self.table}_unique_constraint'.replace('-', '_').lower()
 
     @property
     def unique_index_name(self):
-        return f'{self.table}_unique_idx'.replace('-', '_')
+        return f'{self.table}_unique_idx'.replace('-', '_').lower()
 
     @property
     def sequence_name(self):
-        return f'{self.table}_id_seq'.replace('-', '_')
+        return f'{self.table}_id_seq'.replace('-', '_').lower()
 
     def _check_key(self, key):
         """ Check if the key is valid

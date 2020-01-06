@@ -687,6 +687,26 @@ def test_numurus_data_geography():
     print(result)
     assert result.exit_code == 0
 
+
+@pytest.mark.integration
+def test_numurus_data_geography_uppercase():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'numurus-data-test',
+        '--table', 'Numurus-Data',
+        '--lookup', 'NumurusData',
+        '--packing', 'json',
+        '--drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/numurus.data.json').resolve()),
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+
 @pytest.mark.integration
 def test_numurus_status_geography():
 
