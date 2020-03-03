@@ -135,7 +135,9 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
             L.info(f'Dropping table {mapping.table}')
             engine.execute(sql.text(f'DROP TABLE IF EXISTS \"{mapping.table}\"'))
 
-        if truncate is True:
+        # If we didn't drop the table, we should now truncate it.
+        # There is no need to truncate if we just dropped the table.
+        if drop is False and truncate is True:
             L.info(f'Truncating table {mapping.table}')
             try:
                 engine.execute(sql.text(f'TRUNCATE TABLE \"{mapping.table}\" RESTART IDENTITY'))
