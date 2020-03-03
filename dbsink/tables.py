@@ -146,6 +146,62 @@ def make_valid_string(obj):
         return str(obj)
 
 
+class GenericFieldStatistic(BaseMap):
+
+    @property
+    def schema(self):
+        return [
+            sql.Column('id',       sql.Integer, sql.Sequence(self.sequence_name), primary_key=True),
+            sql.Column('source',   sql.String, index=True, nullable=False),
+            sql.Column('period',   sql.String, default=''),
+            sql.Column('starting', sql.DateTime(timezone=True), index=True, nullable=False),
+            sql.Column('ending',   sql.DateTime(timezone=True), index=True, nullable=False),
+            sql.Column('values',   JSONB),
+            sql.Index(
+                self.unique_index_name,
+                'source',
+                'period',
+                'starting',
+                'ending',
+                unique=True,
+            ),
+            sql.UniqueConstraint(
+                'source',
+                'period',
+                'starting',
+                'ending',
+                name=self.upsert_constraint_name
+            )
+        ]
+
+    def message_to_values(self, key, value):
+        value = payload_parse(value)
+
+        # Throw away non-column data
+        value = self.match_columns(value)
+
+        value['starting'] = dtparse(value['starting']).replace(tzinfo=pytz.utc)
+        value['ending'] = dtparse(value['ending']).replace(tzinfo=pytz.utc)
+
+        # Filter to make sure the time is represented in the filter window
+        # First filter the `starting` between min and `end_date` filter
+        # Then filter the `ending` between `start_date` filter and max
+        # After both filters we are left with the defined window.
+        apply_start_end_filter(
+            value['starting'],
+            datetime.min.replace(tzinfo=pytz.utc),
+            self.filters.get('end_date')
+        )
+        apply_start_end_filter(
+            value['ending'],
+            self.filters.get('start_date'),
+            datetime.max.replace(tzinfo=pytz.utc),
+        )
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in value.items() }
+
+
 class GenericGeography(BaseMap):
 
     @property

@@ -2,6 +2,7 @@
 # coding=utf-8
 from pathlib import Path
 import simplejson as json
+from datetime import datetime
 
 import pytest
 from click.testing import CliRunner
@@ -810,3 +811,123 @@ def test_parsing_string_json_fields():
     assert values['values_misc_points_8_0'] == str(1569232878.0)
     assert values['values_misc_points_8_1'] == str(29.2534)
     assert values['values_misc_points_8_2'] == str(-90.6609)
+
+
+def test_statistics():
+    mapp = GenericFieldStatistic('topic')
+
+    to_send = []
+
+    with open('./tests/statistics.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            to_send.append(mapp.message_to_values('fake', m))
+
+    assert len(to_send) == 4
+
+    assert to_send[0][1] == {
+        "source": "gom-02-combined",
+        "period": "monthly",
+        "starting": dtparse("2020-01-01T00:00:00Z"),
+        "ending": dtparse("2020-02-01T00:00:00Z"),
+        "values": {
+            "Analysis_1": 10,
+            "Analysis_2": 20,
+            "Analysis_3": 30,
+            "Analysis_4": 40,
+            "Field_A": 50,
+            "Field_B": 60,
+            "Field_C": 70,
+            "Field_D": 80
+        }
+    }
+
+    assert to_send[1][1] == {
+        "source": "gom-02-combined",
+        "period": "daily",
+        "starting": dtparse("2020-01-01T00:00:00Z"),
+        "ending": dtparse("2020-01-02T00:00:00Z"),
+        "values": {
+            "Analysis_1": 10,
+            "Analysis_2": 20,
+            "Analysis_3": 30,
+            "Analysis_4": 40,
+            "Field_A": 50,
+            "Field_B": 60,
+            "Field_C": 70,
+            "Field_D": 80
+        }
+    }
+
+    assert to_send[2][1] == {
+        "source": "gom-02-combined",
+        "period": "instant",
+        "starting": dtparse("2020-01-01T00:00:00Z"),
+        "ending": None,
+        "values": {
+            "Analysis_1": 10,
+            "Analysis_2": 20,
+            "Analysis_3": 30,
+            "Analysis_4": 40,
+            "Field_A": 50,
+            "Field_B": 60,
+            "Field_C": 70,
+            "Field_D": 80
+        }
+    }
+
+
+@pytest.mark.integration
+def test_statistics_integration():
+
+    # Drop
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'field_statistics_testing',
+        '--table', 'field_statistics',
+        '--lookup', 'GenericFieldStatistic',
+        '--packing', 'json',
+        '--drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/statistics.json').resolve()),
+        '--start_date', '2019-01-01',
+        '--end_date', '2022-01-01',
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+    # Truncate
+    result = runner.invoke(listen.setup, [
+        '--topic', 'field_statistics_testing',
+        '--table', 'field_statistics',
+        '--lookup', 'GenericFieldStatistic',
+        '--packing', 'json',
+        '--no-drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/statistics.json').resolve()),
+        '--start_date', '2019-01-01',
+        '--end_date', '2022-01-01',
+        '-v'
+    ])
+    print(result)
+    assert result.exit_code == 0
+
+    # Update (no action)
+    result = runner.invoke(listen.setup, [
+        '--topic', 'field_statistics_testing',
+        '--table', 'field_statistics',
+        '--lookup', 'GenericFieldStatistic',
+        '--packing', 'json',
+        '--no-drop',
+        '--no-truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/statistics.json').resolve()),
+        '--start_date', '2019-01-01',
+        '--end_date', '2022-01-01',
+        '-v'
+    ])
+    print(result.stdout)
+    assert result.exit_code == 0

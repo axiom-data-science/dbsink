@@ -34,14 +34,15 @@ setup(
             'dbsink = dbsink.listen:run'
         ],
         'dbsink.maps': [
-            'JsonMap          = dbsink.maps:JsonMap',
-            'StringMap        = dbsink.maps:StringMap',
-            'GenericGeography = dbsink.tables:GenericGeography',
-            'GenericFloat     = dbsink.tables:GenericFloat',
-            'AreteData        = dbsink.tables:AreteData',
-            'NumurusData      = dbsink.tables:NumurusData',
-            'NumurusStatus    = dbsink.tables:NumurusStatus',
-            'NwicFloatReports = dbsink.tables:NwicFloatReports'
+            'JsonMap               = dbsink.maps:JsonMap',
+            'StringMap             = dbsink.maps:StringMap',
+            'GenericGeography      = dbsink.tables:GenericGeography',
+            'GenericFloat          = dbsink.tables:GenericFloat',
+            'AreteData             = dbsink.tables:AreteData',
+            'NumurusData           = dbsink.tables:NumurusData',
+            'NumurusStatus         = dbsink.tables:NumurusStatus',
+            'NwicFloatReports      = dbsink.tables:NwicFloatReports',
+            'GenericFieldStatistic = dbsink.tables:GenericFieldStatistic'
         ]
     },
     classifiers         = [

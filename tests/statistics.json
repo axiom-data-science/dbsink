@@ -1,0 +1,66 @@
+[
+  {
+    "source": "gom-02-combined",
+    "period": "monthly",
+    "starting": "2020-01-01T00:00:00Z",
+    "ending": "2020-02-01T00:00:00Z",
+    "values": {
+      "Analysis_1": 10,
+      "Analysis_2": 20,
+      "Analysis_3": 30,
+      "Analysis_4": 40,
+      "Field_A": 50,
+      "Field_B": 60,
+      "Field_C": 70,
+      "Field_D": 80
+    }
+  },
+  {
+    "source": "gom-02-combined",
+    "period": "daily",
+    "starting": "2020-01-01T00:00:00Z",
+    "ending": "2020-01-02T00:00:00Z",
+    "values": {
+      "Analysis_1": 10,
+      "Analysis_2": 20,
+      "Analysis_3": 30,
+      "Analysis_4": 40,
+      "Field_A": 50,
+      "Field_B": 60,
+      "Field_C": 70,
+      "Field_D": 80
+    }
+  },
+  {
+    "source": "gom-02-combined",
+    "period": "instant",
+    "starting": "2020-01-01T00:00:00Z",
+    "ending": "2020-01-01T00:00:00Z",
+    "values": {
+      "Analysis_1": 10,
+      "Analysis_2": 20,
+      "Analysis_3": 30,
+      "Analysis_4": 40,
+      "Field_A": 50,
+      "Field_B": 60,
+      "Field_C": 70,
+      "Field_D": 80
+    }
+  },
+  {
+    "source": "gom-02-combined",
+    "period": "instant",
+    "starting": "1900-01-01T00:00:00Z",
+    "ending": "1900-01-01T00:00:00Z",
+    "values": {
+      "Analysis_1": 10,
+      "Analysis_2": 20,
+      "Analysis_3": 30,
+      "Analysis_4": 40,
+      "Field_A": 50,
+      "Field_B": 60,
+      "Field_C": 70,
+      "Field_D": 80
+    }
+  }
+]
