@@ -184,10 +184,12 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
                     set_=newvalues
                 )
                 res = engine.execute(upsert_cmd)
+                mode = 'inserted/updated'
             else:
                 res = engine.execute(insert_cmd)
+                mode = 'inserted'
             res.close()
-            L.debug(f'inserted/updated row {res.inserted_primary_key}')
+            L.debug(f'{mode} row {res.inserted_primary_key}')
 
     if datafile:
         with open(datafile) as f:
