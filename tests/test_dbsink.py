@@ -863,7 +863,7 @@ def test_statistics():
         "source": "gom-02-combined",
         "period": "instant",
         "starting": dtparse("2020-01-01T00:00:00Z"),
-        "ending": None,
+        "ending": dtparse("2020-01-01T00:00:00Z"),
         "values": {
             "Analysis_1": 10,
             "Analysis_2": 20,
