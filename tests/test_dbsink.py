@@ -695,7 +695,7 @@ def test_numurus_data_geography_uppercase():
     runner = CliRunner()
     result = runner.invoke(listen.setup, [
         '--topic', 'numurus-data-test',
-        '--table', 'Numurus-Data',
+        '--table', 'Numurus-Data-Uppercase',
         '--lookup', 'NumurusData',
         '--packing', 'json',
         '--no-drop',
