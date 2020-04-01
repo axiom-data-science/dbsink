@@ -14,6 +14,8 @@ matrix:
       env:  PY=3.7
     - name: "default38"
       env:  PY=3.8
+    - name: "release"
+      env: PY=3.8
     - name: "coding_standards"
       env:  PY=3.7
   allow_failures:
@@ -30,14 +32,13 @@ before_install:
     conda update conda --quiet
     conda config --add channels conda-forge --force
     conda config --add channels axiom-data-science --force
-    conda install pycryptosat
     conda config --set channel_priority strict
     conda config --set safety_checks disabled
     conda create --name TEST python=$PY --file requirements.txt --file requirements-dev.txt
     source activate TEST
 
 install:
-  - python setup.py sdist && version=$(python setup.py --version) && pushd dist && pip install --no-deps --force-reinstall ${PACKAGE_NAME}-${version}.tar.gz && popd
+  - pip install -e . --no-deps --force-reinstall
 
 script:
   - if [[ $TRAVIS_JOB_NAME == "default"* ]]; then
@@ -45,12 +46,19 @@ script:
       pushd /tmp && pytest && popd ;
     fi
 
+  - if [[ $TRAVIS_JOB_NAME == 'release' ]]; then
+      python setup.py --version ;
+      pip wheel . -w dist --no-deps ;
+      check-manifest --verbose ;
+      twine check dist/* ;
+    fi
+
   - if [[ $TRAVIS_JOB_NAME == "coding_standards" ]]; then
       py.test --flake8 -m flake8 ;
     fi
 
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_JOB_NAME" == "default37" ]; then
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_JOB_NAME" == "release" ]; then
       conda install -n root conda-build anaconda-client ;
       conda build conda-recipe;
       anaconda -t $ANACONDA_TOKEN upload --force -u axiom-data-science $HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2 ;
@@ -59,13 +67,30 @@ after_success:
 deploy:
 
   - provider: releases
-    api_key:
+    token:
       secure: iq5rf2W1fLQxCpg/VQlnJ54libPBAIZjAjJIU8lCo+LX8GfZR9mi2zKw7ZwA9C/Sld5tmzeyg1JsXmLMIIuWbNcrt1P8o8YQ9Oxvc1SWKqC9ceDRepWci9uqHtUFKuLCLHVsNHprYr/L3ObqZstlBjhgY7Pkk+0hixv3VYzwpuVHzsof1McwDXW16iqglh2ayNVJpHUjKnNWrLtiT6KWQwyn0cK7QAGAcZ6DZegujqjzZO0KqyBxTmnQbE4FPFmfiy0JkPb5NG/uyVrF9RGxiyT1Wc8NcdC8IDh8TZ/b22OKJBdCjTDx01If2m9NcMp3tbUtmmWLllIQ8ccN2Puoj02Fc1wUGw4gyGrdvRQpiI5985QIO1P1NMQU5Q2WvDODxWJVsGEhyncO0mIQf+9c07occ1bK/tjCe+tMaXrtpzvg5VK+5kEQj8OXheTCszinEKS+VtPprTjd253Mf1/X9Wuy/0E+xKlPj39Q02rn8CJLczZVzuBl9Bpknt1z3IyP9nGXkYsU8l8ySRDMlaJ1IXfQdHjx2y9Mdzc0+arQwy0CzTaOazJhb4eqan9czih2M50qYYqHkoOguSNN0f/Dvxupxy9AEoG+kzyEo+cJw9kWrjXD8V17OzBYlvHETibg6Sug146Zyil4yVAvry45RqaUlKoRjeecaMHqYzX4mDY=
     file_glob: true
-    file: "$HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2"
+    file:
+      - "$HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2"
+      - "dist/${PACKAGE_NAME}*"
     skip_cleanup: true
+    edge: true
     on:
       repo: axiom-data-science/dbsink
       tags: true
       all_branches: master
       condition: '$TRAVIS_JOB_NAME == "default37"'
+
+  - provider: pypi
+    user: "__token__"
+    password:
+      secure: nO1DCJGNQdto7IC0kizPLk+BpvO3CwpjUgvKYUSyBNMIyfQ5OdewcQUyITYxf4CrI5m2Q28SpAWgg1JN0nTLqCup4HP2HTPZKb4OGzZNSZ8iedLG1w0lNoloXuLSJ/cUGnSadSbyNAMJCK/EkiaqrOarXDQNL/8Imd126YnrdvaOzTHfezNxr+s0HC7oiH/+lD9AuEJLhEPeAdH4AXhMvbpofSKhRmc1GQWICPrKjNL1bwjdYhM3EOGcFW6uEtsDSOxF+ITHd7o5NLLPazjVURqmmDdFgtxbua1gpYz3HRP3quK9tvas68/dlj2lJ384oe3FG/s50tGWz2cDFemp3gllqKZos/GuSF0grWvBTqzGdIabpIH02NArq4TKTRqTrIo/ag0wLc0JmC6AbympJxcr+06T+GRMgkCqysOCUKnBCoMWtRCkiO8FKgOtOo54GQzofFTHncdnThJa+1/JcVcwk6ibRVGtFrnaIbwDyv2LE2i7Pgo1TbkQwaYDqQoDbAqtJnGiKF1icVZK3aaPLGH1uwec809pddefDSZLYh4YWonfnrn46ODh4nSjRSWpRRDWG3BPyJAaSnJTJa4HfhxdV//G0GZapmoFQhEHqUzQIHacRRZCEaY2ZIlYBhEdcYXUDW20oEJewBCfZWQbh9XOAoaHxTI026auA9NNoew=
+    distributions: sdist bdist_wheel
+    skip_cleanup: true
+    upload_docs: false
+    edge: true
+    on:
+      repo: axiom-data-science/dbsink
+      all_branches: true
+      branch: master
+      condition: '$TRAVIS_JOB_NAME == "release"'
