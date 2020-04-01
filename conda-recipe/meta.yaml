@@ -17,15 +17,15 @@ requirements:
   run:
     - python
     - click
-    - python-dateutil
     - easyavro >=3.0.0
-    - msgpack-python
-    - sqlalchemy
-    - psycopg2
     - geoalchemy2
+    - msgpack-python
+    - psycopg2
+    - python-dateutil
     - pytz
     - shapely
     - simplejson
+    - sqlalchemy
 
 test:
   source_files:
