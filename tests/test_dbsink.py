@@ -2,15 +2,14 @@
 # coding=utf-8
 from pathlib import Path
 import simplejson as json
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from easyavro import EasyProducer
 from click.testing import CliRunner
+from dateutil.parser import parse as dtparse
 
-from dbsink.maps import *  # noqa
-from dbsink.tables import *  # noqa
-from dbsink import listen, utils
+from dbsink import maps, tables, listen, utils, L
 
 
 def test_listen_help():
@@ -23,7 +22,7 @@ def test_listen_help():
 
 
 def test_ncreplayer():
-    mapp = GenericFloat('axds-netcdf-replayer-data')
+    mapp = tables.GenericFloat('axds-netcdf-replayer-data')
 
     to_send = []
     with open('./tests/replayer.json') as f:
@@ -36,7 +35,7 @@ def test_ncreplayer():
 
 
 def test_mission_sensors():
-    mapp = NwicFloatReports('oot.reports.mission_sensors')
+    mapp = tables.NwicFloatReports('oot.reports.mission_sensors')
 
     to_send = []
 
@@ -50,7 +49,7 @@ def test_mission_sensors():
 
 def test_environmental():
 
-    mapp = NwicFloatReports('oot.reports.environmental')
+    mapp = tables.NwicFloatReports('oot.reports.environmental')
 
     to_send = []
 
@@ -63,7 +62,7 @@ def test_environmental():
 
 
 def test_null_infinity():
-    mapp = JsonMap('whatever')
+    mapp = maps.JsonMap('whatever')
 
     to_send = []
 
@@ -78,7 +77,7 @@ def test_null_infinity():
 
 
 def test_health_and_status():
-    mapp = NwicFloatReports('foo')
+    mapp = tables.NwicFloatReports('foo')
 
     to_send = []
 
@@ -121,7 +120,7 @@ def test_health_and_status():
 
 
 def test_numurus_status():
-    mapp = NumurusStatus('topic')
+    mapp = tables.NumurusStatus('topic')
 
     to_send = []
 
@@ -140,7 +139,7 @@ def test_numurus_status():
 
 
 def test_numurus_data():
-    mapp = NumurusData('topic')
+    mapp = tables.NumurusData('topic')
 
     to_send = []
 
@@ -162,9 +161,9 @@ def test_numurus_data():
 
 
 def test_numurus_data_filter_dates():
-    mapp = NumurusData('topic', filters={
-        'start_date': datetime(2019, 7, 18, 15).replace(tzinfo=pytz.utc),
-        'end_date': datetime(2019, 7, 18, 16).replace(tzinfo=pytz.utc)
+    mapp = tables.NumurusData('topic', filters={
+        'start_date': datetime(2019, 7, 18, 15).replace(tzinfo=timezone.utc),
+        'end_date': datetime(2019, 7, 18, 16).replace(tzinfo=timezone.utc)
     })
 
     to_send = []
@@ -181,7 +180,7 @@ def test_numurus_data_filter_dates():
 
 
 def test_arete_data_parse():
-    mapp = AreteData('topic')
+    mapp = tables.AreteData('topic')
 
     to_send = []
 
@@ -218,8 +217,8 @@ def test_arete_data_parse():
 
 
 def test_arete_data_filter_dates():
-    mapp = AreteData('topic', filters={
-        'start_date': datetime(2019, 8, 9, 0).replace(tzinfo=pytz.utc)
+    mapp = tables.AreteData('topic', filters={
+        'start_date': datetime(2019, 8, 9, 0).replace(tzinfo=timezone.utc)
     })
 
     to_send = []
@@ -236,7 +235,7 @@ def test_arete_data_filter_dates():
 
 
 def test_just_json():
-    mapp = JsonMap('topic')
+    mapp = maps.JsonMap('topic')
 
     to_send = []
 
@@ -282,7 +281,7 @@ def test_just_json():
 
 
 def test_geography_driftworker_trajectories_individual():
-    mapp = GenericGeography('topic')
+    mapp = tables.GenericGeography('topic')
 
     to_send = []
 
@@ -297,7 +296,7 @@ def test_geography_driftworker_trajectories_individual():
 
 
 def test_geography_driftworker_trajectories_multi():
-    mapp = GenericGeography('topic')
+    mapp = tables.GenericGeography('topic')
 
     to_send = []
 
@@ -312,7 +311,7 @@ def test_geography_driftworker_trajectories_multi():
 
 
 def test_geography_driftworker_envelopes():
-    mapp = GenericGeography('topic')
+    mapp = tables.GenericGeography('topic')
 
     to_send = []
 
@@ -327,7 +326,7 @@ def test_geography_driftworker_envelopes():
 
 
 def test_geography_scuttle_watch_regions():
-    mapp = GenericGeography('topic')
+    mapp = tables.GenericGeography('topic')
 
     to_send = []
 
@@ -370,11 +369,11 @@ def test_simple_listen_to_return():
     datafile = Path('tests/arete_data.json')
     with datafile.open() as f:
         messages = json.load(f)
-        for m in messages:
-            producer.produce([(None, json.dumps(m))], batch=10, flush_timeout=10)
+        messages = [ (None, json.dumps(m)) for m in messages ]
+        producer.produce(messages, batch=10, flush_timeout=10)
 
-    mapping = AreteData('arete-data', filters={
-        'start_date': datetime(2019, 12, 1, 0).replace(tzinfo=pytz.utc)
+    mapping = tables.AreteData('arete-data', filters={
+        'start_date': datetime(2019, 12, 1, 0).replace(tzinfo=timezone.utc)
     })
 
     _ = utils.listen_unpack(
@@ -404,7 +403,7 @@ def test_numurus_status_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/numurus.status.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -422,7 +421,7 @@ def test_numurus_data_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -442,7 +441,7 @@ def test_numurus_data_live_filter_dates():
         '--end_date', '2019-07-18T16:00:00',
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -460,7 +459,7 @@ def test_arete_data_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/arete_data.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -478,7 +477,7 @@ def test_health_and_status_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/health_and_status.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -496,7 +495,7 @@ def test_ncreplayer_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/replayer.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -514,7 +513,7 @@ def test_environmental_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -532,7 +531,7 @@ def test_mission_sensors_live():
         '--no-do-inserts',
         '--datafile', str(Path('tests/mission_sensors.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -549,7 +548,7 @@ def test_json_payload():
         '--no-do-inserts',
         '--datafile', str(Path('tests/environmental.json').resolve()),
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -567,7 +566,7 @@ def test_geography_integration():
         '--datafile', str(Path('tests/scuttle-watch-regions.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -585,7 +584,7 @@ def test_json_integration():
         '--datafile', str(Path('tests/environmental.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -603,7 +602,7 @@ def test_genericfloat_integration():
         '--datafile', str(Path('tests/replayer.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -621,7 +620,7 @@ def test_nwicfloat_integration():
         '--datafile', str(Path('tests/health_and_status.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -639,7 +638,7 @@ def test_geography_envelopes():
         '--datafile', str(Path('tests/driftworker-envelopes.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -658,7 +657,7 @@ def test_geography_traj_ind():
         '--datafile', str(Path('tests/driftworker-traj-ind.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -677,7 +676,7 @@ def test_geography_traj_multi():
         '--datafile', str(Path('tests/driftworker-traj-multi.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -696,7 +695,7 @@ def test_arete_geography():
         '--datafile', str(Path('tests/arete_data.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -715,7 +714,7 @@ def test_numurus_data_geography():
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -734,7 +733,7 @@ def test_numurus_data_geography_uppercase():
         '--datafile', str(Path('tests/numurus.data.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -753,7 +752,7 @@ def test_numurus_status_geography():
         '--datafile', str(Path('tests/numurus.status.json').resolve()),
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
 
@@ -764,7 +763,7 @@ def test_flatten():
         messages = json.load(f)
         for m in messages:
             try:
-                to_send.append(flatten(m))
+                to_send.append(tables.flatten(m))
             except BaseException as e:
                 listen.L.error(repr(e))
 
@@ -806,7 +805,7 @@ def test_flatten():
 
 
 def test_parsing_string_json_fields():
-    mapp = NwicFloatReports('foo')
+    mapp = tables.NwicFloatReports('foo')
 
     to_send = []
 
@@ -844,7 +843,7 @@ def test_parsing_string_json_fields():
 
 
 def test_statistics():
-    mapp = GenericFieldStatistic('topic')
+    mapp = tables.GenericFieldStatistic('topic')
 
     to_send = []
 
@@ -925,7 +924,7 @@ def test_statistics_integration():
         '--end_date', '2022-01-01',
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
     # Truncate
@@ -942,7 +941,7 @@ def test_statistics_integration():
         '--end_date', '2022-01-01',
         '-v'
     ])
-    print(result)
+    L.info(result)
     assert result.exit_code == 0
 
     # Update (no action)
@@ -959,12 +958,12 @@ def test_statistics_integration():
         '--end_date', '2022-01-01',
         '-v'
     ])
-    print(result.stdout)
+    L.info(result.stdout)
     assert result.exit_code == 0
 
 
 def test_base64_images():
-    mapp = GenericFloat('topic')
+    mapp = tables.GenericFloat('topic')
 
     to_send = []
 
