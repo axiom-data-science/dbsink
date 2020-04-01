@@ -8,6 +8,7 @@ fi
 # Set version to release
 sed -i "s/^__version__ = .*/__version__ = \"$1\"/" dbsink/__init__.py
 sed -i "s/version: .*/version: \"$1\"/" conda-recipe/meta.yaml
+sed -i "s/version = .*/version = $1/" setup.cfg
 #sed -i "s/version = .*/version = \"$1\"/" docs/conf.py
 #sed -i "s/release = .*/release = \"$1\"/" docs/conf.py
 echo $1 > VERSION
@@ -15,6 +16,7 @@ echo $1 > VERSION
 # Commit release
 git add dbsink/__init__.py
 git add conda-recipe/meta.yaml
+git add setup.cfg
 git add VERSION
 #git add docs/conf.py
 git commit -m "Release $1"
