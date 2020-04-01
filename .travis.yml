@@ -10,8 +10,10 @@ env:
 matrix:
   fast_finish: true
   include:
-    - name: "default"
+    - name: "default37"
       env:  PY=3.7
+    - name: "default38"
+      env:  PY=3.8
     - name: "coding_standards"
       env:  PY=3.7
   allow_failures:
@@ -38,9 +40,9 @@ install:
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist && pip install --no-deps --force-reinstall ${PACKAGE_NAME}-${version}.tar.gz && popd
 
 script:
-  - if [[ $TRAVIS_JOB_NAME == "default" ]]; then
+  - if [[ $TRAVIS_JOB_NAME == "default"* ]]; then
       cp -r tests/ /tmp ;
-      pushd /tmp && pytest -m "not integration" && popd ;
+      pushd /tmp && pytest -m "not integration and not kafka" && popd ;
     fi
 
   - if [[ $TRAVIS_JOB_NAME == "coding_standards" ]]; then
@@ -48,7 +50,7 @@ script:
     fi
 
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_JOB_NAME" == "default" ]; then
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_JOB_NAME" == "default37" ]; then
       conda install -n root conda-build anaconda-client ;
       conda build conda-recipe;
       anaconda -t $ANACONDA_TOKEN upload --force -u axiom-data-science $HOME/miniconda/**/${PACKAGE_NAME}-*.tar.bz2 ;
@@ -66,4 +68,4 @@ deploy:
       repo: axiom-data-science/dbsink
       tags: true
       all_branches: master
-      condition: '$TRAVIS_JOB_NAME == "default"'
+      condition: '$TRAVIS_JOB_NAME == "default37"'
