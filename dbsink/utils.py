@@ -77,7 +77,7 @@ def listen_unpack(brokers, topic, offset, packing, mapping, consumer=None, regis
         try:
             nk, nv = mapping.message_to_values(k, v)
         except MessageFiltered as e:
-            L.info(e)
+            L.debug(e)
             return
         except BaseException as e:
             L.error(f'Skipping {v} - {repr(e)}')

@@ -141,7 +141,7 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         try:
             newkey, newvalues = mapping.message_to_values(k, v)
         except utils.MessageFiltered as e:
-            L.info(e)
+            L.debug(e)
             return
         except BaseException as e:
             L.error(f'Skipping {v}, message could not be converted to a row - {repr(e)}')
