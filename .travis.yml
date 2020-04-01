@@ -87,10 +87,11 @@ deploy:
       secure: nO1DCJGNQdto7IC0kizPLk+BpvO3CwpjUgvKYUSyBNMIyfQ5OdewcQUyITYxf4CrI5m2Q28SpAWgg1JN0nTLqCup4HP2HTPZKb4OGzZNSZ8iedLG1w0lNoloXuLSJ/cUGnSadSbyNAMJCK/EkiaqrOarXDQNL/8Imd126YnrdvaOzTHfezNxr+s0HC7oiH/+lD9AuEJLhEPeAdH4AXhMvbpofSKhRmc1GQWICPrKjNL1bwjdYhM3EOGcFW6uEtsDSOxF+ITHd7o5NLLPazjVURqmmDdFgtxbua1gpYz3HRP3quK9tvas68/dlj2lJ384oe3FG/s50tGWz2cDFemp3gllqKZos/GuSF0grWvBTqzGdIabpIH02NArq4TKTRqTrIo/ag0wLc0JmC6AbympJxcr+06T+GRMgkCqysOCUKnBCoMWtRCkiO8FKgOtOo54GQzofFTHncdnThJa+1/JcVcwk6ibRVGtFrnaIbwDyv2LE2i7Pgo1TbkQwaYDqQoDbAqtJnGiKF1icVZK3aaPLGH1uwec809pddefDSZLYh4YWonfnrn46ODh4nSjRSWpRRDWG3BPyJAaSnJTJa4HfhxdV//G0GZapmoFQhEHqUzQIHacRRZCEaY2ZIlYBhEdcYXUDW20oEJewBCfZWQbh9XOAoaHxTI026auA9NNoew=
     distributions: sdist bdist_wheel
     skip_cleanup: true
+    skip_existing: true
     upload_docs: false
     edge: true
     on:
       repo: axiom-data-science/dbsink
-      all_branches: true
-      branch: master
+      tags: true
+      all_branches: master
       condition: '$TRAVIS_JOB_NAME == "release"'
