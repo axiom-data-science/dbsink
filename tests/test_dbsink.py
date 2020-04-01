@@ -376,6 +376,12 @@ def test_simple_listen_to_return():
         'start_date': datetime(2019, 12, 1, 0).replace(tzinfo=timezone.utc)
     })
 
+    results = set()
+
+    def gotone(k, v):
+        del v['geom']
+        results.add(json.dumps(v))
+
     _ = utils.listen_unpack(
         brokers='localhost:4001',
         topic='arete-data',
@@ -384,9 +390,11 @@ def test_simple_listen_to_return():
         mapping=mapping,
         consumer=None,
         registry=None,
-        on_receive=None,
+        on_receive=gotone,
         loop=False
     )
+
+    assert len(results) == 3
 
 
 @pytest.mark.integration
