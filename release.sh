@@ -26,9 +26,3 @@ git tag $1
 echo "If everything looks correct, run:
     git push --tags origin master
 "
-
-echo "If CI is successfully, upload to PyPI:
-    rm -r dist/
-    python setup.py sdist bdist_wheel
-    twine upload --verbose --repository-url https://upload.pypi.org/legacy/ dist/*
-"

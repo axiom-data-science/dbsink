@@ -42,7 +42,7 @@ install:
 
 script:
   - if [[ $TRAVIS_JOB_NAME == "default"* ]]; then
-      cp -r tests/ pytest.ini /tmp ;
+      cp -r tests/ setup.cfg /tmp ;
       pushd /tmp && pytest && popd ;
     fi
 
