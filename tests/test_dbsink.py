@@ -5,11 +5,12 @@ import simplejson as json
 from datetime import datetime
 
 import pytest
+from easyavro import EasyProducer
 from click.testing import CliRunner
 
-from dbsink import listen
 from dbsink.maps import *  # noqa
 from dbsink.tables import *  # noqa
+from dbsink import listen, utils
 
 
 def test_listen_help():
@@ -355,20 +356,41 @@ def test_geography_scuttle_watch_regions():
     assert to_send[2][1]['values'] == {}
 
 
-# def test_geography_scuttle_boundary_forecast():
-#     mapp = GenericGeography('topic')
+@pytest.mark.kafka
+def test_simple_listen_to_return():
 
-#     to_send = []
+    producer = EasyProducer(
+        kafka_brokers=['localhost:4001'],
+        kafka_topic='arete-data',
+        kafka_conf={
+            'queue.buffering.max.messages': 50
+        }
+    )
 
-#     with open('./tests/scuttle-boundary-forecast.json') as f:
-#         messages = json.load(f)
-#         for m in messages:
-#             try:
-#                 to_send.append(mapp.message_to_values('fake', m))
-#             except BaseException as e:
-#                 listen.L.error(repr(e))
+    datafile = Path('tests/arete_data.json')
+    with datafile.open() as f:
+        messages = json.load(f)
+        for m in messages:
+            producer.produce([(None, json.dumps(m))], batch=10, flush_timeout=10)
+
+    mapping = AreteData('arete-data', filters={
+        'start_date': datetime(2019, 12, 1, 0).replace(tzinfo=pytz.utc)
+    })
+
+    _ = utils.listen_unpack(
+        brokers='localhost:4001',
+        topic='arete-data',
+        offset='earliest',
+        packing='json',
+        mapping=mapping,
+        consumer=None,
+        registry=None,
+        on_receive=None,
+        loop=False
+    )
 
 
+@pytest.mark.integration
 def test_numurus_status_live():
 
     runner = CliRunner()
@@ -386,6 +408,7 @@ def test_numurus_status_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_numurus_data_live():
 
     runner = CliRunner()
@@ -403,6 +426,7 @@ def test_numurus_data_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_numurus_data_live_filter_dates():
 
     runner = CliRunner()
@@ -422,6 +446,7 @@ def test_numurus_data_live_filter_dates():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_arete_data_live():
 
     runner = CliRunner()
@@ -439,6 +464,7 @@ def test_arete_data_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_health_and_status_live():
 
     runner = CliRunner()
@@ -456,6 +482,7 @@ def test_health_and_status_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_ncreplayer_live():
 
     runner = CliRunner()
@@ -473,6 +500,7 @@ def test_ncreplayer_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_environmental_live():
 
     runner = CliRunner()
@@ -490,6 +518,7 @@ def test_environmental_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_mission_sensors_live():
 
     runner = CliRunner()
@@ -507,6 +536,7 @@ def test_mission_sensors_live():
     assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_json_payload():
 
     runner = CliRunner()

@@ -16,6 +16,7 @@ from dateutil.parser import parse as dtparse
 from sqlalchemy.dialects.postgresql import HSTORE, JSONB, DOUBLE_PRECISION
 
 from dbsink.maps import BaseMap, payload_parse
+from dbsink.utils import MessageFiltered
 from dbsink import L  # noqa
 
 xx = re.compile(r'[\x00-\x1f\\"]')
@@ -119,9 +120,9 @@ def get_point_location_quality(loc_geom, inprecise_location=False, disallow_lon=
 
 def apply_start_end_filter(message_time, starting, ending):
     if isinstance(starting, datetime) and message_time < starting:
-        raise ValueError(f'Filtering out message from {message_time} since it is before {starting}')
+        raise MessageFiltered(f'Filtering out message from {message_time} since it is before {starting}')
     elif isinstance(ending, datetime) and message_time > ending:
-        raise ValueError(f'Filtering out message from {message_time} since it is after {ending}')
+        raise MessageFiltered(f'Filtering out message from {message_time} since it is after {ending}')
 
 
 def make_valid_string(obj):

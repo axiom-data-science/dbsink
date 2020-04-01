@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import uuid
 import logging
 import pkg_resources
 import simplejson as json
@@ -8,12 +7,11 @@ from datetime import datetime
 
 import pytz
 import click
-import msgpack
+
 import sqlalchemy as sql
 from sqlalchemy.dialects.postgresql import insert
-from easyavro import EasyAvroConsumer, EasyConsumer
 
-from dbsink import L, ea, log_format
+from dbsink import L, ea, log_format, utils
 
 
 def get_mappings():
@@ -58,47 +56,19 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         ea.setLevel(logging.DEBUG)
         L.setLevel(logging.DEBUG)
 
-    # Generate a random consumer if one was not provided.
-    # This guarentees a unique consumer ID for each run
-    if not consumer:
-        consumer = f'dbsink-{topic}-{uuid.uuid4().hex[0:20]}'
-        L.info(f'Setting consumer to {consumer}')
-
     # If no specific table was specified, use the topic name
     if not table:
         table = topic
 
-    # Setup the kafka consuimer
-    if packing == 'avro':
-        unpacking_func = None
-        consumer_class = EasyAvroConsumer
-        consumer_kwargs = {
-            'schema_registry_url': registry,
-            'kafka_brokers': brokers.split(','),
-            'consumer_group': consumer,
-            'kafka_topic': topic,
-            'offset': offset
-        }
-    elif packing == 'msgpack':
-        unpacking_func = lambda x: msgpack.loads(x, use_list=False, raw=False)  # noqa
-        packing_func = lambda x: msgpack.packb(x, use_bin_type=True)  # noqa
-        consumer_class = EasyConsumer
-        consumer_kwargs = {
-            'kafka_brokers': brokers.split(','),
-            'consumer_group': consumer,
-            'kafka_topic': topic,
-            'offset': offset
-        }
-    elif packing == 'json':
-        unpacking_func = json.loads
-        packing_func = lambda x: json.dumps(x, ignore_nan=True)  # noqa
-        consumer_class = EasyConsumer
-        consumer_kwargs = {
-            'kafka_brokers': brokers.split(','),
-            'consumer_group': consumer,
-            'kafka_topic': topic,
-            'offset': offset
-        }
+    # Get consumer and unpack/pack information based on packing
+    consume_cls, consume_kw, unpack, pack = utils.get_kafka_consumer(
+        brokers=brokers.split(','),
+        topic=topic,
+        offset=offset,
+        packing=packing,
+        consumer=consumer,
+        registry=registry
+    )
 
     filters = {}
     if isinstance(start_date, datetime):
@@ -114,7 +84,6 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
     if do_inserts is True:
         """ Database connection and setup
         """
-
         engine = sql.create_engine(
             db,
             pool_size=5,
@@ -161,9 +130,9 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         meta.create_all(tables=[sqltable])
 
     def on_recieve(k, v):
-        if v is not None and unpacking_func:
+        if v is not None and unpack:
             try:
-                v = unpacking_func(v)
+                v = unpack(v)
             except BaseException:
                 L.error(f'Error unpacking message using {packing}: {v}')
                 return
@@ -171,6 +140,9 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         # Custom conversion function for the table
         try:
             newkey, newvalues = mapping.message_to_values(k, v)
+        except utils.MessageFiltered as e:
+            L.info(e)
+            return
         except BaseException as e:
             L.error(f'Skipping {v}, message could not be converted to a row - {repr(e)}')
             return
@@ -197,9 +169,9 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
         with open(datafile) as f:
             messages = json.load(f)
             for m in messages:
-                on_recieve(None, packing_func(m))
+                on_recieve(None, pack(m))
     elif listen is True:
-        c = consumer_class(**consumer_kwargs)
+        c = consume_cls(**consume_kw)
         c.consume(
             on_recieve=on_recieve,
             initial_wait=1,
