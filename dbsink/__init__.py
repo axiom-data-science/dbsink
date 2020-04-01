@@ -15,4 +15,4 @@ L = logging.getLogger()
 L.setLevel(logging.INFO)
 L.handlers = [stream]
 
-__version__ = "2.6.0"
+__version__ = "2.7.0"
