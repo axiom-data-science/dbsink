@@ -28,7 +28,7 @@ def get_mappings():
 @click.option('--db',       type=str, required=True, default='postgresql+psycopg2://sink:sink@localhost:30300/sink', help="SQLAlchemy compatible postgres connection string.")
 @click.option('--schema',   type=str, required=True, default='public', help="Database schema to use (default: public).")
 @click.option('--consumer', type=str, default='', help="Consumer group to listen with (default: random).")
-@click.option('--offset',   type=str, required=True, default='largest', help="Kafka offset to start with (default: largest).")
+@click.option('--offset',   type=str, default='largest', help="Kafka offset to start with (default: largest).")
 @click.option('--packing',  type=click.Choice(['json', 'avro', 'msgpack']), default='json', help="The data unpacking algorithm to use (default: json).")
 @click.option('--registry', type=str, default='http://localhost:4002', help="URL to a Schema Registry if avro packing is requested")
 @click.option('--drop/--no-drop', default=False, help="Drop the table first")
@@ -59,6 +59,11 @@ def setup(brokers, topic, table, lookup, db, schema, consumer, offset, packing, 
     # If no specific table was specified, use the topic name
     if not table:
         table = topic
+
+    # Be sure an empty string passed in is interpretted as a None offset, meaning
+    # use the consumer based offsets stored by zoo/kafka
+    if not offset:
+        offset = None
 
     # Get consumer and unpack/pack information based on packing
     consume_cls, consume_kw, unpack, pack = utils.get_kafka_consumer(
