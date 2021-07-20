@@ -2,9 +2,9 @@
 # coding=utf-8
 import re
 import ast
-import collections
 import simplejson as json
 from datetime import datetime
+from collections.abc import MutableMapping
 
 import pytz
 import sqlalchemy as sql
@@ -32,7 +32,7 @@ def flatten(d, parent_key='', sep='_'):
     # https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
     # to support nested lists and decoding of JSON objects that might be strings.
     items = []
-    if isinstance(d, collections.MutableMapping):
+    if isinstance(d, MutableMapping):
         for k, v in d.items():
             new_key = f'{parent_key}{sep}{k}' if parent_key else k
             items.extend(
