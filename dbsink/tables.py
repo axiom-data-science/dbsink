@@ -652,3 +652,57 @@ class NwicFloatReports(GenericFloat):
         fullvalues = self.match_columns(fullvalues)
         # Remove None to use the defaults defined in the table definition
         return key, { k: v for k, v in fullvalues.items() if v is not None }
+
+
+class NwicFloatReportsSofar(GenericFloat):
+
+    def message_to_values(self, key, value):
+        payload = payload_parse(value)
+
+        # Remove the message information
+        payload.pop('message')
+
+        # Flatten nested JSON into key:value pairs
+        values = flatten(value)
+
+        # Time - use float timestamp and fall back to Iridium
+        reftime = datetime.utcnow().replace(microsecond=0)
+        timestamp = dtparse(values['timestamp']).replace(tzinfo=pytz.utc)
+
+        latdd = None
+        londd = None
+        if values.get('longitude') and values.get('latitude'):
+            latdd = values['latitude']
+            londd = values['longitude']
+
+        top_level = {
+            'uid':     str(values['spotterId'])[5:],
+            'gid':     None,
+            'time':    timestamp.isoformat(),
+            'reftime': reftime.isoformat(),
+            'lat':     latdd,
+            'lon':     londd,
+            'z':       None,
+            'payload': payload
+        }
+        pt = Point(top_level['lon'], top_level['lat'])
+        top_level['geom'] = from_shape(pt, srid=4326)
+
+        # All HSTORE values need to be strings
+        values = {
+            k: make_valid_string(x) if x is not None else None
+            for k, x in values.items()
+        }
+
+        fullvalues = {
+            **top_level,
+            'values': {
+                **values
+            }
+        }
+
+        # Throw away non-column data
+        fullvalues = self.match_columns(fullvalues)
+
+        # Remove None to use the defaults defined in the table definition
+        return key, { k: v for k, v in fullvalues.items() if v is not None }

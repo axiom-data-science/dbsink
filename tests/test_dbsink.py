@@ -355,6 +355,48 @@ def test_geography_scuttle_watch_regions():
     assert to_send[2][1]['values'] == {}
 
 
+def test_sofar_data():
+    mapp = tables.NwicFloatReportsSofar('sofar.data')
+
+    to_send = []
+
+    with open('./tests/sofar.json') as f:
+        messages = json.load(f)
+        for m in messages:
+            try:
+                to_send.append(mapp.message_to_values('fake', m))
+            except BaseException as e:
+                listen.L.error(repr(e))
+    assert len(to_send) == 146
+
+    assert to_send[0][0] == 'fake'
+    assert to_send[0][1]['uid'] == '0199'
+    assert to_send[0][1]['time'] == '2019-04-01T06:33:31+00:00'
+    assert to_send[0][1]['lat'] == 2.66157
+    assert to_send[0][1]['lon'] == -149.43383
+    assert to_send[0][1]['values']['significantWaveHeight'] == '2.19'
+    assert to_send[0][1]['values']['peakPeriod'] == '9.3'
+    assert to_send[0][1]['values']['meanPeriod'] == '7.76'
+    assert to_send[0][1]['values']['peakDirection'] == '85.2'
+    assert to_send[0][1]['values']['peakDirectionalSpread'] == '38.29'
+    assert to_send[0][1]['values']['meanDirection'] == '72.57'
+    assert to_send[0][1]['values']['meanDirectionalSpread'] == '58.01'
+
+    assert to_send[0][1]['payload'] == {
+        "significantWaveHeight": 2.19,
+        "peakPeriod": 9.3,
+        "meanPeriod": 7.76,
+        "peakDirection": 85.2,
+        "peakDirectionalSpread": 38.29,
+        "meanDirection": 72.57,
+        "meanDirectionalSpread": 58.01,
+        "timestamp": "2019-04-01T06:33:31.000Z",
+        "latitude": 2.66157,
+        "longitude": -149.43383,
+        "spotterId": "SPOT-0199"
+    }
+
+
 @pytest.mark.kafka
 def test_simple_listen_to_return():
 
@@ -758,6 +800,25 @@ def test_numurus_status_geography():
         '--truncate',
         '--no-listen',
         '--datafile', str(Path('tests/numurus.status.json').resolve()),
+        '-v'
+    ])
+    L.info(result)
+    assert result.exit_code == 0
+
+
+@pytest.mark.integration
+def test_sofar_data_integration():
+
+    runner = CliRunner()
+    result = runner.invoke(listen.setup, [
+        '--topic', 'sofar.data',
+        '--table', 'sofar-data',
+        '--lookup', 'NwicFloatReportsSofar',
+        '--packing', 'json',
+        '--no-drop',
+        '--truncate',
+        '--no-listen',
+        '--datafile', str(Path('tests/sofar.json').resolve()),
         '-v'
     ])
     L.info(result)
