@@ -1,6 +1,6 @@
 package:
   name: dbsink
-  version: "2.9.1"
+  version: "2.9.2"
 
 source:
   path: ../
